@@ -185,12 +185,14 @@ var LoggingFlag = cli.StringFlag{
 
 // AwsVPCFlag ...
 var AwsVPCFlag = cli.StringFlag{
-	Name: "aws-vpc",
+	Name:  "aws-vpc",
+	Usage: `VPC ID in which AmazonEC2 instances would be launched`,
 }
 
 // AwsRegionFlag ...
 var AwsRegionFlag = cli.StringFlag{
-	Name: "aws-region",
+	Name:  "aws-region",
+	Usage: `AWS region name in which AmazonEC2 instances would be launched`,
 }
 
 /**
