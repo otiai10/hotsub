@@ -22,8 +22,25 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	for report := range handleBunch(tasks) {
-		fmt.Printf("%+v\n", report)
+	handler, err := NewHandler(ctx)
+	if err != nil {
+		return err
+	}
+
+	errored := []Job{}
+	for report := range handler.HandleBunch(tasks) {
+		if report.Error != nil {
+			errored = append(errored, report)
+		}
+	}
+
+	if len(errored) == 0 {
+		fmt.Printf("All %d tasks completed successfully!\n", len(tasks))
+	} else {
+		fmt.Printf("%d task(s) failed with errors.\n", len(errored))
+		for _, job := range errored {
+			fmt.Printf("%s: %v\n", job.Instance.Name, job.Error)
+		}
 	}
 
 	return nil

@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 )
 
 var (
@@ -14,21 +15,20 @@ var (
 
 // Task ...
 type Task struct {
+	Index           int
+	Prefix          string
 	Env             map[string]string
 	Inputs          map[string]string
 	InputRecursive  map[string]string
 	Outputs         map[string]string
 	OutputRecursive map[string]string
-	Index           int
 }
 
 // NewTask ...
-func NewTask(i ...int) *Task {
-	if len(i) == 0 {
-		i = append(i, 0)
-	}
+func NewTask(i int, prefix string) *Task {
 	return &Task{
-		Index:           i[0],
+		Index:           i,
+		Prefix:          prefix,
 		Env:             map[string]string{},
 		Inputs:          map[string]string{},
 		InputRecursive:  map[string]string{},
@@ -61,21 +61,22 @@ func (c Column) Bind(task *Task, value string) error {
 }
 
 func parseTasksFromFile(taskfile *os.File) ([]*Task, error) {
+	name := strings.TrimRight(filepath.Base(taskfile.Name()), filepath.Ext(taskfile.Name()))
 	ext := filepath.Ext(taskfile.Name())
 	switch ext {
 	case ".csv":
 		r := csv.NewReader(taskfile)
-		return parseTasksFromRowReader(r)
+		return parseTasksFromRowReader(r, name)
 	case ".tsv":
 		r := csv.NewReader(taskfile)
 		r.Comma = '\t'
-		return parseTasksFromRowReader(r)
+		return parseTasksFromRowReader(r, name)
 	default:
 		return nil, fmt.Errorf("unexpected extension for task file: %v", ext)
 	}
 }
 
-func parseTasksFromRowReader(r *csv.Reader) ([]*Task, error) {
+func parseTasksFromRowReader(r *csv.Reader, prefix string) ([]*Task, error) {
 	rows, err := r.ReadAll()
 	if err != nil {
 		return nil, err
@@ -95,7 +96,7 @@ func parseTasksFromRowReader(r *csv.Reader) ([]*Task, error) {
 		if len(row) < len(header) {
 			return tasks, fmt.Errorf("csv/tsv record doesn't have enough columns specified with the first row: %v", i)
 		}
-		task := NewTask(i)
+		task := NewTask(i, prefix)
 		for colindex, value := range row {
 			if err := colums[colindex].Bind(task, value); err != nil {
 				return nil, err
