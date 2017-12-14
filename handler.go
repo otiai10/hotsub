@@ -95,8 +95,12 @@ func (h *Handler) Handle(task *Task) Job {
 	if err != nil {
 		return job.Errorf("failed to create machine: %v", err)
 	}
-	defer machine.Remove()
 	job.Logf("The machine created successfully")
+	defer func() {
+		job.Logf("Deleting docker machine")
+		machine.Remove()
+		job.Logf("The machine deleted successfully")
+	}()
 
 	container := daap.NewContainer(h.Image, daap.Args{
 		Machine: &daap.MachineConfig{
