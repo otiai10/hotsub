@@ -7,7 +7,7 @@ if [ -n ${SOURCE} ]; then
 elif [ -n ${SOURCE_RECURSIVE} ]; then
   DIR=`basename ${SOURCE_RECURSIVE}`
   aws s3 cp -r ${SOURCE_RECURSIVE} /var/in/${DIR}
-elif
+else
   echo "[lifecycle error] Either of SOURCE or SOURCE_RECURSIVE must be specified" >&2
   exit 1
 fi
