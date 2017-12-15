@@ -47,9 +47,9 @@ func NewHandler(ctx *cli.Context) (*Handler, error) {
 }
 
 // HandleBunch ...
-func (h *Handler) HandleBunch(tasks []*Task) <-chan Job {
+func (h *Handler) HandleBunch(tasks []*Task) <-chan *Job {
 
-	results := make(chan Job)
+	results := make(chan *Job)
 	done := make(chan bool)
 	count := 0
 
@@ -76,8 +76,9 @@ func (h *Handler) HandleBunch(tasks []*Task) <-chan Job {
 }
 
 // Handle ...
-func (h *Handler) Handle(task *Task) Job {
-	job := Job{Task: *task}
+func (h *Handler) Handle(task *Task) *Job {
+
+	job := &Job{Task: task}
 
 	// {{{ TODO: Refactor and Slim up
 	job.Instance = &dkmachine.CreateOptions{
@@ -134,8 +135,17 @@ func (h *Handler) Handle(task *Task) Job {
 	}
 	job.Logf("The container started successfully")
 
+	if err := h.Prepare(container, job); err != nil {
+		return job.Errorf("failed to prepare files specified by task: %v", err)
+	}
+
+	execution := daap.Execution{
+		Script: h.Script,
+		Env:    task.ContainerEnv,
+	}
+
 	job.Logf("Sending command queue to the container")
-	stream, err := container.Exec(ctx, daap.Execution{Script: h.Script})
+	stream, err := container.Exec(ctx, execution)
 	if err != nil {
 		return job.Errorf("failed to exec script in the container: %v", err)
 	}
@@ -148,4 +158,24 @@ func (h *Handler) Handle(task *Task) Job {
 	// }}}
 
 	return job
+}
+
+// Prepare upload and locate files which are specified by the task onto the container.
+// "Prepare" lifecycle is supposed to do
+// 1) Download inputs files and directories specified by the task
+// 2) Place those files on some specific location of the container.
+// 3) Set the pairs of env variable and path to the file location to the task,
+//    which is used by Execution.
+func (h *Handler) Prepare(container *daap.Container, job *Job) error {
+	task := job.Task
+	for key, val := range task.Env {
+		task.ContainerEnv = append(task.ContainerEnv, fmt.Sprintf("%s=%s", key, val))
+	}
+	for key, val := range task.Inputs {
+		fmt.Println(key, val)
+	}
+	for key, val := range task.InputRecursive {
+		fmt.Println(key, val)
+	}
+	return nil
 }

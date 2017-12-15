@@ -13,6 +13,12 @@ var (
 	headExpression = regexp.MustCompile("^(?P<key>.+) +(?P<bind>.+)$")
 )
 
+// Entry ...
+type Entry struct {
+	URL      string
+	Filepath string
+}
+
 // Task ...
 type Task struct {
 	Index           int
@@ -22,6 +28,11 @@ type Task struct {
 	InputRecursive  map[string]string
 	Outputs         map[string]string
 	OutputRecursive map[string]string
+
+	// ContainerEnv is a set of real and flattened env variables of
+	// Env, Inputs, InputRecursive, Outputs, and OutputRecursive.
+	// These values are supposed to be created by Handler.Prepare lifecycle.
+	ContainerEnv []string
 }
 
 // NewTask ...

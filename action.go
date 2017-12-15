@@ -27,7 +27,7 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	errored := []Job{}
+	errored := []*Job{}
 	for report := range handler.HandleBunch(tasks) {
 		if report.Error != nil {
 			errored = append(errored, report)
