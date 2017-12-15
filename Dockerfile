@@ -26,4 +26,4 @@ RUN curl https://sdk.cloud.google.com | bash
 ENV PATH=${PATH}:/root/google-cloud-sdk/bin
 
 # Uploader scripts
-ADD ./lifecycle/prepare /prepare
+ADD ./lifecycle /lifecycle
