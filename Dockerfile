@@ -1,3 +1,6 @@
+# This docker image is supposed to be used as awsub/lifecycle, in which
+# input files are donwloaded onto the host machine and
+# output files are uploaded to cloud storage services.
 FROM debian:stretch-slim
 
 LABEL maintainer="Hiromu Ochiai<otiai10@gmail.com>"
