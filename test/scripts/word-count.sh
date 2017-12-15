@@ -1,8 +1,9 @@
 #!/bin/bash
 
 echo "=== Parameter Check ==="
-echo "SPEECH_FILE: ${SPEECH_FILE}"
-echo "OUTDIR:      ${OUTDIR}"
+echo "SPEAKER_NAME: ${SPEAKER_NAME}"
+echo "SPEECH_FILE:  ${SPEECH_FILE}"
+echo "DIR:          ${DIR}"
 echo "======================="
 
 cat ${SPEECH_FILE} \
@@ -11,4 +12,4 @@ cat ${SPEECH_FILE} \
   | sort \
   | uniq -c \
   | sort -r \
-  > ${OUTDIR}/wordcount.txt
+  > ${DIR}/wordcount.txt

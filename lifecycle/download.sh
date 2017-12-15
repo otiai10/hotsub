@@ -17,7 +17,7 @@
 #
 # Example:
 #
-#     INPUT=s3://your-bucket/your-object OUTDIR=/your/path ./download.sh
+#     INPUT=s3://your-bucket/your-object DIR=/your/path ./download.sh
 
 function precheck() {
   if [[ -z ${INPUT} && -z ${INPUT_RECURSIVE} ]]; then
@@ -55,7 +55,7 @@ function download() {
     ;;
   esac
 
-  ${CMD} ${SRC} ${OUTDIR}
+  ${CMD} ${SRC} ${DIR}
 }
 
 function __main__() {
