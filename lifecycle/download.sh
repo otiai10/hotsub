@@ -20,6 +20,7 @@
 #     INPUT=s3://your-bucket/your-object DIR=/your/path ./download.sh
 
 function precheck() {
+  whoami
   if [[ -z ${INPUT} && -z ${INPUT_RECURSIVE} ]]; then
     echo "Either of INPUT or INPUT_RECURSIVE must be specified to invoke 'download.sh'"
     exit 1
@@ -27,6 +28,8 @@ function precheck() {
 }
 
 function download() {
+
+  mkdir -p ${DIR}
 
   if [[ -n ${INPUT} ]]; then SRC=${INPUT}; elif [[ -n ${INPUT_RECURSIVE} ]]; then SRC=${INPUT_RECURSIVE}; fi
   if [[ ${SRC} =~ s3://.+ ]]; then
@@ -55,7 +58,9 @@ function download() {
     ;;
   esac
 
-  ${CMD} ${SRC} ${DIR}
+  DEST=${DIR}/`basename ${SRC}`
+  echo "Execution: ${CMD} ${SRC} ${DEST}"
+  ${CMD} ${SRC} ${DEST}
 }
 
 function __main__() {

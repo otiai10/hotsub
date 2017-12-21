@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "=== Parameter Check ==="
+echo "USER:         ${USER}"
 echo "SPEAKER_NAME: ${SPEAKER_NAME}"
 echo "SPEECH_FILE:  ${SPEECH_FILE}"
 echo "DIR:          ${DIR}"
@@ -12,4 +13,4 @@ cat ${SPEECH_FILE} \
   | sort \
   | uniq -c \
   | sort -r \
-  > ${DIR}/wordcount.txt
+# > ${DIR}/wordcount.txt

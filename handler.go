@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/otiai10/daap"
 	"github.com/otiai10/dkmachine/v0/dkmachine"
@@ -82,9 +83,10 @@ func (h *Handler) Handle(task *Task) *Job {
 
 	// {{{ TODO: Refactor and Slim up
 	job.Instance = &dkmachine.CreateOptions{
-		Driver:          "amazonec2",
-		AmazonEC2Region: "ap-southeast-2",
-		Name:            fmt.Sprintf("%s%03d", task.Prefix, task.Index),
+		Driver:                      "amazonec2",
+		AmazonEC2Region:             "ap-southeast-2",
+		AmazonEC2IAMInstanceProfile: "testtest",
+		Name: fmt.Sprintf("%s%02d", task.Prefix, task.Index),
 	}
 
 	// {{{ FIXME: debug
@@ -97,46 +99,47 @@ func (h *Handler) Handle(task *Task) *Job {
 		return job.Errorf("failed to create machine: %v", err)
 	}
 	job.Logf("The machine created successfully")
+
 	defer func() {
 		job.Logf("Deleting docker machine")
 		machine.Remove()
 		job.Logf("The machine deleted successfully")
 	}()
 
+	lifecycle := daap.NewContainer("awsub/lifecycle", daap.Args{
+		Machine: &daap.MachineConfig{
+			Host:     machine.Host(),
+			CertPath: machine.CertPath(),
+		},
+		Mounts: []daap.Mount{
+			daap.Volume("/tmp", "/tmp"),
+		},
+	})
+
 	container := daap.NewContainer(h.Image, daap.Args{
 		Machine: &daap.MachineConfig{
 			Host:     machine.Host(),
 			CertPath: machine.CertPath(),
 		},
-		Env: []string{},
+		Mounts: []daap.Mount{
+			daap.Volume("/tmp", "/tmp"),
+		},
 	})
 
 	ctx := context.Background()
 
-	job.Logf("Pulling the image to the host: %v", container.Image)
-	pull, err := container.PullImage(ctx)
-	if err != nil {
-		return job.Errorf("failed to pull image: %v", err)
-	}
-	for range pull {
-		// fmt.Print(".")
-	}
-	job.Logf("The image pulled successfully")
+	wg := new(sync.WaitGroup)
+	wg.Add(2)
+	go h.Warmup(ctx, lifecycle, job, wg)
+	go h.Warmup(ctx, container, job, wg)
+	wg.Wait()
 
-	job.Logf("Creating a container on the host")
-	if err = container.Create(ctx); err != nil {
-		return job.Errorf("failed to create container: %v", err)
+	if job.Error != nil {
+		return job
 	}
-	job.Logf("The container created successfully")
 
-	job.Logf("Starting the container up")
-	if err = container.Start(ctx); err != nil {
-		return job.Errorf("failed to start container: %v", err)
-	}
-	job.Logf("The container started successfully")
-
-	if err := h.Prepare(container, job); err != nil {
-		return job.Errorf("failed to prepare files specified by task: %v", err)
+	if err := h.Prepare(ctx, lifecycle, job); err != nil {
+		return job.Errorf("failed to prepare input tasks: %v", err)
 	}
 
 	execution := daap.Execution{
@@ -160,22 +163,80 @@ func (h *Handler) Handle(task *Task) *Job {
 	return job
 }
 
+// Warmup ...
+func (h *Handler) Warmup(ctx context.Context, c *daap.Container, job *Job, wg *sync.WaitGroup) {
+	defer wg.Done()
+	job.Logf("Pulling the image to the host: %v", c.Image)
+	pull, err := c.PullImage(ctx)
+	if err != nil {
+		job.Errorf("failed to pull image: %v", err)
+		return
+	}
+	for range pull {
+		// fmt.Print(".")
+	}
+	job.Logf("The image pulled successfully: %v", c.Image)
+
+	job.Logf("Creating a container on the host")
+	if err = c.Create(ctx); err != nil {
+		job.Errorf("failed to create container: %v: %v", c.Image, err)
+		return
+	}
+	job.Logf("The container created successfully")
+
+	job.Logf("Starting the container up")
+	if err = c.Start(ctx); err != nil {
+		job.Errorf("failed to start container: %v: %v", c.Image, err)
+		return
+	}
+	job.Logf("The container started successfully: %v", c.Image)
+}
+
 // Prepare upload and locate files which are specified by the task onto the container.
 // "Prepare" lifecycle is supposed to do
 // 1) Download inputs files and directories specified by the task
 // 2) Place those files on some specific location of the container.
 // 3) Set the pairs of env variable and path to the file location to the task,
 //    which is used by Execution.
-func (h *Handler) Prepare(container *daap.Container, job *Job) error {
+func (h *Handler) Prepare(ctx context.Context, container *daap.Container, job *Job) error {
+
 	task := job.Task
 	for key, val := range task.Env {
 		task.ContainerEnv = append(task.ContainerEnv, fmt.Sprintf("%s=%s", key, val))
 	}
-	for key, val := range task.Inputs {
-		fmt.Println(key, val)
+	envpairs := make(chan string)
+	flag := 0 // flag!?
+	for envname, url := range task.Inputs {
+		flag++
+		go h.prepareInput(ctx, container, envname, url, job, envpairs)
 	}
-	for key, val := range task.InputRecursive {
-		fmt.Println(key, val)
+
+	for envpair := range envpairs {
+		flag--
+		if envpair != "" {
+			task.ContainerEnv = append(task.ContainerEnv, envpair)
+		}
+		if flag < 1 {
+			close(envpairs)
+		}
 	}
+
 	return nil
+}
+
+func (h *Handler) prepareInput(ctx context.Context, c *daap.Container, envname, url string, job *Job, result chan<- string) {
+	stream, err := c.Exec(ctx, daap.Execution{
+		Inline: "/lifecycle/download.sh",
+		Env:    []string{fmt.Sprintf("%s=%s", "INPUT", url), fmt.Sprintf("%s=%s", "DIR", "/tmp")},
+	})
+	if err != nil {
+		job.Errorf("failed to execute /lifecycle/download.sh: %v", err)
+		result <- ""
+		return
+	}
+	for payload := range stream {
+		job.Logf("[PREPARE] &%d> %s", payload.Type, string(payload.Data))
+	}
+	result <- fmt.Sprintf("%s=%s", envname, filepath.Join("/tmp", filepath.Base(url)))
+	return
 }
