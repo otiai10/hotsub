@@ -4,6 +4,9 @@ import "github.com/urfave/cli"
 
 // All flags listed here.
 var flags = []cli.Flag{
+
+	VerboseFlag,
+
 	ProviderFlag,
 	NameFlag,
 	TasksFlag,
@@ -41,9 +44,15 @@ var flags = []cli.Flag{
 	GoogleAcceleratorTypeFlag,
 }
 
+// VerboseFlag ...
+var VerboseFlag = cli.BoolFlag{
+	Name:  "verbose,V",
+	Usage: `output verbose log`,
+}
+
 // ProviderFlag ...
 var ProviderFlag = cli.StringFlag{
-	Name:  "provider",
+	Name:  "provider,p",
 	Usage: `Job service provider. Valid values are "aws" and "local" (local Docker execution). (default: aws)`,
 	Value: "aws",
 }

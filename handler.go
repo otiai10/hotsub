@@ -5,8 +5,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
-	"os"
 	"path/filepath"
 	"sync"
 
@@ -41,9 +39,7 @@ func NewHandler(ctx *cli.Context) (*Handler, error) {
 	}
 	h.Script = script
 
-	// {{{ FIXME: debug
-	h.Verbose = true
-	// }}}
+	h.Verbose = ctx.Bool("verbose")
 
 	return h, nil
 }
@@ -88,9 +84,9 @@ func (h *Handler) Handle(task *Task) *Job {
 	}
 	job.Instance = instance
 
-	// {{{ FIXME: debug
-	job.Logger = log.New(os.Stdout, fmt.Sprintf("[%s] ", job.Instance.Name), 0)
-	// }}}
+	if h.Verbose {
+		job.Logger = NewLogger(fmt.Sprintf("[%s]", job.Instance.Name), task.Index)
+	}
 
 	job.Logf("Creating docker machine")
 	machine, err := dkmachine.Create(job.Instance)

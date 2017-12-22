@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/otiai10/dkmachine/v0/dkmachine"
 )
@@ -12,7 +11,7 @@ type Job struct {
 	Task     *Task
 	Error    error
 	Instance *dkmachine.CreateOptions
-	Logger   *log.Logger `json:"-"`
+	Logger   *Logger `json:"-"`
 }
 
 // Errorf is a shorthand for setting error and rerutn job.
