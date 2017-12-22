@@ -5,6 +5,7 @@ echo "USER:         ${USER}"
 echo "SPEAKER_NAME: ${SPEAKER_NAME}"
 echo "SPEECH_FILE:  ${SPEECH_FILE}"
 echo "DIR:          ${DIR}"
+echo "OUTDIR:       ${OUTDIR}"
 echo "======================="
 
 cat ${SPEECH_FILE} \
@@ -13,4 +14,4 @@ cat ${SPEECH_FILE} \
   | sort \
   | uniq -c \
   | sort -r \
-# > ${DIR}/wordcount.txt
+  | tee ${OUTDIR}/word-count.txt

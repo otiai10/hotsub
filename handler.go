@@ -157,7 +157,13 @@ func (h *Handler) Handle(task *Task) *Job {
 		job.Logf("&%d> %s", payload.Type, string(payload.Data))
 	}
 	job.Logf("The command finished completely")
-	// }}}
+
+	if err := h.Finalize(ctx, lifecycle, job); err != nil {
+		return job.Errorf("failed to finalize output of task: %v", err)
+	}
+	job.Logf("Successfully uploaded output files to your bucket")
+
+	job.Logf("Everything completed. Good work :)")
 
 	return job
 }
