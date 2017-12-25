@@ -46,7 +46,7 @@ var flags = []cli.Flag{
 
 // VerboseFlag ...
 var VerboseFlag = cli.BoolFlag{
-	Name:  "verbose,V",
+	Name:  "verbose,v",
 	Usage: `output verbose log`,
 }
 
