@@ -28,6 +28,11 @@ func (h *Handler) Prepare(ctx context.Context, container *daap.Container, job *J
 		go h.prepareInput(ctx, container, envname, rawurl, job, envpairs)
 	}
 
+	for envname, rawurl := range task.InputRecursive {
+		flag++
+		go h.prepareInputRecursive(ctx, container, envname, rawurl, job, envpairs)
+	}
+
 	for envname, rawurl := range task.OutputRecursive {
 		flag++
 		go h.prepareOutputDirectory(ctx, container, envname, rawurl, job, envpairs)
@@ -50,6 +55,23 @@ func (h *Handler) prepareInput(ctx context.Context, c *daap.Container, envname, 
 	stream, err := c.Exec(ctx, daap.Execution{
 		Inline: "/lifecycle/download.sh",
 		Env:    []string{fmt.Sprintf("%s=%s", "INPUT", rawurl), fmt.Sprintf("%s=%s", "DIR", "/tmp")},
+	})
+	if err != nil {
+		job.Errorf("failed to execute /lifecycle/download.sh: %v", err)
+		result <- ""
+		return
+	}
+	for payload := range stream {
+		job.Logf("[PREPARE] &%d> %s", payload.Type, string(payload.Data))
+	}
+	result <- fmt.Sprintf("%s=%s", envname, filepath.Join("/tmp", filepath.Base(rawurl)))
+	return
+}
+
+func (h *Handler) prepareInputRecursive(ctx context.Context, c *daap.Container, envname, rawurl string, job *Job, result chan<- string) {
+	stream, err := c.Exec(ctx, daap.Execution{
+		Inline: "/lifecycle/download.sh",
+		Env:    []string{fmt.Sprintf("%s=%s", "INPUT_RECURSIVE", rawurl), fmt.Sprintf("%s=%s", "DIR", "/tmp")},
 	})
 	if err != nil {
 		job.Errorf("failed to execute /lifecycle/download.sh: %v", err)

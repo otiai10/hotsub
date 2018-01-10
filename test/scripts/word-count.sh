@@ -6,6 +6,10 @@ echo "SPEECH_FILE:  ${SPEECH_FILE}"
 echo "OUTDIR:       ${OUTDIR}"
 echo "======================="
 
+echo "=== Test --input-recursive ==="
+cat ${META}/profile.txt
+echo "======================="
+
 cat ${SPEECH_FILE} \
   | tr ' ' '\n' \
   | tr -d , \
