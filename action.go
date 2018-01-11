@@ -10,6 +10,10 @@ import (
 // action ...
 func action(ctx *cli.Context) error {
 
+	if ctx.NumFlags() == 0 {
+		return ctx.App.Command("help").Run(ctx)
+	}
+
 	tasksfpath := ctx.String("tasks")
 	f, err := os.Open(tasksfpath)
 	if err != nil {
