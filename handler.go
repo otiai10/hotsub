@@ -24,11 +24,12 @@ type Handler struct {
 // NewHandler ...
 func NewHandler(ctx *cli.Context) (*Handler, error) {
 	h := &Handler{ctx: ctx}
-	img := ctx.String("image")
-	if img == "" {
+
+	h.Image = ctx.String("image")
+	if h.Image == "" {
 		return nil, fmt.Errorf("`--image` is required but not specified")
 	}
-	h.Image = img
+
 	script := ctx.String("script")
 	if script == "" {
 		return nil, fmt.Errorf("`--script` is required (for now)")
