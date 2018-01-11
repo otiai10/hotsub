@@ -1,5 +1,5 @@
---env SAMPLE,--input INPUT1,--input INPUT2,--output-recursive OUTPUT_DIR,--input-recursive REFERENCE
-Hela_wt_dox-,gs://genomon_rna_gce/sequence_data/small/Hela_wt_dox-/sequence1.txt,gs://genomon_rna_gce/sequence_data/small/Hela_wt_dox-/sequence2.txt,gs://friend1ws_genomon_rna_gce_test/test171125/star/Hela_wt_dox-,gs://genomon_rna_gce/db/GRCh37.STAR-2.5.2a
-MCF-7,gs://genomon_rna_gce/sequence_data/small/MCF-7/sequence1.txt,gs://genomon_rna_gce/sequence_data/small/MCF-7/sequence2.txt,gs://friend1ws_genomon_rna_gce_test/test171125/star/MCF-7,gs://genomon_rna_gce/db/GRCh37.STAR-2.5.2a
-DU145_150,gs://genomon_rna_gce/sequence_data/small/DU145_150/sequence1.txt,gs://genomon_rna_gce/sequence_data/small/DU145_150/sequence2.txt,gs://friend1ws_genomon_rna_gce_test/test171125/star/DU145_150,gs://genomon_rna_gce/db/GRCh37.STAR-2.5.2a
-K562_150,gs://genomon_rna_gce/sequence_data/small/K562_150/sequence1.txt,gs://genomon_rna_gce/sequence_data/small/K562_150/sequence2.txt,gs://friend1ws_genomon_rna_gce_test/test171125/star/K562_150,gs://genomon_rna_gce/db/GRCh37.STAR-2.5.2a
+--env SAMPLE,--input INPUT1,--input INPUT2,--input-recursive REFERENCE
+Hela_wt_dox-,s3://hgc-otiai10-test/examples/genomon_rna/sequence_data/small/Hela_wt_dox-/sequence1.txt,s3://hgc-otiai10-test/examples/genomon_rna/sequence_data/small/Hela_wt_dox-/sequence2.txt,s3://hgc-otiai10-test/examples/genomon_rna/db/GRCh37.STAR-2.5.2a
+MCF-7,s3://hgc-otiai10-test/examples/genomon_rna/sequence_data/small/MCF-7/sequence1.txt,s3://hgc-otiai10-test/examples/genomon_rna/sequence_data/small/MCF-7/sequence2.txt,s3://hgc-otiai10-test/examples/genomon_rna/db/GRCh37.STAR-2.5.2a
+DU145_150,s3://hgc-otiai10-test/examples/genomon_rna/sequence_data/small/DU145_150/sequence1.txt,s3://hgc-otiai10-test/examples/genomon_rna/sequence_data/small/DU145_150/sequence2.txt,s3://hgc-otiai10-test/examples/genomon_rna/db/GRCh37.STAR-2.5.2a
+K562_150,s3://hgc-otiai10-test/examples/genomon_rna/sequence_data/small/K562_150/sequence1.txt,s3://hgc-otiai10-test/examples/genomon_rna/sequence_data/small/K562_150/sequence2.txt,s3://hgc-otiai10-test/examples/genomon_rna/db/GRCh37.STAR-2.5.2a
