@@ -1,12 +1,33 @@
 #!/bin/sh
 
-echo "Hello!! This is star-alignment.sh!!!"
-echo "UNAME: `uname -a`"
-echo "SAMPLE: ${SAMPLE}"
-echo "INPUT1: ${INPUT1}"
-echo "INPUT2: ${INPUT2}"
-# for i in 1 2 3 4 5; do
-#   echo ${i}
-#   sleep 1s
-# done
-echo "Finished!!"
+set -o errexit
+set -o nounset
+set -o xtrace
+
+STAR --version
+
+OUTPUT_PREF=${OUTPUT_DIR}/${SAMPLE}
+
+STAR_OPTION="--runThreadN 6 --outSAMstrandField intronMotif --outSAMunmapped Within --outSAMtype BAM Unsorted"
+SAMTOOLS_SORT_OPTION="-@ 6 -m 3G"
+
+ls -lh ${REFERENCE}
+
+/usr/local/bin/STAR \
+    --genomeDir ${REFERENCE} \
+    --readFilesIn ${INPUT1} ${INPUT2} \
+    --outFileNamePrefix ${OUTPUT_PREF}. \
+    ${STAR_OPTION}
+
+/usr/local/bin/samtools sort \
+    -T ${OUTPUT_PREF}.Aligned.sortedByCoord.out \
+    ${SAMTOOLS_SORT_OPTION} \
+    ${OUTPUT_PREF}.Aligned.out.bam -O bam \
+    > ${OUTPUT_PREF}.Aligned.sortedByCoord.out.bam
+
+/usr/local/bin/samtools index \
+    ${OUTPUT_PREF}.Aligned.sortedByCoord.out.bam
+
+rm ${OUTPUT_PREF}.Aligned.out.bam
+
+echo "Finished ==> ${SAMPLE}"

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/fatih/color"
 )
@@ -20,6 +21,9 @@ var colors = []*color.Color{
 	color.New(color.FgYellow),
 }
 
+// TODO: Refactor
+var linelock = new(sync.Mutex)
+
 // Logger ...
 type Logger struct {
 	prefix string
@@ -36,9 +40,16 @@ func NewLogger(prefix string, index int) *Logger {
 
 // Printf ...
 func (l *Logger) Printf(format string, v ...interface{}) {
-	l.color.Print(l.prefix + " ")
+
 	if !strings.HasSuffix(format, "\n") {
 		format = format + "\n"
 	}
+
+	// TODO: Refactor
+	// To avoid to mix up prefix and log content, lock the print process for each print.
+	linelock.Lock()
+	defer linelock.Unlock()
+
+	l.color.Print(l.prefix + " ")
 	fmt.Printf(format, v...)
 }

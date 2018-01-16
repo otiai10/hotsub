@@ -13,7 +13,11 @@ func (h *Handler) generateMachineOption(task *Task) (*dkmachine.CreateOptions, e
 		Name: name,
 	}
 	opt.Driver = "amazonec2"
-	opt.AmazonEC2Region = "ap-southeast-2"
+
+	// opt.AmazonEC2Region = "ap-southeast-2"
+	opt.AmazonEC2Region = "ap-northeast-1"
+	opt.AmazonEC2InstanceType = "m4.xlarge"
+
 	opt.AmazonEC2IAMInstanceProfile = "testtest"
 	opt.AmazonEC2SecurityGroup = name
 

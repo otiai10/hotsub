@@ -43,7 +43,8 @@ function download() {
   case ${PROVIDER} in
   s3)
     if [[ -n ${INPUT_RECURSIVE} ]]; then
-      CMD="aws s3 cp --recursive"
+      # CMD="aws s3 cp --recursive"
+      CMD="aws s3 sync"
     else
       CMD="aws s3 cp"
     fi
@@ -59,7 +60,8 @@ function download() {
 
   DEST=${DIR}/`basename ${SRC}`
   echo "Execution: ${CMD} ${SRC} ${DEST}"
-  ${CMD} ${SRC} ${DEST}
+  ${CMD} ${SRC} ${DEST} || echo $?
+  echo "[[[ ${SRC} ]]]"
 }
 
 function __main__() {
