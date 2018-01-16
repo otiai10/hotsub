@@ -2,17 +2,17 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	"regexp"
 	"sync"
 
 	"github.com/fatih/color"
 )
 
 var colors = []*color.Color{
-	color.New(color.FgHiCyan),
 	color.New(color.FgHiGreen),
-	color.New(color.FgHiBlue),
+	color.New(color.FgHiCyan),
 	color.New(color.FgHiMagenta),
+	color.New(color.FgHiBlue),
 	color.New(color.FgHiYellow),
 	color.New(color.FgCyan),
 	color.New(color.FgGreen),
@@ -21,8 +21,13 @@ var colors = []*color.Color{
 	color.New(color.FgYellow),
 }
 
-// TODO: Refactor
-var linelock = new(sync.Mutex)
+var (
+	// TODO: Refactor
+	linelock = new(sync.Mutex)
+
+	// log suffix
+	newline = regexp.MustCompile("\n*$")
+)
 
 // Logger ...
 type Logger struct {
@@ -41,9 +46,10 @@ func NewLogger(prefix string, index int) *Logger {
 // Printf ...
 func (l *Logger) Printf(format string, v ...interface{}) {
 
-	if !strings.HasSuffix(format, "\n") {
-		format = format + "\n"
-	}
+	// if !strings.HasSuffix(format, "\n") {
+	// 	format = format + "\n"
+	// }
+	format = newline.ReplaceAllString(format, "\n")
 
 	// TODO: Refactor
 	// To avoid to mix up prefix and log content, lock the print process for each print.
