@@ -1,8 +1,8 @@
 #!/bin/sh
 
 set -o errexit
-set -o nounset
-set -o xtrace
+# set -o nounset
+# set -o xtrace
 
 STAR --version
 
