@@ -59,9 +59,7 @@ function download() {
   esac
 
   DEST=${DIR}/`basename ${SRC}`
-  echo "Execution: ${CMD} ${SRC} ${DEST}"
   ${CMD} ${SRC} ${DEST} || echo $?
-  echo "[[[ ${SRC} ]]]"
 }
 
 function __main__() {

@@ -20,7 +20,6 @@
 #     SOURCE=/your/outputs DEST=s3://your-bucket/your-object ./upload.sh
 
 function precheck() {
-  whoami
   if [[ -z ${SOURCE} ]]; then
     echo "SOURCE variable is required but not provided"
     exit 1
@@ -52,7 +51,6 @@ function upload() {
     ;;
   esac
 
-  echo "Execution: ${CMD} ${SOURCE} ${DEST}"
   ${CMD} ${SOURCE} ${DEST}
 }
 
