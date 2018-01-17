@@ -1,0 +1,2 @@
+--input-recursive IMAGE,--output-recursive OUTDIR
+s3://_placeholder_/ocr/images/github.png,s3://_placeholder_/ocr/results/github

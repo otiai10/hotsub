@@ -47,7 +47,10 @@ var quickguide = cli.Command{
 		if ng == 0 {
 			speak("\nCongrats! It seems you are ready to use `awsub`.")
 			speak("For the next step let's try following command.")
-			speak("\n\tawsub --tasks ./test/tasks/word-count.csv --script ./test/script/word-count.sh\n")
+			fmt.Println(ocrExample)
+			speak("Then you can see characters detected from image files on s3://{YOUR_S3_BUCKET}/ocr/results")
+			speak("If you have any question for using awsub, just issue `awsub help`, or")
+			speak("create new issue on https://github.com/otiai10/awsub/issues. Thank you!")
 		}
 
 		return nil
@@ -77,3 +80,15 @@ func speak(format string, v ...interface{}) {
 	fmt.Printf(format, v...)
 	rand.Seed(time.Now().UnixNano())
 }
+
+var ocrExample = `
+
+    // Copy your input files to your s3 bucket (need to be read/put-able as a quick example)
+    $ aws s3 cp --recursive ./examples/ocr/images s3://{YOUR_S3_BUCKET}/ocr/images
+
+    // Edit parameter file to use your s3 bucket
+    $ sed -e "s/_placeholder_/{YOUR_S3_BUCKET}/g" ./examples/ocr/template.tasks.csv > ./examples/ocr/tasks.csv
+
+    // Execute the tasks with specific docker image
+    $ awsub --tasks ./examples/ocr/tasks.csv --script ./examples/ocr/main.sh --image otiai10/tesseract --verbose
+`
