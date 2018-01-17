@@ -13,6 +13,6 @@ awsub \
 If you have `go` and `GOPATH/bin` avialble for `PATH`, just hit
 
 ```
-% go get github.com/otiai10/awsub
-% awsub help
+% go get -u github.com/otiai10/awsub
+% awsub quickguide
 ```
