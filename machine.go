@@ -9,19 +9,32 @@ import (
 func (h *Handler) generateMachineOption(task *Task) (*dkmachine.CreateOptions, error) {
 
 	name := fmt.Sprintf("%s%02d", task.Prefix, task.Index)
-	opt := &dkmachine.CreateOptions{
-		Name: name,
+	opt := &dkmachine.CreateOptions{Name: name}
+	var err error
+	switch h.ctx.String("provider") {
+	case "aws":
+		err = h.setupAWSMachineOption(opt)
+	default:
+		err = h.setupAWSMachineOption(opt)
 	}
-	opt.Driver = "amazonec2"
-
-	// opt.AmazonEC2Region = "ap-southeast-2"
-	opt.AmazonEC2Region = "ap-northeast-1"
-	// opt.AmazonEC2InstanceType = "m4.xlarge"
-	opt.AmazonEC2InstanceType = "t2.2xlarge"
-	opt.AmazonEC2RootSize = 48
-
-	opt.AmazonEC2IAMInstanceProfile = "testtest"
-	opt.AmazonEC2SecurityGroup = name
+	if err != nil {
+		return nil, err
+	}
 
 	return opt, nil
+}
+
+func (h *Handler) setupAWSMachineOption(opt *dkmachine.CreateOptions) error {
+
+	opt.AmazonEC2RootSize = h.ctx.Int("disk-size")
+	// e.g. "ap-southeast-2"
+	opt.AmazonEC2Region = h.ctx.String("aws-region")
+	// e.g. "t2.2xlarge"
+	opt.AmazonEC2InstanceType = h.ctx.String("aws-ec2-instance-type")
+	// e.g. "my-role"
+	opt.AmazonEC2IAMInstanceProfile = h.ctx.String("aws-iam-instance-profile")
+
+	opt.AmazonEC2SecurityGroup = opt.Name
+
+	return nil
 }

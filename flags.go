@@ -7,7 +7,6 @@ var flags = []cli.Flag{
 
 	// Command Control
 	VerboseFlag,
-	DryRunFlag,
 
 	// Operation Contents
 	ProviderFlag,
@@ -16,12 +15,12 @@ var flags = []cli.Flag{
 	ScriptFlag,
 
 	// Machine Specs
-	MinCoresFlag,
-	MinRAMFlag,
-	DiskSizeFlag,
+	// MinCoresFlag,
+	// MinRAMFlag,
+	// DiskSizeFlag,
 
 	// Amazon Web Service
-	AwsVPCFlag,
+	// AwsVPCFlag,
 	AwsRegionFlag,
 	AwsEC2InstanceType,
 	AwsIAMInstanceProfile,
@@ -43,10 +42,10 @@ var VerboseFlag = cli.BoolFlag{
 }
 
 // DryRunFlag ...
-var DryRunFlag = cli.BoolFlag{
-	Name:  "dry-run",
-	Usage: `Print the pipeline(s) that would be run and then exit. (default: false)`,
-}
+// var DryRunFlag = cli.BoolFlag{
+// 	Name:  "dry-run",
+// 	Usage: `Print the pipeline(s) that would be run and then exit. (default: false)`,
+// }
 
 // ProviderFlag ...
 var ProviderFlag = cli.StringFlag{
@@ -75,24 +74,24 @@ var ScriptFlag = cli.StringFlag{
 }
 
 // MinCoresFlag ...
-var MinCoresFlag = cli.UintFlag{
-	Name:  "min-cores",
-	Usage: `Minimum CPU cores for each job.`,
-	Value: 1,
-}
+// var MinCoresFlag = cli.UintFlag{
+// 	Name:  "min-cores",
+// 	Usage: `Minimum CPU cores for each job.`,
+// 	Value: 1,
+// }
 
 // MinRAMFlag ...
-var MinRAMFlag = cli.Float64Flag{
-	Name:  "min-ram",
-	Usage: `Minimum RAM per job in GB.`,
-	Value: 4,
-}
+// var MinRAMFlag = cli.Float64Flag{
+// 	Name:  "min-ram",
+// 	Usage: `Minimum RAM per job in GB.`,
+// 	Value: 4,
+// }
 
 // DiskSizeFlag ...
 var DiskSizeFlag = cli.UintFlag{
 	Name:  "disk-size",
 	Usage: `Size of data disk to attach for each job in GB.`,
-	Value: 200,
+	Value: 64,
 }
 
 //////////////////////////////////
@@ -100,21 +99,23 @@ var DiskSizeFlag = cli.UintFlag{
 //////////////////////////////////
 
 // AwsVPCFlag ...
-var AwsVPCFlag = cli.StringFlag{
-	Name:  "aws-vpc",
-	Usage: `AWS VPC ID in which AmazonEC2 instances would be launched`,
-}
+// var AwsVPCFlag = cli.StringFlag{
+// 	Name:  "aws-vpc",
+// 	Usage: `AWS VPC ID in which AmazonEC2 instances would be launched`,
+// }
 
 // AwsRegionFlag ...
 var AwsRegionFlag = cli.StringFlag{
 	Name:  "aws-region",
 	Usage: `AWS region name in which AmazonEC2 instances would be launched`,
+	Value: "ap-northeast-1",
 }
 
 // AwsEC2InstanceType ...
 var AwsEC2InstanceType = cli.StringFlag{
 	Name:  "aws-ec2-instance-type",
 	Usage: `AWS EC2 instance type. If specified, all --min-cores and --min-ram would be ignored.`,
+	Value: "t2.micro",
 }
 
 // AwsIAMInstanceProfile ...
