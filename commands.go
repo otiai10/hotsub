@@ -18,7 +18,7 @@ var commands = []cli.Command{
 
 var quickguide = cli.Command{
 	Name:    "quickguide",
-	Aliases: []string{"q"},
+	Aliases: []string{"qg"},
 	Action: func(ctx *cli.Context) error {
 
 		speak("Hello! This is a quick guide to know how to use awsub.")
@@ -48,7 +48,6 @@ var quickguide = cli.Command{
 			speak("\nCongrats! It seems you are ready to use `awsub`.")
 			speak("For the next step let's try following command.")
 			fmt.Println(ocrExample)
-			speak("Then you can see characters detected from image files on s3://{YOUR_S3_BUCKET}/ocr/results")
 			speak("If you have any question for using awsub, just issue `awsub help`, or")
 			speak("create new issue on https://github.com/otiai10/awsub/issues. Thank you!")
 		}
@@ -83,12 +82,23 @@ func speak(format string, v ...interface{}) {
 
 var ocrExample = `
 
-    // Copy your input files to your s3 bucket (need to be read/put-able as a quick example)
-    $ aws s3 cp --recursive ./examples/ocr/images s3://{YOUR_S3_BUCKET}/ocr/images
+    /*
+     * If you want to try awsub on AWS, you need 2 things beforehand.
+     * 1) S3 Bucket, in which your input files/directories are located
+     * 2) IAM Instance Profile, which can read/put to your S3 Bucket
+     */
+
+    // Prepare your input files on your s3 bucket
+    $ aws s3 cp --recursive ./examples/wordcount/speech s3://{YOUR_S3_BUCKET}/speech
 
     // Edit parameter file to use your s3 bucket
-    $ sed -e "s/_placeholder_/{YOUR_S3_BUCKET}/g" ./examples/ocr/template.tasks.csv > ./examples/ocr/tasks.csv
+    $ sed -e "s/_placeholder_/{YOUR_S3_BUCKET}/g" ./examples/wordcount/template.csv > ./examples/wordcount/wordcount.csv
 
     // Execute the tasks with specific docker image
-    $ awsub --tasks ./examples/ocr/tasks.csv --script ./examples/ocr/main.sh --image otiai10/tesseract --verbose
+    $ awsub --tasks ./examples/wordcount/wordcount.csv --script ./examples/wordcount/main.sh -aws-iam-instance-profile {YOUR_INSTANCE_PROFILE} --verbose
+
+    /*
+     * Then you can see s3://{YOUR_S3_BUCKET}/speech/out is created
+     * and the word-count result files.
+     */
 `

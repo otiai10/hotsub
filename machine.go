@@ -26,6 +26,8 @@ func (h *Handler) generateMachineOption(task *Task) (*dkmachine.CreateOptions, e
 
 func (h *Handler) setupAWSMachineOption(opt *dkmachine.CreateOptions) error {
 
+	opt.Driver = "amazonec2"
+
 	opt.AmazonEC2RootSize = h.ctx.Int("disk-size")
 	// e.g. "ap-southeast-2"
 	opt.AmazonEC2Region = h.ctx.String("aws-region")

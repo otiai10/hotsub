@@ -1,3 +1,0 @@
---env SPEAKER_NAME,--input SPEECH_FILE,--input-recursive META,--output-recursive OUTDIR
-Martin,s3://hgc-otiai10-test/examples/speech/martin_speech_1963.txt,s3://hgc-otiai10-test/examples/speech/martin_meta,s3://hgc-otiai10-test/examples/speech/out/martin
-Elizabeth,s3://hgc-otiai10-test/examples/speech/elizabeth_speech_1588.txt,s3://hgc-otiai10-test/examples/speech/elizabeth_meta,s3://hgc-otiai10-test/examples/speech/out/elizabeth
