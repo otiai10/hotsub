@@ -38,5 +38,8 @@ func (h *Handler) setupAWSMachineOption(opt *dkmachine.CreateOptions) error {
 
 	opt.AmazonEC2SecurityGroup = opt.Name
 
+	// FIXME: hard coding
+	opt.AmazonEC2RequestSpotInstance = true
+
 	return nil
 }
