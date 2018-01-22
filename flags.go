@@ -17,7 +17,7 @@ var flags = []cli.Flag{
 	// Machine Specs
 	// MinCoresFlag,
 	// MinRAMFlag,
-	// DiskSizeFlag,
+	DiskSizeFlag,
 
 	// Amazon Web Service
 	// AwsVPCFlag,
