@@ -29,12 +29,13 @@ func (h *Handler) uploadOutDirToCloud(ctx context.Context, c *daap.Container, jo
 		return
 	}
 	outdir := filepath.Join("/tmp", u.Path)
-	stream, err := c.Exec(ctx, daap.Execution{
+	execution := &daap.Execution{
 		Inline: "/lifecycle/upload.sh",
 		Env: []string{
 			fmt.Sprintf("%s=%s", "SOURCE", outdir),
 			fmt.Sprintf("%s=%s", "DEST", dest)},
-	})
+	}
+	stream, err := c.Exec(ctx, execution)
 	if err != nil {
 		job.Errorf("failed to execute finalize: %v", err)
 		return

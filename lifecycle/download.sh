@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Let it fail when something failed
+set -e
+
 # This script is supposed to be used to download input files from
 # cloud storage services such as Amazon S3, GoogleStorage and Azure Storage.
 # This script should be called for each 1 input (or input-recursive) file.
@@ -60,7 +63,7 @@ function download() {
 
   DEST=${DIR}/`basename ${SRC}`
   echo "Execution: ${CMD} ${SRC} ${DEST}"
-  ${CMD} ${SRC} ${DEST} || echo $?
+  ${CMD} ${SRC} ${DEST} || exit $?
 }
 
 function __main__() {

@@ -52,7 +52,7 @@ func (h *Handler) Prepare(ctx context.Context, container *daap.Container, job *J
 		}
 	}
 
-	return nil
+	return job.Error
 }
 
 // prepareInput prepares input files to the worker container and convert it
@@ -73,10 +73,12 @@ func (h *Handler) prepareInput(ctx context.Context, c *daap.Container, envname, 
 
 	dir := filepath.Join(workdir, filepath.Dir(u.Path))
 
-	stream, err := c.Exec(ctx, daap.Execution{
-		Inline: "/lifecycle/download.sh",
-		Env:    []string{fmt.Sprintf("%s=%s", "INPUT", u.String()), fmt.Sprintf("%s=%s", "DIR", dir)},
-	})
+	execution := &daap.Execution{
+		Inline:  "/lifecycle/download.sh",
+		Env:     []string{fmt.Sprintf("%s=%s", "INPUT", u.String()), fmt.Sprintf("%s=%s", "DIR", dir)},
+		Inspect: true,
+	}
+	stream, err := c.Exec(ctx, execution)
 	if err != nil {
 		job.Errorf("failed to execute /lifecycle/download.sh: %v", err)
 		result <- ""
@@ -85,6 +87,13 @@ func (h *Handler) prepareInput(ctx context.Context, c *daap.Container, envname, 
 	for payload := range stream {
 		job.Logf("[PREPARE] &%d> %s", payload.Type, string(payload.Data))
 	}
+
+	if execution.ExitCode != 0 {
+		job.Errorf("failed to download input file `%s` with status code %d, please check output with --verbose option", rawurl, execution.ExitCode)
+		result <- ""
+		return
+	}
+
 	result <- fmt.Sprintf("%s=%s", envname, filepath.Join(dir, filepath.Base(rawurl)))
 	return
 }
@@ -106,11 +115,12 @@ func (h *Handler) prepareInputRecursive(ctx context.Context, c *daap.Container, 
 	}
 
 	dir := filepath.Join(workdir, filepath.Dir(u.Path))
-
-	stream, err := c.Exec(ctx, daap.Execution{
-		Inline: "/lifecycle/download.sh",
-		Env:    []string{fmt.Sprintf("%s=%s", "INPUT_RECURSIVE", rawurl), fmt.Sprintf("%s=%s", "DIR", dir)},
-	})
+	execution := &daap.Execution{
+		Inline:  "/lifecycle/download.sh",
+		Env:     []string{fmt.Sprintf("%s=%s", "INPUT_RECURSIVE", rawurl), fmt.Sprintf("%s=%s", "DIR", dir)},
+		Inspect: true,
+	}
+	stream, err := c.Exec(ctx, execution)
 	if err != nil {
 		job.Errorf("failed to execute /lifecycle/download.sh: %v", err)
 		result <- ""
@@ -119,6 +129,13 @@ func (h *Handler) prepareInputRecursive(ctx context.Context, c *daap.Container, 
 	for payload := range stream {
 		job.Logf("[PREPARE] &%d> %s", payload.Type, string(payload.Data))
 	}
+
+	if execution.ExitCode != 0 {
+		job.Errorf("failed to download input file `%s` with status code %d, please check output with --verbose option", rawurl, execution.ExitCode)
+		result <- ""
+		return
+	}
+
 	result <- fmt.Sprintf("%s=%s", envname, filepath.Join(dir, filepath.Base(rawurl)))
 	return
 }
@@ -130,9 +147,10 @@ func (h *Handler) prepareOutputDirectory(ctx context.Context, c *daap.Container,
 		return
 	}
 	outdir := filepath.Join(workdir, u.Path)
-	stream, err := c.Exec(ctx, daap.Execution{
+	execution := &daap.Execution{
 		Inline: fmt.Sprintf("mkdir -p %v", outdir),
-	})
+	}
+	stream, err := c.Exec(ctx, execution)
 	if err != nil {
 		job.Errorf("failed to execute make output directory: %v", err)
 		result <- ""
@@ -141,5 +159,12 @@ func (h *Handler) prepareOutputDirectory(ctx context.Context, c *daap.Container,
 	for payload := range stream {
 		job.Logf("[PREPARE] &%d> %s", payload.Type, string(payload.Data))
 	}
+
+	if execution.ExitCode != 0 {
+		job.Errorf("failed to create output directory `%s` with status code %d, please check output with --verbose option", rawurl, execution.ExitCode)
+		result <- ""
+		return
+	}
+
 	result <- fmt.Sprintf("%s=%s", envname, outdir)
 }

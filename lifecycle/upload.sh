@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Let it fail when something failed
+set -e
+
 # This script is supposed to be used to upload output files to
 # cloud storage services such as Amazon S3, GoogleStorage and Azure Storage.
 # This script should be called for just 1 time to upload "SRC" directory.
@@ -51,7 +54,7 @@ function upload() {
     ;;
   esac
 
-  ${CMD} ${SOURCE} ${DEST}
+  ${CMD} ${SOURCE} ${DEST} || exit $?
 }
 
 function __main__() {

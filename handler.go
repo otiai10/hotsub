@@ -138,7 +138,7 @@ func (h *Handler) Handle(task *Task) *Job {
 		return job.Errorf("failed to prepare input tasks: %v", err)
 	}
 
-	execution := daap.Execution{
+	execution := &daap.Execution{
 		Script: h.Script,
 		Env:    task.ContainerEnv,
 	}
