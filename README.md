@@ -1,4 +1,4 @@
-# awsub
+# awsub [![Build Status](https://travis-ci.org/otiai10/awsub.svg?branch=master)](https://travis-ci.org/otiai10/awsub)
 
 ```sh
 awsub \
