@@ -1,0 +1,9 @@
+language: go
+go:
+  - tip
+install:
+  - curl -L https://github.com/docker/machine/releases/download/v0.13.0/docker-machine-`uname -s`-`uname -m` > /home/travis/bin/docker-machine && chmod a+x /home/travis/bin/docker-machine
+  - go get -t ./...
+  - go install .
+script:
+  - ./test/script/word-count.sh
