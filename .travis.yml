@@ -1,6 +1,10 @@
 language: go
 go:
   - tip
+baranches:
+  only:
+    - master
+if: type = pull_request
 env:
   # - AWS_ACCESS_KEY_ID=" should be declared on Travis console "
   # - AWS_SECRET_ACCESS_KEY=" should be declared on Travis console "
