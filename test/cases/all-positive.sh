@@ -5,7 +5,7 @@ set -e
 PROJROOT=$(dirname $(dirname $(cd $(dirname $0) && pwd)))
 
 awsub \
-    --tasks ${PROJROOT}/test/data/wordcount.csv \
-    --script ${PROJROOT}/examples/wordcount/main.sh \
+    --tasks ${PROJROOT}/test/wordcount/wordcount.csv \
+    --script ${PROJROOT}/test/wordcount/main.sh \
     --aws-iam-instance-profile testtest \
     --verbose

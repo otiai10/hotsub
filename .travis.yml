@@ -13,4 +13,4 @@ install:
   - go get -t ./...
   - go install .
 script:
-  - ./test/script/word-count.sh
+  - ./test/run.sh
