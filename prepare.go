@@ -42,6 +42,11 @@ func (h *Handler) Prepare(ctx context.Context, container *daap.Container, job *J
 		go h.prepareOutputDirectory(ctx, container, envname, rawurl, job, envpairs)
 	}
 
+	if flag == 0 {
+		close(envpairs)
+		return job.Error
+	}
+
 	for envpair := range envpairs {
 		flag--
 		if envpair != "" {
