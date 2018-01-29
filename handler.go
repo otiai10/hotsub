@@ -139,8 +139,9 @@ func (h *Handler) Handle(task *Task) *Job {
 	}
 
 	execution := &daap.Execution{
-		Script: h.Script,
-		Env:    task.ContainerEnv,
+		Script:  h.Script,
+		Env:     task.ContainerEnv,
+		Inspect: true,
 	}
 
 	job.Logf("Sending command queue to the container")
@@ -152,6 +153,9 @@ func (h *Handler) Handle(task *Task) *Job {
 
 	for payload := range stream {
 		job.Logf("&%d> %s", payload.Type, string(payload.Data))
+	}
+	if execution.ExitCode != 0 {
+		return job.Errorf("your script exited with code %d, please check verbose log", execution.ExitCode)
 	}
 	job.Logf("The command finished completely")
 
