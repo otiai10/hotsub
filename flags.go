@@ -27,7 +27,7 @@ var flags = []cli.Flag{
 	AwsIAMInstanceProfile,
 
 	//// Google Cloud Platform
-	// GoogleProjectFlag,
+	GoogleProjectFlag,
 	// GoogleBootDiskSizeFlag,
 	// GooglePreEmptibleFlag,
 	// GoogleZonesFlag,
@@ -134,3 +134,9 @@ var AwsIAMInstanceProfile = cli.StringFlag{
 /////////////////////////////////////
 // Flags for Google Cloud Platform //
 /////////////////////////////////////
+
+// GoogleProjectFlag ...
+var GoogleProjectFlag = cli.StringFlag{
+	Name:  "google-project",
+	Usage: "Project ID for GCP",
+}

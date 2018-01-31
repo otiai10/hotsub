@@ -14,6 +14,8 @@ func (h *Handler) generateMachineOption(task *Task) (*dkmachine.CreateOptions, e
 	switch h.ctx.String("provider") {
 	case "aws":
 		err = h.setupAWSMachineOption(opt)
+	case "google":
+		err = h.setupGCPMachineOption(opt)
 	default:
 		err = h.setupAWSMachineOption(opt)
 	}
@@ -40,6 +42,15 @@ func (h *Handler) setupAWSMachineOption(opt *dkmachine.CreateOptions) error {
 
 	// FIXME: hard coding
 	opt.AmazonEC2RequestSpotInstance = false
+
+	return nil
+}
+
+func (h *Handler) setupGCPMachineOption(opt *dkmachine.CreateOptions) error {
+
+	opt.Driver = "google"
+
+	opt.GoogleProject = h.ctx.String("google-project")
 
 	return nil
 }
