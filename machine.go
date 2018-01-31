@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/otiai10/dkmachine/v0/dkmachine"
 )
@@ -51,6 +52,15 @@ func (h *Handler) setupGCPMachineOption(opt *dkmachine.CreateOptions) error {
 	opt.Driver = "google"
 
 	opt.GoogleProject = h.ctx.String("google-project")
+
+	// e.g. asia-northeast1
+	opt.GoogleZone = h.ctx.String("google-zone")
+
+	// YAGNI: It's hard coded for now.
+	opt.GoogleScopes = strings.Join([]string{
+		"https://www.googleapis.com/auth/devstorage.read_write",
+		"https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write",
+	}, ",")
 
 	return nil
 }

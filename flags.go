@@ -28,9 +28,9 @@ var flags = []cli.Flag{
 
 	//// Google Cloud Platform
 	GoogleProjectFlag,
+	GoogleZoneFlag,
 	// GoogleBootDiskSizeFlag,
 	// GooglePreEmptibleFlag,
-	// GoogleZonesFlag,
 	// GoogleScopesFlag,
 	// GoogleKeepAlive,
 	// GoogleAcceleratorTypeFlag,
@@ -139,4 +139,11 @@ var AwsIAMInstanceProfile = cli.StringFlag{
 var GoogleProjectFlag = cli.StringFlag{
 	Name:  "google-project",
 	Usage: "Project ID for GCP",
+}
+
+// GoogleZoneFlag ...
+var GoogleZoneFlag = cli.StringFlag{
+	Name:  "google-zone",
+	Usage: "GCP service zone name",
+	Value: "asia-northeast1-a",
 }
