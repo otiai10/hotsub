@@ -93,7 +93,9 @@ func (h *Handler) Handle(task *Task) *Job {
 	job.Logf("Creating docker machine on %v", strings.ToUpper(instance.Driver))
 	machine, err := dkmachine.Create(job.Instance)
 	if machine != nil && !h.ctx.Bool("keep") {
-		defer job.Logf("Deleted machine: %v", machine.Remove())
+		defer func() {
+			job.Logf("Deleted machine: %v", machine.Remove())
+		}()
 	}
 	if err != nil {
 		return job.Errorf("failed to create machine: %v", err)
