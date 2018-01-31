@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/otiai10/daap"
@@ -89,18 +90,15 @@ func (h *Handler) Handle(task *Task) *Job {
 		job.Logger = NewLogger(fmt.Sprintf("[%s]", job.Instance.Name), task.Index)
 	}
 
-	job.Logf("Creating docker machine")
+	job.Logf("Creating docker machine on %v", strings.ToUpper(instance.Driver))
 	machine, err := dkmachine.Create(job.Instance)
+	if machine != nil && !h.ctx.Bool("keep") {
+		defer job.Logf("Deleted machine: %v", machine.Remove())
+	}
 	if err != nil {
 		return job.Errorf("failed to create machine: %v", err)
 	}
 	job.Logf("The machine created successfully")
-
-	defer func() {
-		job.Logf("Deleting docker machine")
-		machine.Remove()
-		job.Logf("The machine deleted successfully")
-	}()
 
 	lifecycle := daap.NewContainer("awsub/lifecycle", daap.Args{
 		Machine: &daap.MachineConfig{
