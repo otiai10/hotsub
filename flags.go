@@ -13,6 +13,7 @@ var flags = []cli.Flag{
 	TasksFlag,
 	ImageFlag,
 	ScriptFlag,
+	KeepFlag,
 
 	// Machine Specs
 	// MinCoresFlag,
@@ -71,6 +72,12 @@ var ImageFlag = cli.StringFlag{
 var ScriptFlag = cli.StringFlag{
 	Name:  "script",
 	Usage: `Local path to a script to run inside the job's Docker container. (required)`,
+}
+
+// KeepFlag ...
+var KeepFlag = cli.BoolFlag{
+	Name:  "keep",
+	Usage: `Keep instances created for computing event after everything gets done`,
 }
 
 // MinCoresFlag ...
