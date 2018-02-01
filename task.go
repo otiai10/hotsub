@@ -93,6 +93,12 @@ func parseTasksFromRowReader(r *csv.Reader, prefix string) ([]*Task, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// If this file is empty, return without errors
+	if len(rows) == 0 {
+		return []*Task{}, nil
+	}
+
 	header, rows := rows[0], rows[1:]
 
 	tasks := []*Task{}
