@@ -81,6 +81,7 @@ func parseTasksFromFile(taskfile *os.File) ([]*Task, error) {
 	case ".tsv":
 		r := csv.NewReader(taskfile)
 		r.Comma = '\t'
+		r.LazyQuotes = true
 		return parseTasksFromRowReader(r, name)
 	default:
 		return nil, fmt.Errorf("unexpected extension for task file: %v", ext)
