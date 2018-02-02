@@ -28,7 +28,7 @@ func (h *Handler) uploadOutDirToCloud(ctx context.Context, c *daap.Container, jo
 		job.Errorf("failed to parse destination url: %v", err)
 		return
 	}
-	outdir := filepath.Join("/tmp", u.Path)
+	outdir := filepath.Join(AWSUBROOT, u.Hostname(), u.Path)
 	execution := &daap.Execution{
 		Inline: "/lifecycle/upload.sh",
 		Env: []string{
