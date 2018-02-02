@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	workdir = "/tmp"
+	// AWSUBROOT ...
+	AWSUBROOT = "/tmp"
 )
 
 // Prepare upload and locate files which are specified by the task onto the container.
@@ -69,6 +70,11 @@ func (h *Handler) Prepare(ctx context.Context, container *daap.Container, job *J
 //  s3://hgc-otiai10-test/foo/bar.txt -> ${workdir}/foo/bar.txt
 func (h *Handler) prepareInput(ctx context.Context, c *daap.Container, envname, rawurl string, job *Job, result chan<- string) {
 
+	if rawurl == "" {
+		result <- ""
+		return
+	}
+
 	u, err := url.Parse(rawurl)
 	if err != nil {
 		job.Errorf("failed to parse the url of given input: %s: %v", rawurl, err)
@@ -76,7 +82,7 @@ func (h *Handler) prepareInput(ctx context.Context, c *daap.Container, envname, 
 		return
 	}
 
-	dir := filepath.Join(workdir, filepath.Dir(u.Path))
+	dir := filepath.Join(AWSUBROOT, u.Hostname(), filepath.Dir(u.Path))
 
 	execution := &daap.Execution{
 		Inline:  "/lifecycle/download.sh",
@@ -112,6 +118,11 @@ func (h *Handler) prepareInput(ctx context.Context, c *daap.Container, envname, 
 //  s3://hgc-otiai10-test/foo/baz -> ${workdir}/foo/baz
 func (h *Handler) prepareInputRecursive(ctx context.Context, c *daap.Container, envname, rawurl string, job *Job, result chan<- string) {
 
+	if rawurl == "" {
+		result <- ""
+		return
+	}
+
 	u, err := url.Parse(rawurl)
 	if err != nil {
 		job.Errorf("failed to parse the url of given input: %s: %v", rawurl, err)
@@ -119,7 +130,7 @@ func (h *Handler) prepareInputRecursive(ctx context.Context, c *daap.Container, 
 		return
 	}
 
-	dir := filepath.Join(workdir, filepath.Dir(u.Path))
+	dir := filepath.Join(AWSUBROOT, u.Hostname(), filepath.Dir(u.Path))
 	execution := &daap.Execution{
 		Inline:  "/lifecycle/download.sh",
 		Env:     []string{fmt.Sprintf("%s=%s", "INPUT_RECURSIVE", rawurl), fmt.Sprintf("%s=%s", "DIR", dir)},
@@ -151,7 +162,7 @@ func (h *Handler) prepareOutputDirectory(ctx context.Context, c *daap.Container,
 		result <- ""
 		return
 	}
-	outdir := filepath.Join(workdir, u.Path)
+	outdir := filepath.Join(AWSUBROOT, u.Hostname(), u.Path)
 	execution := &daap.Execution{
 		Inline: fmt.Sprintf("mkdir -p %v", outdir),
 	}

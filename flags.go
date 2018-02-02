@@ -13,6 +13,7 @@ var flags = []cli.Flag{
 	TasksFlag,
 	ImageFlag,
 	ScriptFlag,
+	KeepFlag,
 
 	// Machine Specs
 	// MinCoresFlag,
@@ -26,10 +27,10 @@ var flags = []cli.Flag{
 	AwsIAMInstanceProfile,
 
 	//// Google Cloud Platform
-	// GoogleProjectFlag,
+	GoogleProjectFlag,
+	GoogleZoneFlag,
 	// GoogleBootDiskSizeFlag,
 	// GooglePreEmptibleFlag,
-	// GoogleZonesFlag,
 	// GoogleScopesFlag,
 	// GoogleKeepAlive,
 	// GoogleAcceleratorTypeFlag,
@@ -71,6 +72,12 @@ var ImageFlag = cli.StringFlag{
 var ScriptFlag = cli.StringFlag{
 	Name:  "script",
 	Usage: `Local path to a script to run inside the job's Docker container. (required)`,
+}
+
+// KeepFlag ...
+var KeepFlag = cli.BoolFlag{
+	Name:  "keep",
+	Usage: `Keep instances created for computing event after everything gets done`,
 }
 
 // MinCoresFlag ...
@@ -127,3 +134,16 @@ var AwsIAMInstanceProfile = cli.StringFlag{
 /////////////////////////////////////
 // Flags for Google Cloud Platform //
 /////////////////////////////////////
+
+// GoogleProjectFlag ...
+var GoogleProjectFlag = cli.StringFlag{
+	Name:  "google-project",
+	Usage: "Project ID for GCP",
+}
+
+// GoogleZoneFlag ...
+var GoogleZoneFlag = cli.StringFlag{
+	Name:  "google-zone",
+	Usage: "GCP service zone name",
+	Value: "asia-northeast1-a",
+}
