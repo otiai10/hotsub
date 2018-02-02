@@ -69,6 +69,11 @@ func (h *Handler) Prepare(ctx context.Context, container *daap.Container, job *J
 //  s3://hgc-otiai10-test/foo/bar.txt -> ${workdir}/foo/bar.txt
 func (h *Handler) prepareInput(ctx context.Context, c *daap.Container, envname, rawurl string, job *Job, result chan<- string) {
 
+	if rawurl == "" {
+		result <- ""
+		return
+	}
+
 	u, err := url.Parse(rawurl)
 	if err != nil {
 		job.Errorf("failed to parse the url of given input: %s: %v", rawurl, err)
@@ -111,6 +116,11 @@ func (h *Handler) prepareInput(ctx context.Context, c *daap.Container, envname, 
 // e.g.
 //  s3://hgc-otiai10-test/foo/baz -> ${workdir}/foo/baz
 func (h *Handler) prepareInputRecursive(ctx context.Context, c *daap.Container, envname, rawurl string, job *Job, result chan<- string) {
+
+	if rawurl == "" {
+		result <- ""
+		return
+	}
 
 	u, err := url.Parse(rawurl)
 	if err != nil {
