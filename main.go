@@ -7,6 +7,10 @@ import (
 	"github.com/urfave/cli"
 )
 
+const (
+	version = "0.0.5"
+)
+
 func main() {
 	app := cli.NewApp()
 	cli.VersionFlag = cli.BoolFlag{
@@ -14,7 +18,7 @@ func main() {
 		Usage: "print the version",
 	}
 	app.Commands = commands
-	app.Version = "0.0.1"
+	app.Version = version
 	app.Usage = "command line to run batch computing on AWS"
 	app.Description = "Open-source command-line tool to run batch computing tasks and workflows on backend services such as Amazon Web Service."
 	app.Flags = flags
