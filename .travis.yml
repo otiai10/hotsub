@@ -9,10 +9,14 @@ env:
   # - AWS_ACCESS_KEY_ID=" should be declared on Travis console "
   # - AWS_SECRET_ACCESS_KEY=" should be declared on Travis console "
 install:
-  - curl -L https://github.com/docker/machine/releases/download/v0.13.0/docker-machine-`uname -s`-`uname -m` > /home/travis/bin/docker-machine && chmod a+x /home/travis/bin/docker-machine
   - go get -t ./...
   - go install .
-  - curl https://sdk.cloud.google.com | bash && export PATH=${PATH}:${TRAVIS_BUILD_DIR}/google-cloud-sdk/bin
+  # Install docker-machine
+  - curl -L https://github.com/docker/machine/releases/download/v0.13.0/docker-machine-`uname -s`-`uname -m` > /home/travis/bin/docker-machine && chmod a+x /home/travis/bin/docker-machine
+  # Install Google Cloud SDK CLI
+  - sudo apt-get install python
+  - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-187.0.0-linux-x86_64.tar.gz && tar xzvf google-cloud-sdk-187.0.0-linux-x86_64.tar.gz
+  - yes | ${TRAVIS_BUILD_DIR}/google-cloud-sdk/install.sh && export PATH=${PATH}:${TRAVIS_BUILD_DIR}/google-cloud-sdk/bin
   - echo ${ENCODED_GCP_KEY_FILE} | base64 -d > ${HOME}/gcp-key.json
   - gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
 script:
