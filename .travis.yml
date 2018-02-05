@@ -12,5 +12,8 @@ install:
   - curl -L https://github.com/docker/machine/releases/download/v0.13.0/docker-machine-`uname -s`-`uname -m` > /home/travis/bin/docker-machine && chmod a+x /home/travis/bin/docker-machine
   - go get -t ./...
   - go install .
+  - curl https://sdk.cloud.google.com | bash && export PATH=${PATH}:${TRAVIS_BUILD_DIR}/google-cloud-sdk/bin
+  - echo ${ENCODED_GCP_KEY_FILE} | base64 -d > ${HOME}/gcp-key.json
+  - gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
 script:
   - ./test/run.sh
