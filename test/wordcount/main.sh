@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "=== Parameter Check ==="
+echo "AWSUB_ROOT:   ${AWSUB_ROOT}"
 echo "SPEAKER_NAME: ${SPEAKER_NAME}"
 echo "SPEECH_FILE:  ${SPEECH_FILE}"
 echo "OUTDIR:       ${OUTDIR}"
