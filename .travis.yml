@@ -20,4 +20,5 @@ install:
   - echo ${ENCODED_GCP_KEY_FILE} | base64 -d > ${HOME}/gcp-key.json
   - gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
 script:
-  - ./test/run.sh
+  # - ./test/run.sh
+  - ./test/run.sh --match GCP
