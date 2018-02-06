@@ -38,6 +38,11 @@ func (h *Handler) Prepare(ctx context.Context, container *daap.Container, job *J
 		go h.prepareInputRecursive(ctx, container, envname, rawurl, job, envpairs)
 	}
 
+	for envname, rawurl := range task.Outputs {
+		flag++
+		go h.prepareOutput(ctx, container, envname, rawurl, job, envpairs)
+	}
+
 	for envname, rawurl := range task.OutputRecursive {
 		flag++
 		go h.prepareOutputDirectory(ctx, container, envname, rawurl, job, envpairs)
@@ -154,6 +159,36 @@ func (h *Handler) prepareInputRecursive(ctx context.Context, c *daap.Container, 
 
 	result <- fmt.Sprintf("%s=%s", envname, filepath.Join(dir, filepath.Base(rawurl)))
 	return
+}
+
+func (h *Handler) prepareOutput(ctx context.Context, c *daap.Container, envname, rawurl string, job *Job, result chan<- string) {
+	u, err := url.Parse(rawurl)
+	if err != nil {
+		result <- ""
+		return
+	}
+	outpath := filepath.Join(AWSUBROOT, u.Hostname(), u.Path)
+	execution := &daap.Execution{
+		Inline:  fmt.Sprintf("mkdir -p %v", filepath.Dir(outpath)),
+		Inspect: true,
+	}
+	stream, err := c.Exec(ctx, execution)
+	if err != nil {
+		job.Errorf("failed to execute make output file path: %v", err)
+		result <- ""
+		return
+	}
+	for payload := range stream {
+		job.Logf("[PREPARE] &%d> %s", payload.Type, string(payload.Data))
+	}
+
+	if execution.ExitCode != 0 {
+		job.Errorf("failed to create output file path `%s` with status code %d, please check output with --verbose option", rawurl, execution.ExitCode)
+		result <- ""
+		return
+	}
+
+	result <- fmt.Sprintf("%s=%s", envname, outpath)
 }
 
 func (h *Handler) prepareOutputDirectory(ctx context.Context, c *daap.Container, envname, rawurl string, job *Job, result chan<- string) {
