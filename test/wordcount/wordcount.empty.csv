@@ -1,0 +1,1 @@
+--env SPEAKER_NAME,--input SPEECH_FILE,--input-recursive META,--output-recursive OUTDIR
