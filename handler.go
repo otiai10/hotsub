@@ -138,6 +138,9 @@ func (h *Handler) Handle(task *Task) *Job {
 		return job.Errorf("failed to prepare input tasks: %v", err)
 	}
 
+	// Add super variables
+	task.ContainerEnv = append(task.ContainerEnv, fmt.Sprintf("%s=%s", "AWSUB_ROOT", AWSUBROOT))
+
 	execution := &daap.Execution{
 		Script:  h.Script,
 		Env:     task.ContainerEnv,
