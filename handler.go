@@ -50,26 +50,19 @@ func NewHandler(ctx *cli.Context) (*Handler, error) {
 func (h *Handler) HandleBunch(tasks []*Task) <-chan *Job {
 
 	results := make(chan *Job)
-	done := make(chan bool)
-	count := 0
+	wg := new(sync.WaitGroup)
+	wg.Add(len(tasks))
 
 	for _, task := range tasks {
 		go func(t *Task) {
 			results <- h.Handle(t)
-			done <- true
+			wg.Done()
 		}(task)
 	}
 
 	go func() {
-		defer close(done)
-		defer close(results)
-		for {
-			<-done
-			count++
-			if count >= len(tasks) {
-				return
-			}
-		}
+		wg.Wait()
+		close(results)
 	}()
 
 	return results
