@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/otiai10/daap"
 	"github.com/otiai10/dkmachine/v0/dkmachine"
@@ -54,6 +55,7 @@ func (h *Handler) HandleBunch(tasks []*Task) <-chan *Job {
 	wg.Add(len(tasks))
 
 	for _, task := range tasks {
+		time.Sleep(time.Millisecond * time.Duration(h.ctx.Int("debug-sleep")))
 		go func(t *Task) {
 			results <- h.Handle(t)
 			wg.Done()

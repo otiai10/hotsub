@@ -8,12 +8,15 @@ var flags = []cli.Flag{
 	// Command Control
 	VerboseFlag,
 
+	// Debug
+	DebugSleepFlag,
+	KeepFlag,
+
 	// Operation Contents
 	ProviderFlag,
 	TasksFlag,
 	ImageFlag,
 	ScriptFlag,
-	KeepFlag,
 
 	// Machine Specs
 	// MinCoresFlag,
@@ -34,6 +37,15 @@ var flags = []cli.Flag{
 	// GoogleScopesFlag,
 	// GoogleKeepAlive,
 	// GoogleAcceleratorTypeFlag,
+}
+
+// Debug flags
+
+// DebugSleepFlag ...
+var DebugSleepFlag = cli.IntFlag{
+	Name:  "debug-sleep",
+	Usage: "[DEBUG] Sleep millisecond between sending parallel jobs",
+	Value: 500,
 }
 
 // VerboseFlag ...
