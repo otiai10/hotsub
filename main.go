@@ -7,10 +7,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-const (
-	version = "0.0.8"
-)
-
 func main() {
 	app := cli.NewApp()
 	cli.VersionFlag = cli.BoolFlag{

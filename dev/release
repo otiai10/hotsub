@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+BRANCH=master
+
+DEVELOPDIR=`cd $(dirname $0) && pwd`
+PROJECTROOT=`dirname ${DEVELOPDIR}`
+BUILDDIR=${PROJECTROOT}/builds
+
+echo -e "package main\n\nconst version = \"${1}\"" > ${PROJECTROOT}/version.go
+git add .
+git commit -m "v${1}"
+git push origin ${BRANCH}
+git tag "v${1}"
+git push --tags
+
+
+TARGETS="linux/amd64 darwin/amd64 windows/amd64"
+rm -rf ${BUILDDIR}
+mkdir -p ${BUILDDIR}
+gox -output="${BUILDDIR}/{{.OS}}_{{.Arch}}/{{.Dir}}" -osarch="${TARGETS}" -rebuild -verbose
+for dir in ${BUILDDIR}/*; do
+    osarch=`basename ${dir}`
+    tar -czvf builds/awsub.${osarch}.tar.gz -C ${dir} `ls ${dir}`
+    rm -rf ${dir}
+done
+
+# TODO: automate uploading release files by CI server
