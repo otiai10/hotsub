@@ -7,6 +7,10 @@ import (
 	"github.com/otiai10/dkmachine/v0/dkmachine"
 )
 
+const (
+	defaultAWSSecurityGroupName = "awsub-default"
+)
+
 func (h *Handler) generateMachineOption(task *Task) (*dkmachine.CreateOptions, error) {
 
 	name := fmt.Sprintf("%s%02d", task.Prefix, task.Index)
@@ -39,7 +43,7 @@ func (h *Handler) setupAWSMachineOption(opt *dkmachine.CreateOptions) error {
 	// e.g. "my-role"
 	opt.AmazonEC2IAMInstanceProfile = h.ctx.String("aws-iam-instance-profile")
 
-	opt.AmazonEC2SecurityGroup = opt.Name
+	opt.AmazonEC2SecurityGroup = defaultAWSSecurityGroupName
 
 	// FIXME: hard coding
 	opt.AmazonEC2RequestSpotInstance = false

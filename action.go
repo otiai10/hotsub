@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/otiai10/awsub/toolbox"
 	"github.com/urfave/cli"
 )
 
@@ -29,6 +30,14 @@ func action(ctx *cli.Context) error {
 	handler, err := NewHandler(ctx)
 	if err != nil {
 		return err
+	}
+
+	// TODO: Refactor architecture :(
+	switch ctx.String("provider") {
+	case "aws":
+		if err := toolbox.CreateSecurityGroupIfNotExists(defaultAWSSecurityGroupName, ctx.String("aws-region")); err != nil {
+			return err
+		}
 	}
 
 	errored := []*Job{}
