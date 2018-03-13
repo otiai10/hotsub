@@ -12,6 +12,8 @@ awsub \
 
 # Installation
 
+There are 3 options to install `awsub` command.
+
 ## 1. Download binary directly
 
 Check releases here https://github.com/otiai10/awsub/releases and choose the binary for your OS.
