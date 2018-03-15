@@ -9,11 +9,6 @@ import (
 	"github.com/otiai10/daap"
 )
 
-const (
-	// AWSUBROOT ...
-	AWSUBROOT = "/tmp"
-)
-
 // Prepare upload and locate files which are specified by the task onto the container.
 // "Prepare" lifecycle is supposed to do
 // 1) Download inputs files and directories specified by the task
