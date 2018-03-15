@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -28,7 +29,10 @@ func action(ctx *cli.Context) error {
 
 	name := filepath.Base(tasksfpath)
 	// TODO: make "NewComponent" func.
-	root := &core.Component{Identity: core.Identity{Name: name, Timestamp: time.Now().UnixNano()}}
+	root := &core.Component{
+		Identity: core.Identity{Name: name, Timestamp: time.Now().UnixNano()},
+		Log:      log.New(os.Stdout, "[root]", 1),
+	}
 
 	jobs, err := parser.ParseFile(tasksfpath)
 	if err != nil {

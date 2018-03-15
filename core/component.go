@@ -1,5 +1,10 @@
 package core
 
+import (
+	"fmt"
+	"log"
+)
+
 // Component represents a independent workflow component, handling only 1 input set.
 type Component struct {
 
@@ -28,10 +33,17 @@ type Component struct {
 		LocalPath string
 		// URL, if specified, the report path would be uploaded to this URL.
 		URL string
+		// Message is an interface to write log
 	}
+	Log *log.Logger
 }
 
 // Commit ...
-func (component *Component) Commit(parent *Component) error {
+func (comp *Component) Commit(parent *Component) error {
+	if len(comp.Jobs) == 0 {
+		comp.Log.Println("No jobs provided.")
+		return nil
+	}
+	fmt.Println(comp.Jobs)
 	return nil
 }
