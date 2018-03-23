@@ -97,32 +97,15 @@ func (h *Handler) Handle(task *Task) *Job {
 	}
 	job.Logf("The machine created successfully")
 
-	lifecycle := daap.NewContainer("awsub/lifecycle", daap.Args{
-		Machine: &daap.MachineConfig{
-			Host:     machine.Host(),
-			CertPath: machine.CertPath(),
-		},
-		Mounts: []daap.Mount{
-			daap.Volume("/tmp", "/tmp"),
-		},
-	})
-
-	container := daap.NewContainer(h.Image, daap.Args{
-		Machine: &daap.MachineConfig{
-			Host:     machine.Host(),
-			CertPath: machine.CertPath(),
-		},
-		Mounts: []daap.Mount{
-			daap.Volume("/tmp", "/tmp"),
-		},
-	})
+	lifecycle := daap.NewContainer("awsub/lifecycle", machine)
+	maincontainer := daap.NewContainer(h.Image, machine)
 
 	ctx := context.Background()
 
 	wg := new(sync.WaitGroup)
 	wg.Add(2)
 	go h.Warmup(ctx, lifecycle, job, wg)
-	go h.Warmup(ctx, container, job, wg)
+	go h.Warmup(ctx, maincontainer, job, wg)
 	wg.Wait()
 
 	if job.Error != nil {
@@ -143,7 +126,7 @@ func (h *Handler) Handle(task *Task) *Job {
 	}
 
 	job.Logf("Sending command queue to the container")
-	stream, err := container.Exec(ctx, execution)
+	stream, err := maincontainer.Exec(ctx, execution)
 	if err != nil {
 		return job.Errorf("failed to exec script in the container: %v", err)
 	}

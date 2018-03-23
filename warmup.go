@@ -4,6 +4,8 @@ import (
 	"context"
 	"sync"
 
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/mount"
 	"github.com/otiai10/daap"
 )
 
@@ -22,7 +24,13 @@ func (h *Handler) Warmup(ctx context.Context, c *daap.Container, job *Job, wg *s
 	job.Logf("The image pulled successfully: %v", c.Image)
 
 	job.Logf("Creating a container on the host")
-	if err = c.Create(ctx); err != nil {
+	if err = c.Create(ctx, daap.CreateConfig{
+		Host: &container.HostConfig{
+			Mounts: []mount.Mount{
+				daap.Volume("/tmp", AWSUBROOT),
+			},
+		},
+	}); err != nil {
 		job.Errorf("failed to create container: %v: %v", c.Image, err)
 		return
 	}
