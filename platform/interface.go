@@ -15,7 +15,7 @@ type Context interface {
 func Get(ctx Context) Platform {
 	switch Provider(ctx.String("provider")) {
 	case AWS:
-		return &AmazonWebServices{Region: ctx.String("region")}
+		return &AmazonWebServices{Region: ctx.String("aws-region")}
 	}
 	return &AmazonWebServices{}
 }
