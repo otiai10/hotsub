@@ -65,7 +65,6 @@ type Report struct {
 func (job *Job) Create() error {
 	spec := *job.Machine.Spec
 	spec.Name = fmt.Sprintf("%s-%04d", job.Identity.Prefix, job.Identity.Index)
-	fmt.Printf("%+v\n", spec)
 	instance, err := dkmachine.Create(&spec)
 	job.Machine.Instance = instance
 	return err

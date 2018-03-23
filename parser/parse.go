@@ -12,7 +12,8 @@ import (
 )
 
 var (
-	headExpression = regexp.MustCompile("^(?P<key>.+) +(?P<bind>.+)$")
+	headExpression   = regexp.MustCompile("^(?P<key>.+) +(?P<bind>.+)$")
+	sharedExpression = regexp.MustCompile("^(?P<name>[0-9A-Z_]+)=(?P<url>.+)$")
 )
 
 // ParseFile ...
@@ -106,4 +107,24 @@ func (c Column) Bind(job *core.Job, value string) error {
 	job.Parameters.Inputs = inputs
 	job.Parameters.Outputs = outputs
 	return nil
+}
+
+// ParseSharedData ...
+func ParseSharedData(kvpairs []string) (inputs core.Inputs, err error) {
+	if len(kvpairs) == 0 {
+		return
+	}
+	for _, kv := range kvpairs {
+		kvl := sharedExpression.FindStringSubmatch(kv)
+		if len(kvl) < 3 {
+			err = fmt.Errorf("Invalid format for shared data: %s", kv)
+			return
+		}
+		inputs = append(inputs, &core.Input{
+			Name:      kvl[1],
+			URL:       kvl[2],
+			Recursive: true, // TEMP
+		})
+	}
+	return
 }

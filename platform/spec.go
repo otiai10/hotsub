@@ -1,6 +1,9 @@
 package platform
 
-import "github.com/otiai10/dkmachine/v0/dkmachine"
+import (
+	"github.com/otiai10/awsub/core"
+	"github.com/otiai10/dkmachine/v0/dkmachine"
+)
 
 // DefineMachineSpec is a factory layer to connect cli.Context to CreateOptions.
 func DefineMachineSpec(ctx Context) (*dkmachine.CreateOptions, error) {
@@ -10,18 +13,42 @@ func DefineMachineSpec(ctx Context) (*dkmachine.CreateOptions, error) {
 		AmazonEC2RootSize:           ctx.Int("disk-size"),
 		AmazonEC2InstanceType:       ctx.String("aws-ec2-instance-type"),
 		AmazonEC2IAMInstanceProfile: ctx.String("aws-iam-instance-profile"),
+		AmazonEC2SecurityGroup:      DefaultAWSSecurityGroupName,
 		// GCP
 		GoogleProject:  ctx.String("google-project"),
 		GoogleZone:     ctx.String("google-zone"),
 		GoogleDiskSize: ctx.Int("disk-size"),
 	}
-	switch ctx.String("provider") {
-	case "aws":
-		opt.Driver = "amazonec2"
-	case "gcp":
-		opt.Driver = "google"
+	switch Provider(ctx.String("provider")) {
+	case AWS:
+		opt.Driver = string(AmazonEC2)
+	case GCP:
+		opt.Driver = string(Google)
 	default:
-		opt.Driver = "amazonec2"
+		opt.Driver = string(AmazonEC2)
+	}
+	return opt, nil
+}
+
+// DefineSharedDataInstanceSpec ...
+func DefineSharedDataInstanceSpec(shared core.Inputs, ctx Context) (*dkmachine.CreateOptions, error) {
+	opt := &dkmachine.CreateOptions{
+		AmazonEC2Region:             ctx.String("aws-region"),
+		AmazonEC2IAMInstanceProfile: ctx.String("aws-iam-instance-profile"),
+		AmazonEC2SecurityGroup:      DefaultAWSSecurityGroupName,
+		// {{{ TODO: Fix hard coding
+		AmazonEC2InstanceType: "m4.2xlarge", // TODO: Fix hard coding
+		AmazonEC2RootSize:     64,           // TODO: Fix hard coding
+		// }}}
+		Name: "Shared-Data-Instance",
+	}
+	switch Provider(ctx.String("provider")) {
+	case AWS:
+		opt.Driver = string(AmazonEC2)
+	case GCP:
+		opt.Driver = string(Google)
+	default:
+		opt.Driver = string(AmazonEC2)
 	}
 	return opt, nil
 }

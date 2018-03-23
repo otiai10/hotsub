@@ -34,6 +34,17 @@ func action(ctx *cli.Context) error {
 	}
 	root.Jobs = jobs
 
+	shared, err := parser.ParseSharedData(ctx.StringSlice("shared"))
+	if err != nil {
+		return err
+	}
+	root.SharedData.Inputs = shared
+	sdispec, err := platform.DefineSharedDataInstanceSpec(shared, ctx)
+	if err != nil {
+		return err
+	}
+	root.SharedData.Spec = sdispec
+
 	spec, err := platform.DefineMachineSpec(ctx)
 	if err != nil {
 		return err
