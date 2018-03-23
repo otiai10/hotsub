@@ -8,6 +8,7 @@ type Platform interface {
 // Context ...
 type Context interface {
 	String(string) string
+	Int(string) int
 }
 
 // Get ...
@@ -16,5 +17,5 @@ func Get(ctx Context) Platform {
 	case "aws":
 		return &AmazonWebServices{Region: ctx.String("region")}
 	}
-	return &Virtualbox{}
+	return &AmazonWebServices{}
 }

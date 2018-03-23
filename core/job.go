@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"io"
 	"time"
 
@@ -38,11 +39,13 @@ type Job struct {
 		Envs   []Env
 		Image  *Image
 		Script *Script
-		// Machine keeps the informations of physical machine, might be created by docker-machine.
-		Machine *dkmachine.Machine
+		// Instance keeps the informations of physical machine, might be created by docker-machine.
 	}
 
-	Context Context
+	Machine struct {
+		Spec     *dkmachine.CreateOptions
+		Instance *dkmachine.Machine
+	}
 
 	// Report ...
 	Report *Report
@@ -58,8 +61,20 @@ type Report struct {
 	}
 }
 
-// Context ...
-type Context interface {
-	String(string) string
-	Bool(string) bool
+// Create ...
+func (job *Job) Create() error {
+	spec := *job.Machine.Spec
+	spec.Name = fmt.Sprintf("%s-%04d", job.Identity.Prefix, job.Identity.Index)
+	fmt.Printf("%+v\n", spec)
+	instance, err := dkmachine.Create(&spec)
+	job.Machine.Instance = instance
+	return err
+}
+
+// Destroy ...
+func (job *Job) Destroy() error {
+	if job.Machine.Instance == nil {
+		return nil
+	}
+	return job.Machine.Instance.Remove()
 }

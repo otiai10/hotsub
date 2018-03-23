@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/otiai10/awsub/core"
 	"github.com/otiai10/awsub/parser"
@@ -28,18 +26,19 @@ func action(ctx *cli.Context) error {
 	defer f.Close()
 
 	name := filepath.Base(tasksfpath)
-	// TODO: make "NewComponent" func.
-	root := &core.Component{
-		Identity: core.Identity{Name: name, Timestamp: time.Now().UnixNano()},
-		Log:      log.New(os.Stdout, "[root]", 1),
-	}
+	root := core.RootComponentTemplate(name)
 
 	jobs, err := parser.ParseFile(tasksfpath)
 	if err != nil {
 		return err
 	}
-
 	root.Jobs = jobs
+
+	spec, err := platform.DefineMachineSpec(ctx)
+	if err != nil {
+		return err
+	}
+	root.Machine.Spec = spec
 
 	if err := platform.Get(ctx).Validate(); err != nil {
 		return err

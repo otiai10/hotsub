@@ -1,8 +1,11 @@
 package core
 
 import (
-	"fmt"
 	"log"
+	"os"
+	"time"
+
+	"golang.org/x/sync/errgroup"
 )
 
 // Component represents a independent workflow component, handling only 1 input set.
@@ -13,6 +16,9 @@ type Component struct {
 
 	// Jobs represent specific set of jobs which should be executed on this component.
 	Jobs []*Job
+
+	// Machine represents the spec of machines on which each job is executed.
+	Machine *Machine
 
 	/* You Ain't Gonna Need It!! */
 	// // Nest can specify nested components.
@@ -35,15 +41,53 @@ type Component struct {
 		URL string
 		// Message is an interface to write log
 	}
+
+	// Log is an application logger ONLY FOR ROOT COMPONENT.
 	Log *log.Logger
 }
 
+// RootComponentTemplate ...
+func RootComponentTemplate(name string) *Component {
+	return &Component{
+		Identity: Identity{Name: name, Timestamp: time.Now().UnixNano()},
+		Log:      log.New(os.Stdout, "[root]", 1),
+		Machine:  &Machine{},
+	}
+}
+
 // Commit ...
-func (comp *Component) Commit(parent *Component) error {
-	if len(comp.Jobs) == 0 {
-		comp.Log.Println("No jobs provided.")
+func (component *Component) Commit(parent *Component) error {
+	if len(component.Jobs) == 0 {
 		return nil
 	}
-	fmt.Println(comp.Jobs)
+
+	if err := component.Create(); err != nil {
+		return err
+	}
+	defer component.Destroy()
+
 	return nil
+}
+
+// Create ...
+func (component *Component) Create() error {
+	g := new(errgroup.Group)
+	for i, job := range component.Jobs {
+		job.Identity.Prefix = component.Identity.Name
+		job.Identity.Index = i
+		job.Machine.Spec = component.Machine.Spec
+		g.Go(job.Create)
+	}
+	return g.Wait()
+}
+
+// Destroy ...
+func (component *Component) Destroy() error {
+	var e error
+	for _, job := range component.Jobs {
+		if err := job.Destroy(); err != nil {
+			e = err
+		}
+	}
+	return e
 }
