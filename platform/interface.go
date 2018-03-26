@@ -16,6 +16,8 @@ func Get(ctx Context) Platform {
 	switch Provider(ctx.String("provider")) {
 	case AWS:
 		return &AmazonWebServices{Region: ctx.String("aws-region")}
+	case GCP:
+		return &GoogleCloudPlatform{}
 	}
 	return &AmazonWebServices{}
 }
