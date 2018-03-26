@@ -173,9 +173,3 @@ func (job *Job) Commit() error {
 
 	return nil
 }
-
-// Push uploads result files to cloud storage services according to
-// specified "output" URLs of tasks file.
-func (job *Job) Push() error {
-	return nil
-}
