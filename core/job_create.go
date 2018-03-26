@@ -18,10 +18,10 @@ func (job *Job) Create() error {
 	job.Identity.Name = fmt.Sprintf("%s-%04d", job.Identity.Prefix, job.Identity.Index)
 	spec.Name = job.Identity.Name
 	instance, err := dkmachine.Create(&spec)
+	job.Machine.Instance = instance
 	if err != nil {
 		return err
 	}
-	job.Machine.Instance = instance
 
 	eg := new(errgroup.Group)
 	eg.Go(job.wakeupRoutineContainer)
