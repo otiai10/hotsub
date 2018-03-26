@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log"
 	"time"
 
 	dockercontainer "github.com/docker/docker/api/types/container"
@@ -81,7 +82,8 @@ type JobContainer struct {
 // In most cases, containers with awsub/lifecycle and user defined image are required.
 func (job *Job) Create() error {
 	spec := *job.Machine.Spec
-	spec.Name = fmt.Sprintf("%s-%04d", job.Identity.Prefix, job.Identity.Index)
+	job.Identity.Name = fmt.Sprintf("%s-%04d", job.Identity.Prefix, job.Identity.Index)
+	spec.Name = job.Identity.Name
 	instance, err := dkmachine.Create(&spec)
 	if err != nil {
 		return err
@@ -124,15 +126,15 @@ func (job *Job) wakeupWorkflowContainer() error {
 }
 
 func (job *Job) wakeupContainer(img string) (*daap.Container, error) {
+
 	ctx := context.Background()
 	container := daap.NewContainer(img, job.Machine.Instance)
+
 	progress, err := container.PullImage(ctx)
 	if err != nil {
 		return nil, err
 	}
-	for range progress {
-		fmt.Printf(".")
-	}
+	job.drain(progress)
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
@@ -145,4 +147,44 @@ func (job *Job) wakeupContainer(img string) (*daap.Container, error) {
 
 	err = container.Start(ctx)
 	return container, err
+}
+
+func (job *Job) drain(ch <-chan daap.ImagePullResponsePayload) {
+	for range ch {
+		// fmt.Printf(".")
+	}
+	// fmt.Printf("\n")
+}
+
+// Commit represents a main process of this job.
+// The main process of this job consists of Fetch, Exec, and Push.
+func (job *Job) Commit() error {
+
+	if err := job.Fetch(); err != nil {
+		return err
+	}
+
+	if err := job.Exec(); err != nil {
+		return err
+	}
+
+	if err := job.Push(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Exec executes user-defined script inside the workflow container.
+func (job *Job) Exec() error {
+	for _, env := range job.Container.Envs {
+		log.Println(job.Identity.Name, env.Pair())
+	}
+	return nil
+}
+
+// Push uploads result files to cloud storage services according to
+// specified "output" URLs of tasks file.
+func (job *Job) Push() error {
+	return nil
 }

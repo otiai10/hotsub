@@ -88,24 +88,30 @@ type Column struct {
 
 // Bind ...
 func (c Column) Bind(job *core.Job, value string) error {
-	envs := []core.Env{}
-	inputs := core.Inputs{}
-	outputs := core.Outputs{}
 	switch c.Type {
 	case "--env":
-		envs = append(envs, core.Env{Name: c.Name, Value: value})
+		job.Parameters.Envs = append(job.Parameters.Envs, core.Env{Name: c.Name, Value: value})
 	case "--input":
-		inputs = append(inputs, &core.Input{Name: c.Name, URL: value})
+		job.Parameters.Inputs = append(
+			job.Parameters.Inputs,
+			&core.Input{Resource: core.Resource{Name: c.Name, URL: value}},
+		)
 	case "--input-recursive":
-		inputs = append(inputs, &core.Input{Name: c.Name, URL: value, Recursive: true})
+		job.Parameters.Inputs = append(
+			job.Parameters.Inputs,
+			&core.Input{Resource: core.Resource{Name: c.Name, URL: value, Recursive: true}},
+		)
 	case "--output":
-		outputs = append(outputs, &core.Output{Name: c.Name, URL: value})
+		job.Parameters.Outputs = append(
+			job.Parameters.Outputs,
+			&core.Output{Resource: core.Resource{Name: c.Name, URL: value}},
+		)
 	case "--output-recursive":
-		outputs = append(outputs, &core.Output{Name: c.Name, URL: value, Recursive: true})
+		job.Parameters.Outputs = append(
+			job.Parameters.Outputs,
+			&core.Output{Resource: core.Resource{Name: c.Name, URL: value, Recursive: true}},
+		)
 	}
-	job.Parameters.Envs = envs
-	job.Parameters.Inputs = inputs
-	job.Parameters.Outputs = outputs
 	return nil
 }
 
@@ -120,11 +126,11 @@ func ParseSharedData(kvpairs []string) (inputs core.Inputs, err error) {
 			err = fmt.Errorf("Invalid format for shared data: %s", kv)
 			return
 		}
-		inputs = append(inputs, &core.Input{
+		inputs = append(inputs, &core.Input{Resource: core.Resource{
 			Name:      kvl[1],
 			URL:       kvl[2],
 			Recursive: true, // TEMP
-		})
+		}})
 	}
 	return
 }
