@@ -12,6 +12,8 @@ import (
 )
 
 // action ...
+// All the CLI context should be parsed and decoded on this layer,
+// no deeper layer should NOT touch cli.
 func action(ctx *cli.Context) error {
 
 	if ctx.NumFlags() == 0 {
@@ -27,6 +29,9 @@ func action(ctx *cli.Context) error {
 
 	name := filepath.Base(tasksfpath)
 	root := core.RootComponentTemplate(name)
+
+	root.Runtime.Image.Name = ctx.String("image")
+	root.Runtime.Script.Path = ctx.String("script")
 
 	jobs, err := parser.ParseFile(tasksfpath)
 	if err != nil {
@@ -55,6 +60,10 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
+	defer root.Destroy()
+	if err := root.Create(); err != nil {
+		return err
+	}
 	if err := root.Commit(nil); err != nil {
 		return err
 	}

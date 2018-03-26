@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -38,6 +37,11 @@ type Component struct {
 	// // Parent
 	// Parent *Component
 
+	Runtime struct {
+		Image  *Image
+		Script *Script
+	}
+
 	// Report directory path
 	Report struct {
 		// LocalPath is a local path to save report files.
@@ -57,18 +61,18 @@ func RootComponentTemplate(name string) *Component {
 		Identity: Identity{Name: name, Timestamp: time.Now().UnixNano()},
 		Log:      log.New(os.Stdout, "[root]", 1),
 		Machine:  &Machine{},
+		Runtime: struct {
+			Image  *Image
+			Script *Script
+		}{Image: &Image{}, Script: &Script{}},
 	}
 }
 
 // Commit ...
 func (component *Component) Commit(parent *Component) error {
+
 	if len(component.Jobs) == 0 {
 		return nil
-	}
-
-	defer component.Destroy()
-	if err := component.Create(); err != nil {
-		return err
 	}
 
 	return nil
@@ -83,10 +87,14 @@ func (component *Component) Create() error {
 		job.Identity.Prefix = component.Identity.Name
 		job.Identity.Index = i
 		job.Machine.Spec = component.Machine.Spec
+
 		g.Go(job.Create)
+
+		// Delegate runtimes
+		job.Container.Image = component.Runtime.Image
+		job.Container.Script = component.Runtime.Script
 	}
 
-	fmt.Printf("%+v\n", component.SharedData.Inputs)
 	if len(component.SharedData.Inputs) != 0 {
 		g.Go(func() error {
 			instance, err := dkmachine.Create(component.SharedData.Spec)
