@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/otiai10/daap"
+	"github.com/otiai10/ternary"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -77,8 +78,10 @@ func (job *Job) ensure(output *Output) error {
 		return err
 	}
 
+	dir := ternary.If(output.Recursive).String(output.LocalPath, filepath.Dir(output.LocalPath))
+
 	ensure := &daap.Execution{
-		Inline:  fmt.Sprintf("mkdir -p %s", filepath.Dir(output.LocalPath)),
+		Inline:  fmt.Sprintf("mkdir -p %s", dir),
 		Inspect: true,
 	}
 

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 	"time"
 
 	dockercontainer "github.com/docker/docker/api/types/container"
@@ -172,14 +171,6 @@ func (job *Job) Commit() error {
 		return err
 	}
 
-	return nil
-}
-
-// Exec executes user-defined script inside the workflow container.
-func (job *Job) Exec() error {
-	for _, env := range job.Container.Envs {
-		log.Println(job.Identity.Name, env.Pair())
-	}
 	return nil
 }
 
