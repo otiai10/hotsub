@@ -37,6 +37,8 @@ func DefineMachineSpec(ctx Context) (*dkmachine.CreateOptions, error) {
 }
 
 // DefineSharedDataInstanceSpec ...
+// It defines ALL the specifications for docker-machine,
+// though it's a bit verbose ;)
 func DefineSharedDataInstanceSpec(shared core.Inputs, ctx Context) (*dkmachine.CreateOptions, error) {
 	opt := &dkmachine.CreateOptions{
 		AmazonEC2Region:             ctx.String("aws-region"),
