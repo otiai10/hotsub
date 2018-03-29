@@ -65,6 +65,10 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
+	if err := root.Attach(); err != nil {
+		return err
+	}
+
 	if err := root.Commit(nil); err != nil {
 		return err
 	}

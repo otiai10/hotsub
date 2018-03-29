@@ -5,7 +5,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/otiai10/dkmachine/v0/dkmachine"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -71,29 +70,26 @@ func RootComponentTemplate(name string) *Component {
 // Create ...
 func (component *Component) Create() error {
 
-	g := new(errgroup.Group)
+	eg := new(errgroup.Group)
 
 	for i, job := range component.Jobs {
 		job.Identity.Prefix = component.Identity.Name
 		job.Identity.Index = i
 		job.Machine.Spec = component.Machine.Spec
 
-		g.Go(job.Create)
+		eg.Go(job.Create)
 
 		// Delegate runtimes
 		job.Container.Image = component.Runtime.Image
 		job.Container.Script = component.Runtime.Script
 	}
 
+	// YAGNI: multiple SDIs for computing nodes
 	if len(component.SharedData.Inputs) != 0 {
-		g.Go(func() error {
-			instance, err := dkmachine.Create(component.SharedData.Spec)
-			component.SharedData.Instance = instance
-			return err
-		})
+		eg.Go(component.SharedData.Create)
 	}
 
-	return g.Wait()
+	return eg.Wait()
 }
 
 // Destroy ...
