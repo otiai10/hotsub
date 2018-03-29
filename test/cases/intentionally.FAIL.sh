@@ -1,9 +1,8 @@
 #!/bin/bash
 
-set -o errexit
-set -o verbose
-
 PROJROOT=$(dirname $(dirname $(cd $(dirname $0) && pwd)))
+
+set -e -v
 
 # This control script fails intentionally.
 # This test case checks if "awsub" can detect script error inside the container.
