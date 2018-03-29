@@ -1,6 +1,8 @@
 package platform
 
 import (
+	"strings"
+
 	"github.com/otiai10/awsub/core"
 	"github.com/otiai10/dkmachine/v0/dkmachine"
 )
@@ -18,6 +20,10 @@ func DefineMachineSpec(ctx Context) (*dkmachine.CreateOptions, error) {
 		GoogleProject:  ctx.String("google-project"),
 		GoogleZone:     ctx.String("google-zone"),
 		GoogleDiskSize: ctx.Int("disk-size"),
+		GoogleScopes: strings.Join([]string{
+			"https://www.googleapis.com/auth/devstorage.read_write",
+			"https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write",
+		}, ","),
 	}
 	switch Provider(ctx.String("provider")) {
 	case AWS:
