@@ -3,7 +3,6 @@ package core
 import (
 	"context"
 	"fmt"
-	"log"
 	"path/filepath"
 
 	"github.com/otiai10/daap"
@@ -37,8 +36,6 @@ func (job *Job) Fetch() error {
 
 // fetch
 func (job *Job) fetch(input *Input) error {
-	log.Println(job.Identity.Name, "fetch", input.Name, input.URL)
-
 	if err := input.Localize(AWSUB_CONTAINERROOT); err != nil {
 		return err
 	}
