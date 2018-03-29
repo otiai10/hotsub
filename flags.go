@@ -18,6 +18,8 @@ var flags = []cli.Flag{
 	ImageFlag,
 	ScriptFlag,
 
+	SharedFlag,
+
 	// Machine Specs
 	// MinCoresFlag,
 	// MinRAMFlag,
@@ -84,6 +86,12 @@ var ImageFlag = cli.StringFlag{
 var ScriptFlag = cli.StringFlag{
 	Name:  "script",
 	Usage: `Local path to a script to run inside the job's Docker container. (required)`,
+}
+
+// SharedFlag ...
+var SharedFlag = cli.StringSliceFlag{
+	Name:  "shared,S",
+	Usage: `Shared data URL on cloud storage bucket. (e.g. s3://~)`,
 }
 
 // KeepFlag ...
