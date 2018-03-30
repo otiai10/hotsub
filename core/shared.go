@@ -55,7 +55,7 @@ func (sd *SharedData) fetchAll() error {
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
-			Mounts: []mount.Mount{daap.Volume(AWSUB_MOUNTPOINT, AWSUB_MOUNTPOINT)},
+			Mounts: []mount.Mount{daap.MountVolume(AWSUB_MOUNTPOINT, AWSUB_MOUNTPOINT)},
 		},
 	})
 	if err != nil {
@@ -122,7 +122,7 @@ func (sd SharedData) startNFS() error {
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
-			Mounts:     []mount.Mount{daap.Volume(AWSUB_MOUNTPOINT, AWSUB_MOUNTPOINT)},
+			Mounts:     []mount.Mount{daap.MountVolume(AWSUB_MOUNTPOINT, AWSUB_MOUNTPOINT)},
 			Privileged: true,
 			// NetworkMode: "host",
 		},
