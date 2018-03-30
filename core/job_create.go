@@ -63,7 +63,8 @@ func (job *Job) wakeupContainer(img string) (*daap.Container, error) {
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
-			Mounts: []mount.Mount{daap.Volume(AWSUB_HOSTROOT, AWSUB_CONTAINERROOT)},
+			Mounts:     []mount.Mount{daap.Volume(AWSUB_HOSTROOT, AWSUB_CONTAINERROOT)},
+			Privileged: true, // TODO: workflow
 		},
 	})
 	if err != nil {

@@ -60,7 +60,10 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	defer root.Destroy()
+	if !ctx.Bool("keep") {
+		defer root.Destroy()
+	}
+
 	if err := root.Create(); err != nil {
 		return err
 	}

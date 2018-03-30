@@ -21,7 +21,7 @@ func (component *Component) Attach() error {
 
 	env := []Env{}
 	for _, input := range shared.Inputs {
-		if err := input.Localize(AWSUB_CONTAINERROOT + AWSUB_SHARED_DIR); err != nil {
+		if err := input.Localize(AWSUB_CONTAINERROOT + "/" + AWSUB_SHARED_DIR); err != nil {
 			return err
 		}
 		env = append(env, input.Env())
