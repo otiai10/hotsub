@@ -4,8 +4,6 @@ import (
 	"log"
 	"os"
 	"time"
-
-	"golang.org/x/sync/errgroup"
 )
 
 // Component represents a independent workflow component, handling only 1 input set.
@@ -18,7 +16,7 @@ type Component struct {
 	Jobs []*Job
 
 	// SharedData ...
-	SharedData SharedData
+	SharedData *SharedData
 
 	// Machine represents the spec of machines on which each job is executed.
 	Machine *Machine
@@ -64,50 +62,6 @@ func RootComponentTemplate(name string) *Component {
 			Image  *Image
 			Script *Script
 		}{Image: &Image{}, Script: &Script{}},
+		SharedData: &SharedData{},
 	}
-}
-
-// Create ...
-func (component *Component) Create() error {
-
-	eg := new(errgroup.Group)
-
-	for i, job := range component.Jobs {
-		job.Identity.Prefix = component.Identity.Name
-		job.Identity.Index = i
-		job.Machine.Spec = component.Machine.Spec
-
-		eg.Go(job.Create)
-
-		// Delegate runtimes
-		job.Container.Image = component.Runtime.Image
-		job.Container.Script = component.Runtime.Script
-	}
-
-	// YAGNI: multiple SDIs for computing nodes
-	if len(component.SharedData.Inputs) != 0 {
-		eg.Go(component.SharedData.Create)
-	}
-
-	return eg.Wait()
-}
-
-// Destroy ...
-func (component *Component) Destroy() error {
-
-	var e error
-
-	for _, job := range component.Jobs {
-		if err := job.Destroy(); err != nil {
-			e = err
-		}
-	}
-
-	if component.SharedData.Instance != nil {
-		if err := component.SharedData.Instance.Remove(); err != nil {
-			e = err
-		}
-	}
-
-	return e
 }

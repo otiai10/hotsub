@@ -6,6 +6,7 @@ import (
 
 	dockercontainer "github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
+	"github.com/docker/docker/api/types/volume"
 
 	"github.com/otiai10/daap"
 	"github.com/otiai10/dkmachine/v0/dkmachine"
@@ -14,8 +15,13 @@ import (
 
 // SharedData ...
 type SharedData struct {
-	Spec      *dkmachine.CreateOptions
-	Instance  *dkmachine.Machine
+	Spec *dkmachine.CreateOptions
+
+	// {{{ TODO: multiple SharedDataInstances design
+	Instance *dkmachine.Machine
+	Volume   *daap.Volume
+	// }}}
+
 	Inputs    Inputs
 	Root      string
 	Container struct {
@@ -52,10 +58,11 @@ func (sd *SharedData) fetchAll() error {
 	for range progress {
 		fmt.Printf(".") // DEBUG: delete
 	}
+	fmt.Printf("\n")
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
-			Mounts: []mount.Mount{daap.MountVolume(AWSUB_MOUNTPOINT, AWSUB_MOUNTPOINT)},
+			Mounts: []mount.Mount{daap.Bind(AWSUB_MOUNTPOINT, AWSUB_MOUNTPOINT)},
 		},
 	})
 	if err != nil {
@@ -117,14 +124,14 @@ func (sd SharedData) startNFS() error {
 		return nil
 	}
 	for range progress {
-		fmt.Printf("#") // DEBUG: delete
+		fmt.Printf(".") // DEBUG: delete
 	}
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
-			Mounts:     []mount.Mount{daap.MountVolume(AWSUB_MOUNTPOINT, AWSUB_MOUNTPOINT)},
-			Privileged: true,
-			// NetworkMode: "host",
+			Mounts:      []mount.Mount{daap.Bind(AWSUB_MOUNTPOINT, AWSUB_MOUNTPOINT)},
+			Privileged:  true,
+			NetworkMode: "host",
 		},
 		Container: &dockercontainer.Config{
 			Env: []string{fmt.Sprintf("%s=%s", "MOUNTPOINT", AWSUB_MOUNTPOINT)},
@@ -139,4 +146,32 @@ func (sd SharedData) startNFS() error {
 	}
 
 	return nil
+}
+
+// CreateNFSVolumeOn ...
+func (sd *SharedData) CreateNFSVolumeOn(m *dkmachine.Machine) error {
+	sd.Volume = &daap.Volume{
+		Config: volume.VolumesCreateBody{
+			Driver: "local",
+			DriverOpts: map[string]string{
+				"type":   "nfs",
+				"o":      "addr=" + sd.Instance.Driver.PrivateIPAddress + ",rw,vers=4",
+				"device": ":/",
+			},
+			Name: "shared",
+		},
+		Machine: m,
+	}
+	ctx := context.Background()
+	return sd.Volume.Create(ctx)
+}
+
+// Envs ...
+func (sd *SharedData) Envs() (envs []Env) {
+	for _, input := range sd.Inputs {
+		// Relocalize for workflow container
+		input.Localize(AWSUB_CONTAINERROOT + "/" + AWSUB_SHARED_DIR)
+		envs = append(envs, input.Env())
+	}
+	return envs
 }
