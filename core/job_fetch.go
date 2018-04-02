@@ -103,6 +103,6 @@ func (job *Job) ensure(output *Output) error {
 	return nil
 }
 
-func (job *Job) addContainerEnv(env Env) {
-	job.Container.Envs = append(job.Container.Envs, env)
+func (job *Job) addContainerEnv(envs ...Env) {
+	job.Container.Envs = append(job.Container.Envs, envs...)
 }

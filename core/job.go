@@ -16,7 +16,7 @@ func NewJob(index int, prefix string) *Job {
 			Index:     index,
 			Prefix:    prefix,
 		},
-		Container: JobContainer{
+		Container: &JobContainer{
 			Image:  &Image{},
 			Script: &Script{},
 		},
@@ -38,7 +38,7 @@ type Job struct {
 	} `json:"parameters"`
 
 	// Container spedifies the settings which is used the real execution runtime.
-	Container JobContainer
+	Container *JobContainer
 
 	Machine struct {
 		Spec     *dkmachine.CreateOptions
@@ -69,23 +69,4 @@ type JobContainer struct {
 	// container ...
 	Routine  *daap.Container
 	Workflow *daap.Container
-}
-
-// Commit represents a main process of this job.
-// The main process of this job consists of Fetch, Exec, and Push.
-func (job *Job) Commit() error {
-
-	if err := job.Fetch(); err != nil {
-		return err
-	}
-
-	if err := job.Exec(); err != nil {
-		return err
-	}
-
-	if err := job.Push(); err != nil {
-		return err
-	}
-
-	return nil
 }

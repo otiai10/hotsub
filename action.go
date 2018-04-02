@@ -60,34 +60,17 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	defer root.Destroy()
+	if !ctx.Bool("keep") {
+		defer root.Destroy()
+	}
+
 	if err := root.Create(); err != nil {
 		return err
 	}
+
 	if err := root.Commit(nil); err != nil {
 		return err
 	}
-
-	// handler, err := NewHandler(ctx)
-	// if err != nil {
-	// 	return err
-	// }
-	// errored := []*Job{}
-	//
-	// for report := range handler.HandleBunch(tasks) {
-	// 	if report.Error != nil {
-	// 		errored = append(errored, report)
-	// 	}
-	// }
-	//
-	// if len(errored) == 0 {
-	// 	fmt.Printf("All %d tasks completed successfully!\n", len(tasks))
-	// } else {
-	// 	for _, job := range errored {
-	// 		fmt.Printf("%s: %v\n", job.Instance.Name, job.Error)
-	// 	}
-	// 	return fmt.Errorf("%d task(s) failed with errors", len(errored))
-	// }
 
 	return nil
 }

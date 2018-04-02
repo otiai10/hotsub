@@ -4,9 +4,6 @@ import (
 	"log"
 	"os"
 	"time"
-
-	"github.com/otiai10/dkmachine/v0/dkmachine"
-	"golang.org/x/sync/errgroup"
 )
 
 // Component represents a independent workflow component, handling only 1 input set.
@@ -19,7 +16,7 @@ type Component struct {
 	Jobs []*Job
 
 	// SharedData ...
-	SharedData SharedData
+	SharedData *SharedData
 
 	// Machine represents the spec of machines on which each job is executed.
 	Machine *Machine
@@ -65,65 +62,6 @@ func RootComponentTemplate(name string) *Component {
 			Image  *Image
 			Script *Script
 		}{Image: &Image{}, Script: &Script{}},
+		SharedData: &SharedData{},
 	}
-}
-
-// Commit ...
-func (component *Component) Commit(parent *Component) error {
-	if len(component.Jobs) == 0 {
-		return nil
-	}
-	eg := new(errgroup.Group)
-	for _, job := range component.Jobs {
-		eg.Go(job.Commit)
-	}
-	return eg.Wait()
-}
-
-// Create ...
-func (component *Component) Create() error {
-
-	g := new(errgroup.Group)
-
-	for i, job := range component.Jobs {
-		job.Identity.Prefix = component.Identity.Name
-		job.Identity.Index = i
-		job.Machine.Spec = component.Machine.Spec
-
-		g.Go(job.Create)
-
-		// Delegate runtimes
-		job.Container.Image = component.Runtime.Image
-		job.Container.Script = component.Runtime.Script
-	}
-
-	if len(component.SharedData.Inputs) != 0 {
-		g.Go(func() error {
-			instance, err := dkmachine.Create(component.SharedData.Spec)
-			component.SharedData.Instance = instance
-			return err
-		})
-	}
-
-	return g.Wait()
-}
-
-// Destroy ...
-func (component *Component) Destroy() error {
-
-	var e error
-
-	for _, job := range component.Jobs {
-		if err := job.Destroy(); err != nil {
-			e = err
-		}
-	}
-
-	if component.SharedData.Instance != nil {
-		if err := component.SharedData.Instance.Remove(); err != nil {
-			e = err
-		}
-	}
-
-	return e
 }
