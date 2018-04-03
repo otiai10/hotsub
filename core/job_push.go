@@ -18,7 +18,7 @@ func (job *Job) Push() error {
 		eg.Go(func() error { return job.push(o) })
 	}
 
-	return nil
+	return eg.Wait()
 }
 
 func (job *Job) push(output *Output) error {
