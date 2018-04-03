@@ -55,10 +55,11 @@ func (sd *SharedData) fetchAll() error {
 	if err != nil {
 		return nil
 	}
+
 	for range progress {
-		fmt.Printf(".") // DEBUG: delete
+		// fmt.Printf(".")
 	}
-	fmt.Printf("\n")
+	// fmt.Printf("\n")
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
@@ -123,9 +124,11 @@ func (sd SharedData) startNFS() error {
 	if err != nil {
 		return nil
 	}
+
 	for range progress {
-		fmt.Printf(".") // DEBUG: delete
+		// fmt.Printf(".")
 	}
+	// fmt.Printf("\n")
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{

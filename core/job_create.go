@@ -103,7 +103,7 @@ func (job *Job) wakeupWorkflowContainer(shared *SharedData) error {
 
 func (job *Job) drain(ch <-chan daap.ImagePullResponsePayload) {
 	for range ch {
-		fmt.Printf(".")
+		// fmt.Printf(".")
 	}
-	fmt.Printf("\n")
+	// fmt.Printf("\n")
 }

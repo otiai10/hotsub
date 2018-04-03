@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/otiai10/awsub/core"
+	"github.com/otiai10/awsub/logs"
 	"github.com/otiai10/awsub/parser"
 	"github.com/otiai10/awsub/platform"
 	"github.com/urfave/cli"
@@ -38,6 +41,11 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 	root.Jobs = jobs
+	applog("Your tasks file is parsed and decoded to %d job(s) ✅", len(jobs))
+
+	// {{{ TEMP
+	root.JobLoggerer = new(logs.ColorfulLoggerFactory)
+	// }}}
 
 	shared, err := parser.ParseSharedData(ctx.StringSlice("shared"))
 	if err != nil {
@@ -72,5 +80,12 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
+	applog("All of your %d job(s) are completed 🎉", len(jobs))
+
 	return nil
+}
+
+func applog(format string, v ...interface{}) {
+	format = regexp.MustCompile("\n*$").ReplaceAllString(format, "\n")
+	log.Printf("[COMMAND]\t"+format, v...)
 }

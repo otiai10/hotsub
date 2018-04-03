@@ -1,8 +1,6 @@
 package core
 
 import (
-	"log"
-	"os"
 	"time"
 )
 
@@ -39,24 +37,18 @@ type Component struct {
 		Script *Script
 	}
 
-	// Report directory path
-	Report struct {
-		// LocalPath is a local path to save report files.
-		LocalPath string
-		// URL, if specified, the report path would be uploaded to this URL.
-		URL string
-		// Message is an interface to write log
-	}
+	// TODO: Not yet used
+	// RootLog is an application logger ONLY FOR ROOT COMPONENT.
+	// RootLog *log.Logger
 
-	// Log is an application logger ONLY FOR ROOT COMPONENT.
-	Log *log.Logger
+	// JobLoggerer is an interface to specify logger for each job.
+	JobLoggerer Loggerer
 }
 
 // RootComponentTemplate ...
 func RootComponentTemplate(name string) *Component {
 	return &Component{
 		Identity: Identity{Name: name, Timestamp: time.Now().UnixNano()},
-		Log:      log.New(os.Stdout, "[root]", 1),
 		Machine:  &Machine{},
 		Runtime: struct {
 			Image  *Image

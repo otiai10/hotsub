@@ -23,6 +23,11 @@ func (component *Component) Create() error {
 		j.Identity.Index = i
 		j.Machine.Spec = component.Machine.Spec
 
+		if component.JobLoggerer != nil {
+			j.Report.Log = component.JobLoggerer.Logger(j)
+		}
+		j.Logf("Creating computing instance for this job")
+
 		eg.Go(func() error {
 			return j.Create(component.SharedData)
 		})

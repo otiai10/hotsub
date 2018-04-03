@@ -1,7 +1,6 @@
 package core
 
 import (
-	"io"
 	"time"
 
 	"github.com/otiai10/daap"
@@ -20,6 +19,7 @@ func NewJob(index int, prefix string) *Job {
 			Image:  &Image{},
 			Script: &Script{},
 		},
+		Report: &Report{},
 	}
 }
 
@@ -47,16 +47,6 @@ type Job struct {
 
 	// Report ...
 	Report *Report
-}
-
-// Report ...
-type Report struct {
-	Log struct {
-		Writer io.Writer
-	}
-	Metrics struct {
-		Writer io.Writer
-	}
 }
 
 // JobContainer ...
