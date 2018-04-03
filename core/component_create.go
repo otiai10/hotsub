@@ -1,6 +1,8 @@
 package core
 
 import (
+	"fmt"
+
 	"golang.org/x/sync/errgroup"
 )
 
@@ -9,6 +11,8 @@ func (component *Component) Create() error {
 
 	// YAGNI: multiple SDIs for computing nodes
 	if len(component.SharedData.Inputs) != 0 {
+		// TODO: Use component.Logger
+		fmt.Printf("[ROOT][CREATE]\tCreating Shared Data Instance...")
 		if err := component.SharedData.Create(); err != nil {
 			return err
 		}
@@ -26,7 +30,6 @@ func (component *Component) Create() error {
 		if component.JobLoggerer != nil {
 			j.Report.Log = component.JobLoggerer.Logger(j)
 		}
-		j.Logf("Creating computing instance for this job")
 
 		eg.Go(func() error {
 			return j.Create(component.SharedData)

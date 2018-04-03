@@ -29,7 +29,7 @@ func (job *Job) Exec() error {
 	}
 
 	for payload := range stream {
-		fmt.Printf("&%d> %s\n", payload.Type, string(payload.Data))
+		job.Logf("[COMMIT]\t&%d> %s\n", payload.Type, string(payload.Data))
 	}
 
 	if workflow.ExitCode != 0 {

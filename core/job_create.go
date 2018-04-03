@@ -14,6 +14,9 @@ import (
 // Create creates physical machine and wake the required containers up.
 // In most cases, containers with awsub/lifecycle and user defined image are required.
 func (job *Job) Create(shared *SharedData) error {
+
+	job.Logf("[CREATE]\tCreating computing instance for this job...")
+
 	spec := *job.Machine.Spec
 	job.Identity.Name = fmt.Sprintf("%s-%04d", job.Identity.Prefix, job.Identity.Index)
 	spec.Name = job.Identity.Name
@@ -38,6 +41,8 @@ func (job *Job) Create(shared *SharedData) error {
 
 // wakeupRoutineContainer wakes the routine container up.
 func (job *Job) wakeupRoutineContainer() error {
+
+	job.Logf("[CREATE]\tSetting up routine container inside the computing instance...")
 
 	ctx := context.Background()
 	img := "awsub/lifecycle"
@@ -66,6 +71,8 @@ func (job *Job) wakeupRoutineContainer() error {
 
 // wakeupWorkflowContainer wakes the user-defined workflow container up.
 func (job *Job) wakeupWorkflowContainer(shared *SharedData) error {
+
+	job.Logf("[CREATE]\tSetting up workflow container inside the computing instance...")
 
 	ctx := context.Background()
 	container := daap.NewContainer(job.Container.Image.Name, job.Machine.Instance)

@@ -53,7 +53,7 @@ func (job *Job) fetch(input *Input) error {
 	}
 
 	for payload := range stream {
-		fmt.Printf("&%d> %s\n", payload.Type, payload.Text())
+		job.Logf("[FETCH]\t&%d> %s\n", payload.Type, payload.Text())
 	}
 
 	if fetch.ExitCode != 0 {
@@ -89,7 +89,7 @@ func (job *Job) ensure(output *Output) error {
 	}
 
 	for payload := range stream {
-		fmt.Printf("&%d> %s\n", payload.Type, payload.Text())
+		job.Logf("[ENSURE]\t&%d> %s\n", payload.Type, payload.Text())
 	}
 
 	if ensure.ExitCode != 0 {
