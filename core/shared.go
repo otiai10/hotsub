@@ -33,6 +33,9 @@ type SharedData struct {
 // Create ...
 func (sd *SharedData) Create() error {
 
+	// FIXME: Use component.Log to manage log level
+	fmt.Printf("[Root Component][CREATE]\tCreating Shared Data Instance...\n")
+
 	instance, err := dkmachine.Create(sd.Spec)
 	sd.Instance = instance
 	if err != nil {

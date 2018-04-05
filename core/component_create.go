@@ -1,24 +1,19 @@
 package core
 
 import (
-	"fmt"
-
 	"golang.org/x/sync/errgroup"
 )
 
-// Create ...
+// Create creates the instances for each Job.
 func (component *Component) Create() error {
+
+	eg := new(errgroup.Group)
 
 	// YAGNI: multiple SDIs for computing nodes
 	if len(component.SharedData.Inputs) != 0 {
 		// TODO: Use component.Logger
-		fmt.Printf("[ROOT][CREATE]\tCreating Shared Data Instance...")
-		if err := component.SharedData.Create(); err != nil {
-			return err
-		}
+		eg.Go(component.SharedData.Create)
 	}
-
-	eg := new(errgroup.Group)
 
 	for i, job := range component.Jobs {
 
@@ -31,9 +26,7 @@ func (component *Component) Create() error {
 			j.Report.Log = component.JobLoggerer.Logger(j)
 		}
 
-		eg.Go(func() error {
-			return j.Create(component.SharedData)
-		})
+		eg.Go(j.Create)
 
 		// Delegate runtimes
 		j.Container.Image = component.Runtime.Image
