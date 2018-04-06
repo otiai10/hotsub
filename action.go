@@ -46,11 +46,14 @@ func action(ctx *cli.Context) error {
 
 	// {{{ Define Log Location
 	// root.JobLoggerFactory = new(logs.ColorfulLoggerFactory)
-	cwd, err := os.Getwd()
-	if err != nil {
-		return err
+	dir := ctx.String("log-dir")
+	if dir == "" {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		dir = filepath.Join(cwd, "logs", time.Now().Format("20060102_150405"))
 	}
-	dir := filepath.Join(cwd, "logs", time.Now().Format("20060102_150405"))
 	root.JobLoggerFactory = &logs.FileLoggerFactory{Dir: dir}
 	// }}}
 

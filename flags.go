@@ -1,12 +1,15 @@
 package main
 
-import "github.com/urfave/cli"
+import (
+	"github.com/urfave/cli"
+)
 
 // All flags listed here.
 var flags = []cli.Flag{
 
 	// Command Control
 	VerboseFlag,
+	LogDirectoryFlag,
 
 	// Debug
 	DebugSleepFlag,
@@ -54,6 +57,12 @@ var DebugSleepFlag = cli.IntFlag{
 var VerboseFlag = cli.BoolFlag{
 	Name:  "verbose,v",
 	Usage: `Print verbose log for operation.`,
+}
+
+// LogDirectoryFlag ...
+var LogDirectoryFlag = cli.StringFlag{
+	Name:  "log-dir",
+	Usage: `Path to log directory where stdout/stderr log files will be placed (default: "${cwd}/logs/${time}")`,
 }
 
 // DryRunFlag ...

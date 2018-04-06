@@ -7,4 +7,5 @@ awsub \
     --tasks ${PROJROOT}/test/wordcount/wordcount.csv \
     --script ${PROJROOT}/test/wordcount/main.sh \
     --aws-iam-instance-profile testtest \
+    --log-dir /tmp \
     --verbose
