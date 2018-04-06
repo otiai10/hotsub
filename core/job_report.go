@@ -12,18 +12,19 @@ type Report struct {
 	}
 }
 
-// Lifetimef ...
-func (job *Job) Lifetimef(format string, v ...interface{}) {
+// Lifetime ...
+func (job *Job) Lifetime(label, format string, v ...interface{}) {
 	if job.Report.Log == nil {
 		return
 	}
-	job.Report.Log.Lifetimef(format, v...)
+	job.Report.Log.Lifetime(label, format, v...)
 }
 
-// Stdf ...
-func (job *Job) Stdf(streamtype int, format string, v ...interface{}) {
+// Stdio logs stdout/stderr.
+func (job *Job) Stdio(streamtype int, label string, text string) {
 	if job.Report.Log == nil {
 		return
 	}
-	job.Report.Log.Stdf(streamtype, format, v...)
+	job.Report.Log.Stdio(streamtype, label, text)
+
 }

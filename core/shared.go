@@ -34,7 +34,7 @@ type SharedData struct {
 func (sd *SharedData) Create() error {
 
 	// FIXME: Use component.Log to manage log level
-	fmt.Printf("[Root Component][CREATE]\tCreating Shared Data Instance...\n")
+	fmt.Printf("[Root Component]\t[CREATE]\tCreating Shared Data Instance...\n")
 
 	instance, err := dkmachine.Create(sd.Spec)
 	sd.Instance = instance
@@ -108,7 +108,7 @@ func (sd SharedData) fetch(input *Input) error {
 		return err
 	}
 	for payload := range stream {
-		fmt.Printf("[SaredData] &%d> %s\n", payload.Type, payload.Text())
+		fmt.Printf("[SaredDataInstance]\t[FETCH]\t&%d> %s\n", payload.Type, payload.Text())
 	}
 
 	if fetch.ExitCode != 0 {

@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"strings"
 	"sync"
 
 	"github.com/fatih/color"
@@ -71,17 +72,22 @@ func (logger *ColorfulLogger) printf(format string, v ...interface{}) {
 	fmt.Printf(format, v...)
 }
 
-// Lifetimef output log of the job lifetime.
-func (logger *ColorfulLogger) Lifetimef(format string, v ...interface{}) {
+// Lifetime output log of the job lifetime.
+func (logger *ColorfulLogger) Lifetime(label, format string, v ...interface{}) {
+	format = fmt.Sprintf("[%s]\t", strings.ToUpper(label)) + format
 	logger.printf(format, v...)
 }
 
-// Stdf output log to appropriate writer according to streamtype [stdout, stderr]
-func (logger *ColorfulLogger) Stdf(streamtype int, format string, v ...interface{}) {
-	logger.printf(format, v...)
+// Stdio logs to appropriate writer according to streamtype [stdout, stderr]
+func (logger *ColorfulLogger) Stdio(streamtype int, label, text string) {
+	out := fmt.Sprintf("[%s]\t&%d> %s", strings.ToUpper(label), streamtype, text)
+	logger.printf(out)
 }
 
 // Close ...
 func (logger *ColorfulLogger) Close() error {
+	if closer, ok := logger.writer.(io.Closer); ok {
+		return closer.Close()
+	}
 	return nil
 }

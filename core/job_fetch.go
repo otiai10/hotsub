@@ -53,7 +53,7 @@ func (job *Job) fetch(input *Input) error {
 	}
 
 	for payload := range stream {
-		job.Stdf(int(payload.Type), "[FETCH]\t&%d>\t%s", payload.Type, payload.Text())
+		job.Stdio(int(payload.Type), "fetch", payload.Text())
 	}
 
 	if fetch.ExitCode != 0 {
@@ -89,7 +89,7 @@ func (job *Job) ensure(output *Output) error {
 	}
 
 	for payload := range stream {
-		job.Stdf(int(payload.Type), "[ENSURE]\t&%d>\t%s", payload.Type, payload.Text())
+		job.Stdio(int(payload.Type), "ensure", payload.Text())
 	}
 
 	if ensure.ExitCode != 0 {

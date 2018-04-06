@@ -7,7 +7,7 @@ type Loggerer interface {
 
 // Logger is an interface of log writer
 type Logger interface {
-	Lifetimef(string, ...interface{})
-	Stdf(int, string, ...interface{})
+	Lifetime(string, string, ...interface{})
+	Stdio(int, string, string)
 	Close() error
 }
