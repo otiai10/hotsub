@@ -54,7 +54,11 @@ func action(ctx *cli.Context) error {
 		}
 		dir = filepath.Join(cwd, "logs", time.Now().Format("20060102_150405"))
 	}
-	root.JobLoggerFactory = &logs.FileLoggerFactory{Dir: dir}
+	factory := &logs.IntegratedLoggerFactory{File: &logs.FileLoggerFactory{Dir: dir}}
+	if ctx.Bool("verbose") {
+		factory.Verbose = new(logs.ColorfulLoggerFactory)
+	}
+	root.JobLoggerFactory = factory
 	// }}}
 
 	shared, err := parser.ParseSharedData(ctx.StringSlice("shared"))

@@ -85,8 +85,10 @@ func (logger *ColorfulLogger) Stdio(streamtype int, label, text string) {
 
 // Close ...
 func (logger *ColorfulLogger) Close() error {
-	if closer, ok := logger.writer.(io.Closer); ok {
-		return closer.Close()
+	if logger.writer != os.Stdout {
+		if closer, ok := logger.writer.(io.Closer); ok {
+			return closer.Close()
+		}
 	}
 	return nil
 }
