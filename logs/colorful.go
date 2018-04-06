@@ -38,9 +38,9 @@ type (
 	}
 	// ColorfulLogger ...
 	ColorfulLogger struct {
-		w io.Writer
-		c *color.Color
-		p string
+		writer io.Writer
+		color  *color.Color
+		prefix string
 	}
 )
 
@@ -50,14 +50,14 @@ func (clf *ColorfulLoggerFactory) Logger(job *core.Job) core.Logger {
 		clf.w = os.Stdout
 	}
 	return &ColorfulLogger{
-		w: clf.w,
-		c: colors[job.Identity.Index%len(colors)],
-		p: fmt.Sprintf("[%s %d]", job.Identity.Prefix, job.Identity.Index),
+		writer: clf.w,
+		color:  colors[job.Identity.Index%len(colors)],
+		prefix: fmt.Sprintf("[%s %d]", job.Identity.Prefix, job.Identity.Index),
 	}
 }
 
-// Printf ...
-func (logger *ColorfulLogger) Printf(format string, v ...interface{}) {
+// printf ...
+func (logger *ColorfulLogger) printf(format string, v ...interface{}) {
 
 	// Force newline at the tail
 	format = newline.ReplaceAllString(format, "\n")
@@ -67,6 +67,21 @@ func (logger *ColorfulLogger) Printf(format string, v ...interface{}) {
 	linelock.Lock()
 	defer linelock.Unlock()
 
-	logger.c.Print(logger.p + " ")
+	logger.color.Print(logger.prefix + "\t")
 	fmt.Printf(format, v...)
+}
+
+// Lifetimef output log of the job lifetime.
+func (logger *ColorfulLogger) Lifetimef(format string, v ...interface{}) {
+	logger.printf(format, v...)
+}
+
+// Stdf output log to appropriate writer according to streamtype [stdout, stderr]
+func (logger *ColorfulLogger) Stdf(streamtype int, format string, v ...interface{}) {
+	logger.printf(format, v...)
+}
+
+// Close ...
+func (logger *ColorfulLogger) Close() error {
+	return nil
 }

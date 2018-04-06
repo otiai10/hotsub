@@ -2,7 +2,6 @@ package core
 
 import (
 	"io"
-	"strings"
 )
 
 // Report ...
@@ -13,13 +12,18 @@ type Report struct {
 	}
 }
 
-// Logf ...
-func (job *Job) Logf(format string, v ...interface{}) {
+// Lifetimef ...
+func (job *Job) Lifetimef(format string, v ...interface{}) {
 	if job.Report.Log == nil {
 		return
 	}
-	if !strings.HasSuffix(format, "\n") {
-		format += "\n"
+	job.Report.Log.Lifetimef(format, v...)
+}
+
+// Stdf ...
+func (job *Job) Stdf(streamtype int, format string, v ...interface{}) {
+	if job.Report.Log == nil {
+		return
 	}
-	job.Report.Log.Printf(format, v...)
+	job.Report.Log.Stdf(streamtype, format, v...)
 }

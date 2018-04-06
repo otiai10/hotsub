@@ -22,7 +22,7 @@ func (job *Job) Mount(shared *dkmachine.Machine) error {
 		return err
 	}
 	for payload := range stream {
-		fmt.Printf("[MOUNT] &%d> %s\n", payload.Type, payload.Text())
+		job.Stdf(int(payload.Type), "[MOUNT]\t&%d>\t%s", payload.Type, payload.Text())
 	}
 
 	if mnt.ExitCode != 0 {
