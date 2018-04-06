@@ -2,7 +2,7 @@ package core
 
 // Destroy ...
 func (job *Job) Destroy() error {
-	job.Lifetime("destroy", "Terminating computing instance for this job...")
+	job.Lifetime(DESTROY, "Terminating computing instance for this job...")
 	if job.Machine.Instance == nil {
 		return nil
 	}

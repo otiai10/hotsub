@@ -10,7 +10,7 @@ import (
 // In most cases, containers with awsub/lifecycle and user defined image are required.
 func (job *Job) Create() error {
 
-	job.Lifetime("create", "Creating computing instance for this job...")
+	job.Lifetime(CREATE, "Creating computing instance for this job...")
 
 	spec := *job.Machine.Spec
 	job.Identity.Name = fmt.Sprintf("%s-%04d", job.Identity.Prefix, job.Identity.Index)

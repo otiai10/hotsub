@@ -15,18 +15,18 @@ type Report struct {
 }
 
 // Lifetime ...
-func (job *Job) Lifetime(label, format string, v ...interface{}) {
+func (job *Job) Lifetime(lifecycle Lifecycle, format string, v ...interface{}) {
 	if job.Report.Log == nil {
 		return
 	}
-	job.Report.Log.Lifetime(label, format, v...)
+	job.Report.Log.Lifetime(string(lifecycle), format, v...)
 }
 
 // Stdio logs stdout/stderr.
-func (job *Job) Stdio(streamtype daap.HijackedStreamType, label Lifecycle, text string) {
+func (job *Job) Stdio(streamtype daap.HijackedStreamType, lifecycle Lifecycle, text string) {
 	if job.Report.Log == nil {
 		return
 	}
-	job.Report.Log.Stdio(int(streamtype), string(label), text)
+	job.Report.Log.Stdio(int(streamtype), string(lifecycle), text)
 
 }
