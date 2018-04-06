@@ -68,19 +68,29 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	if !ctx.Bool("keep") {
-		defer root.Destroy()
+	destroy := func() error {
+		if !ctx.Bool("keep") {
+			return root.Destroy()
+		}
+		return nil
 	}
 
 	if err := root.Create(); err != nil {
+		destroy()
 		return err
 	}
 
 	if err := root.Setup(); err != nil {
+		destroy()
 		return err
 	}
 
 	if err := root.Commit(nil); err != nil {
+		destroy()
+		return err
+	}
+
+	if err := destroy(); err != nil {
 		return err
 	}
 
