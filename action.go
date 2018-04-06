@@ -80,7 +80,7 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	if err := root.Setup(); err != nil {
+	if err := root.Construct(); err != nil {
 		destroy()
 		return err
 	}

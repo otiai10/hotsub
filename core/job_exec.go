@@ -29,7 +29,7 @@ func (job *Job) Exec() error {
 	}
 
 	for payload := range stream {
-		job.Stdio(int(payload.Type), "commit", string(payload.Data))
+		job.Stdio(payload.Type, EXECUTE, string(payload.Data))
 	}
 
 	if workflow.ExitCode != 0 {

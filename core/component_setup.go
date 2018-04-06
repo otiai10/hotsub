@@ -4,14 +4,14 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-// Setup sets up all the containers inside computing nodes.
-func (component *Component) Setup() error {
+// Construct sets up all the containers inside computing nodes.
+func (component *Component) Construct() error {
 	eg := new(errgroup.Group)
 
 	for _, job := range component.Jobs {
 		j := job
 		eg.Go(func() error {
-			return j.Setup(component.SharedData)
+			return j.Construct(component.SharedData)
 		})
 	}
 

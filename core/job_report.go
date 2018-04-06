@@ -2,6 +2,8 @@ package core
 
 import (
 	"io"
+
+	"github.com/otiai10/daap"
 )
 
 // Report ...
@@ -21,10 +23,10 @@ func (job *Job) Lifetime(label, format string, v ...interface{}) {
 }
 
 // Stdio logs stdout/stderr.
-func (job *Job) Stdio(streamtype int, label string, text string) {
+func (job *Job) Stdio(streamtype daap.HijackedStreamType, label Lifecycle, text string) {
 	if job.Report.Log == nil {
 		return
 	}
-	job.Report.Log.Stdio(streamtype, label, text)
+	job.Report.Log.Stdio(int(streamtype), string(label), text)
 
 }

@@ -39,7 +39,7 @@ func (job *Job) push(output *Output) error {
 	}
 
 	for payload := range stream {
-		job.Stdio(int(payload.Type), "push", payload.Text())
+		job.Stdio(payload.Type, PUSH, payload.Text())
 	}
 
 	if push.ExitCode != 0 {

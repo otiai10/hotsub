@@ -9,9 +9,10 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func (job *Job) Setup(shared *SharedData) error {
+// Construct creates containers inside job instance.
+func (job *Job) Construct(shared *SharedData) error {
 
-	job.Lifetime("setup", "Setting up containers for this job...")
+	job.Lifetime("construct", "Constructing containers for this job...")
 
 	if len(shared.Inputs) != 0 {
 		if err := shared.CreateNFSVolumeOn(job.Machine.Instance); err != nil {
@@ -29,7 +30,7 @@ func (job *Job) Setup(shared *SharedData) error {
 // wakeupRoutineContainer wakes the routine container up.
 func (job *Job) wakeupRoutineContainer() error {
 
-	job.Lifetime("setup", "Setting up routine container inside the computing instance...")
+	job.Lifetime("construct", "Constructing routine container inside the computing instance...")
 
 	ctx := context.Background()
 	img := "awsub/lifecycle"
@@ -59,7 +60,7 @@ func (job *Job) wakeupRoutineContainer() error {
 // wakeupWorkflowContainer wakes the user-defined workflow container up.
 func (job *Job) wakeupWorkflowContainer(shared *SharedData) error {
 
-	job.Lifetime("setup", "Setting up workflow container inside the computing instance...")
+	job.Lifetime("construct", "Constructing workflow container inside the computing instance...")
 
 	ctx := context.Background()
 	container := daap.NewContainer(job.Container.Image.Name, job.Machine.Instance)
