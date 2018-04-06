@@ -1,6 +1,8 @@
 package core
 
 import (
+	"fmt"
+
 	"golang.org/x/sync/errgroup"
 )
 
@@ -20,6 +22,7 @@ func (component *Component) Create() error {
 		j := job
 		j.Identity.Prefix = component.Identity.Name
 		j.Identity.Index = i
+		j.Identity.Name = fmt.Sprintf("%s.%d", j.Identity.Prefix, i)
 		j.Machine.Spec = component.Machine.Spec
 
 		if component.JobLoggerFactory != nil {

@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 	"regexp"
-	"strings"
 	"sync"
 
 	"github.com/fatih/color"
@@ -74,13 +73,13 @@ func (logger *ColorfulLogger) printf(format string, v ...interface{}) {
 
 // Lifetime output log of the job lifetime.
 func (logger *ColorfulLogger) Lifetime(label, format string, v ...interface{}) {
-	format = fmt.Sprintf("[%s]\t", strings.ToUpper(label)) + format
+	format = fmt.Sprintf("[%s]\t", label) + format
 	logger.printf(format, v...)
 }
 
 // Stdio logs to appropriate writer according to streamtype [stdout, stderr]
 func (logger *ColorfulLogger) Stdio(streamtype int, label, text string) {
-	out := fmt.Sprintf("[%s]\t&%d> %s", strings.ToUpper(label), streamtype, text)
+	out := fmt.Sprintf("[%s]\t&%d> %s", label, streamtype, text)
 	logger.printf(out)
 }
 

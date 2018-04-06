@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"time"
 
 	"github.com/otiai10/awsub/core"
 	"github.com/otiai10/awsub/logs"
@@ -43,8 +44,14 @@ func action(ctx *cli.Context) error {
 	root.Jobs = jobs
 	applog("Your tasks file is parsed and decoded to %d job(s) ✅", len(jobs))
 
-	// {{{ TEMP
-	root.JobLoggerFactory = new(logs.ColorfulLoggerFactory)
+	// {{{ Define Log Location
+	// root.JobLoggerFactory = new(logs.ColorfulLoggerFactory)
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	dir := filepath.Join(cwd, "logs", time.Now().Format("20060102_150405"))
+	root.JobLoggerFactory = &logs.FileLoggerFactory{Dir: dir}
 	// }}}
 
 	shared, err := parser.ParseSharedData(ctx.StringSlice("shared"))
