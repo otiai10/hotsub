@@ -9,6 +9,11 @@ func (component *Component) Destroy() error {
 		if err := job.Destroy(); err != nil {
 			e = err
 		}
+		if job.Report.Log != nil {
+			if err := job.Report.Log.Close(); err != nil {
+				e = err
+			}
+		}
 	}
 
 	if component.SharedData.Instance != nil {
