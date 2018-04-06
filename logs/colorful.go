@@ -46,7 +46,7 @@ type (
 )
 
 // Logger ...
-func (clf *ColorfulLoggerFactory) Logger(job *core.Job) core.Logger {
+func (clf *ColorfulLoggerFactory) Logger(job *core.Job) (core.Logger, error) {
 	if clf.w == nil {
 		clf.w = os.Stdout
 	}
@@ -54,7 +54,7 @@ func (clf *ColorfulLoggerFactory) Logger(job *core.Job) core.Logger {
 		writer: clf.w,
 		color:  colors[job.Identity.Index%len(colors)],
 		prefix: fmt.Sprintf("[%s %d]", job.Identity.Prefix, job.Identity.Index),
-	}
+	}, nil
 }
 
 // printf ...

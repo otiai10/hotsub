@@ -44,7 +44,7 @@ func action(ctx *cli.Context) error {
 	applog("Your tasks file is parsed and decoded to %d job(s) ✅", len(jobs))
 
 	// {{{ TEMP
-	root.JobLoggerer = new(logs.ColorfulLoggerFactory)
+	root.JobLoggerFactory = new(logs.ColorfulLoggerFactory)
 	// }}}
 
 	shared, err := parser.ParseSharedData(ctx.StringSlice("shared"))

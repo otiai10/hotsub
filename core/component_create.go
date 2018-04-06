@@ -22,8 +22,12 @@ func (component *Component) Create() error {
 		j.Identity.Index = i
 		j.Machine.Spec = component.Machine.Spec
 
-		if component.JobLoggerer != nil {
-			j.Report.Log = component.JobLoggerer.Logger(j)
+		if component.JobLoggerFactory != nil {
+			logger, err := component.JobLoggerFactory.Logger(j)
+			if err != nil {
+				return err
+			}
+			j.Report.Log = logger
 		}
 
 		eg.Go(j.Create)

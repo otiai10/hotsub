@@ -1,8 +1,8 @@
 package core
 
-// Loggerer can generate a Logger struct corresponding to the specified Job.
-type Loggerer interface {
-	Logger(*Job) Logger
+// LoggerFactory can generate a Logger struct corresponding to the specified Job.
+type LoggerFactory interface {
+	Logger(*Job) (Logger, error)
 }
 
 // Logger is an interface of log writer

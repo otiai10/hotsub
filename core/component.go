@@ -41,8 +41,8 @@ type Component struct {
 	// RootLog is an application logger ONLY FOR ROOT COMPONENT.
 	// RootLog *log.Logger
 
-	// JobLoggerer is an interface to specify logger for each job.
-	JobLoggerer Loggerer
+	// JobLoggerFactory is an interface to specify logger for each job.
+	JobLoggerFactory LoggerFactory
 }
 
 // RootComponentTemplate ...
