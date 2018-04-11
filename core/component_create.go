@@ -1,7 +1,10 @@
 package core
 
 import (
+	"context"
 	"fmt"
+
+	"golang.org/x/sync/semaphore"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -16,6 +19,9 @@ func (component *Component) Create() error {
 		// TODO: Use component.Logger
 		eg.Go(component.SharedData.Create)
 	}
+
+	ctx := context.Background()
+	sem := semaphore.NewWeighted(4)
 
 	for i, job := range component.Jobs {
 
@@ -33,7 +39,13 @@ func (component *Component) Create() error {
 			j.Report.Log = logger
 		}
 
-		eg.Go(j.Create)
+		if err := sem.Acquire(ctx, 1); err != nil {
+			return err
+		}
+		eg.Go(func() error {
+			defer sem.Release(1)
+			return j.Create()
+		})
 
 		// Delegate runtimes
 		j.Container.Image = component.Runtime.Image

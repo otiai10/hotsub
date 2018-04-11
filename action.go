@@ -59,6 +59,7 @@ func action(ctx *cli.Context) error {
 		factory.Verbose = new(logs.ColorfulLoggerFactory)
 	}
 	root.JobLoggerFactory = factory
+	log.Printf("[COMMAND]\tSee logs here -> %s\n", dir)
 	// }}}
 
 	shared, err := parser.ParseSharedData(ctx.StringSlice("shared"))
@@ -82,6 +83,10 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
+	if err := root.Prepare(); err != nil {
+		return err
+	}
+
 	destroy := func() error {
 		if !ctx.Bool("keep") {
 			return root.Destroy()
@@ -89,20 +94,24 @@ func action(ctx *cli.Context) error {
 		return nil
 	}
 
-	if err := root.Create(); err != nil {
-		destroy()
-		return err
+	if err := root.Run(); err != nil {
+		return destroy()
 	}
 
-	if err := root.Construct(); err != nil {
-		destroy()
-		return err
-	}
+	// if err := root.Create(); err != nil {
+	// 	destroy()
+	// 	return err
+	// }
 
-	if err := root.Commit(nil); err != nil {
-		destroy()
-		return err
-	}
+	// if err := root.Construct(); err != nil {
+	// 	destroy()
+	// 	return err
+	// }
+
+	// if err := root.Commit(nil); err != nil {
+	// 	destroy()
+	// 	return err
+	// }
 
 	if err := destroy(); err != nil {
 		return err

@@ -3,7 +3,6 @@ package logs
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -52,8 +51,6 @@ func (factory *FileLoggerFactory) Logger(job *core.Job) (core.Logger, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("[COMMAND]\tSee logs -> %s\n", jobdir)
 
 	return &FileLogger{
 		stdout:   stdout,
