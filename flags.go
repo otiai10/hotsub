@@ -10,6 +10,7 @@ var flags = []cli.Flag{
 	// Command Control
 	VerboseFlag,
 	LogDirectoryFlag,
+	ConcurrencyFlag,
 
 	// Debug
 	DebugSleepFlag,
@@ -63,6 +64,13 @@ var VerboseFlag = cli.BoolFlag{
 var LogDirectoryFlag = cli.StringFlag{
 	Name:  "log-dir",
 	Usage: `Path to log directory where stdout/stderr log files will be placed (default: "${cwd}/logs/${time}")`,
+}
+
+// ConcurrencyFlag ...
+var ConcurrencyFlag = cli.Int64Flag{
+	Name:  "concurrency,C",
+	Usage: `Concurrency for creating machines (≠ job running) // TODO: more documentation`,
+	Value: 8,
 }
 
 // DryRunFlag ...

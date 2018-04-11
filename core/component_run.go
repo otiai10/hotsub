@@ -16,7 +16,7 @@ func (component *Component) Run() error {
 	}
 
 	eg := new(errgroup.Group)
-	sem := semaphore.NewWeighted(4)
+	sem := semaphore.NewWeighted(component.Concurrency)
 
 	for i, job := range component.Jobs {
 

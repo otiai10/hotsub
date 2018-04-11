@@ -43,6 +43,11 @@ type Component struct {
 
 	// JobLoggerFactory is an interface to specify logger for each job.
 	JobLoggerFactory LoggerFactory
+
+	// Concurrency for creating machines.
+	// We estimate that creating machines is the most costly process in job lifecycle,
+	// therefore, this "Concurrency" prop should throttle the concurrency of them.
+	Concurrency int64
 }
 
 // RootComponentTemplate ...
@@ -54,6 +59,7 @@ func RootComponentTemplate(name string) *Component {
 			Image  *Image
 			Script *Script
 		}{Image: &Image{}, Script: &Script{}},
-		SharedData: &SharedData{},
+		SharedData:  &SharedData{},
+		Concurrency: 8,
 	}
 }

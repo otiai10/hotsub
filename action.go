@@ -37,6 +37,8 @@ func action(ctx *cli.Context) error {
 	root.Runtime.Image.Name = ctx.String("image")
 	root.Runtime.Script.Path = ctx.String("script")
 
+	root.Concurrency = ctx.Int64("concurrency")
+
 	jobs, err := parser.ParseFile(tasksfpath)
 	if err != nil {
 		return err
