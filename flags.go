@@ -13,7 +13,6 @@ var flags = []cli.Flag{
 	ConcurrencyFlag,
 
 	// Debug
-	DebugSleepFlag,
 	KeepFlag,
 
 	// Operation Contents
@@ -46,13 +45,6 @@ var flags = []cli.Flag{
 }
 
 // Debug flags
-
-// DebugSleepFlag ...
-var DebugSleepFlag = cli.IntFlag{
-	Name:  "debug-sleep",
-	Usage: "[DEBUG] Sleep millisecond between sending parallel jobs",
-	Value: 500,
-}
 
 // VerboseFlag ...
 var VerboseFlag = cli.BoolFlag{
