@@ -12,8 +12,10 @@ import (
 )
 
 var (
-	headExpression   = regexp.MustCompile("^(?P<key>.+) +(?P<bind>.+)$")
-	sharedExpression = regexp.MustCompile("^(?P<name>[0-9A-Z_]+)=(?P<url>.+)$")
+	headExpressionString         = "^(?P<key>.+) +(?P<bind>.+)$"
+	headExpression               = regexp.MustCompile(headExpressionString)
+	keyValuePairExpressionString = "^(?P<key>[0-9A-Z_]+)=(?P<value>.+)$"
+	keyValuePairExpression       = regexp.MustCompile(keyValuePairExpressionString)
 )
 
 // ParseFile ...
@@ -61,7 +63,7 @@ func ParseRowReader(r *csv.Reader, prefix string) (jobs []*core.Job, err error) 
 	for _, th := range hrow {
 		matched := headExpression.FindStringSubmatch(th)
 		if len(matched) < 3 {
-			return nil, fmt.Errorf("unexpected format for task file columns header: %v", th)
+			return nil, fmt.Errorf("unexpected format for task file columns header: %v (expected: %s)", th, headExpressionString)
 		}
 		header = append(header, Column{
 			Type: strings.Trim(matched[1], " "),
@@ -125,9 +127,9 @@ func ParseSharedData(kvpairs []string) (inputs core.Inputs, err error) {
 		return
 	}
 	for _, kv := range kvpairs {
-		kvl := sharedExpression.FindStringSubmatch(kv)
+		kvl := keyValuePairExpression.FindStringSubmatch(kv)
 		if len(kvl) < 3 {
-			err = fmt.Errorf("Invalid format for shared data: %s", kv)
+			err = fmt.Errorf("Invalid format for shared data: %s (expected: %s)", kv, keyValuePairExpressionString)
 			return
 		}
 		inputs = append(inputs, &core.Input{Resource: core.Resource{
