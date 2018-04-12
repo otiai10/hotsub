@@ -97,7 +97,8 @@ func action(ctx *cli.Context) error {
 	}
 
 	if err := root.Run(); err != nil {
-		return destroy()
+		destroy()
+		return err
 	}
 
 	// if err := root.Create(); err != nil {
