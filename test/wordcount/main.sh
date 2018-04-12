@@ -11,6 +11,10 @@ echo "=== Test --input-recursive ==="
 cat ${META}/profile.txt
 echo "======================="
 
+echo "=== Common ENV ==="
+echo "FOO: ${FOO}"
+echo "=================="
+
 cat ${SPEECH_FILE} \
   | tr ' ' '\n' \
   | tr -d , \
