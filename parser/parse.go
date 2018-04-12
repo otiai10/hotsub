@@ -63,7 +63,10 @@ func ParseRowReader(r *csv.Reader, prefix string) (jobs []*core.Job, err error) 
 		if len(matched) < 3 {
 			return nil, fmt.Errorf("unexpected format for task file columns header: %v", th)
 		}
-		header = append(header, Column{Type: matched[1], Name: matched[2]})
+		header = append(header, Column{
+			Type: strings.Trim(matched[1], " "),
+			Name: strings.Trim(matched[2], " "),
+		})
 	}
 	for i, row := range rows {
 		if len(row) < len(header) {
@@ -88,6 +91,7 @@ type Column struct {
 
 // Bind ...
 func (c Column) Bind(job *core.Job, value string) error {
+	value = strings.Trim(value, " ")
 	switch c.Type {
 	case "--env":
 		job.Parameters.Envs = append(job.Parameters.Envs, core.Env{Name: c.Name, Value: value})
