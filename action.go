@@ -101,21 +101,6 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	// if err := root.Create(); err != nil {
-	// 	destroy()
-	// 	return err
-	// }
-
-	// if err := root.Construct(); err != nil {
-	// 	destroy()
-	// 	return err
-	// }
-
-	// if err := root.Commit(nil); err != nil {
-	// 	destroy()
-	// 	return err
-	// }
-
 	if err := destroy(); err != nil {
 		return err
 	}
