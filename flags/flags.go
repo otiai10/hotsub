@@ -82,3 +82,11 @@ var disksize = cli.UintFlag{
 	Usage: `Size of data disk to attach for each job in GB.`,
 	Value: 64,
 }
+
+// env flag allows to provide environment variables to each container, instead of using "--env" in tasks file.
+// This flag is expected to be used for specifying common environment variables to containers,
+// but at the same time, which is specific for project or every command line.
+var env = cli.StringSliceFlag{
+	Name:  "env,E",
+	Usage: `Environment variables to pass to all the workflow containers`,
+}

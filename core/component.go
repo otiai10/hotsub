@@ -13,6 +13,9 @@ type Component struct {
 	// Jobs represent specific set of jobs which should be executed on this component.
 	Jobs []*Job
 
+	// CommonParameters represents the common env (and TODO: input, output) for all the workflow containers.
+	CommonParameters *Parameters
+
 	// SharedData ...
 	SharedData *SharedData
 
@@ -59,7 +62,8 @@ func RootComponentTemplate(name string) *Component {
 			Image  *Image
 			Script *Script
 		}{Image: &Image{}, Script: &Script{}},
-		SharedData:  &SharedData{},
-		Concurrency: 8,
+		CommonParameters: &Parameters{},
+		SharedData:       &SharedData{},
+		Concurrency:      8,
 	}
 }

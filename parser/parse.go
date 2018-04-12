@@ -140,3 +140,22 @@ func ParseSharedData(kvpairs []string) (inputs core.Inputs, err error) {
 	}
 	return
 }
+
+// ParseEnv should parse given string slice flags to []core.Env.
+func ParseEnv(kvpairs []string) (envs []core.Env, err error) {
+	if len(kvpairs) == 0 {
+		return
+	}
+	for _, kv := range kvpairs {
+		kvl := keyValuePairExpression.FindStringSubmatch(kv)
+		if len(kvl) < 3 {
+			err = fmt.Errorf("Invalid format for env variable: %s (expected: %s)", kv, keyValuePairExpressionString)
+			return
+		}
+		envs = append(envs, core.Env{
+			Name:  kvl[1],
+			Value: kvl[2],
+		})
+	}
+	return
+}

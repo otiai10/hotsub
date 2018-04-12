@@ -36,6 +36,10 @@ func (component *Component) Run() error {
 			return err
 		}
 
+		// Merge common parameters to each job.
+		// TODO: Refactor, such as job.Parameters.Merge(common)
+		j.Parameters.Envs = append(j.Parameters.Envs, component.CommonParameters.Envs...)
+
 		// Execute main.
 		eg.Go(func() error {
 			return j.Run(component.SharedData, sem)

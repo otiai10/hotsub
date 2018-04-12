@@ -64,11 +64,18 @@ func action(ctx *cli.Context) error {
 	log.Printf("[COMMAND]\tSee logs here -> %s\n", dir)
 	// }}}
 
+	commonEnv, err := parser.ParseEnv(ctx.StringSlice("env"))
+	if err != nil {
+		return err
+	}
+	root.CommonParameters.Envs = commonEnv
+
 	shared, err := parser.ParseSharedData(ctx.StringSlice("shared"))
 	if err != nil {
 		return err
 	}
 	root.SharedData.Inputs = shared
+
 	sdispec, err := platform.DefineSharedDataInstanceSpec(shared, ctx)
 	if err != nil {
 		return err

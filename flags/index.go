@@ -16,6 +16,7 @@ var Index = []cli.Flag{
 	shared,
 	keep,
 	disksize,
+	env,
 
 	// AWS
 	awsRegion,
