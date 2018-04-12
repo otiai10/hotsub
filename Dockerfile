@@ -27,6 +27,3 @@ ENV PATH=${PATH}:/root/google-cloud-sdk/bin
 
 # Uploader scripts
 ADD ./lifecycle /lifecycle
-
-# For mounting onto SharedDataInstance
-RUN apt-get install -y nfs-common
