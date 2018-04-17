@@ -1,3 +1,3 @@
 --env SPEAKER_NAME,--input SPEECH_FILE,--input-recursive META,--output-recursive OUTDIR
-Martin,s3://awsub-test-otiai10/speech/martin_speech_1963.txt,s3://awsub-test-otiai10/speech/martin_meta,s3://awsub-test-otiai10/speech/out/martin
-Elizabeth,s3://awsub-test-otiai10/speech/elizabeth_speech_1588.txt,s3://awsub-test-otiai10/speech/elizabeth_meta,s3://awsub-test-otiai10/speech/out/elizabeth
+Martin,s3://awsub/examples/wordcount/speech/martinking_1963.txt,s3://awsub/examples/wordcount/speech/martinking,s3://awsub/examples/wordcount/out/martin
+Emma,s3://awsub/examples/wordcount/speech/emmawatson_2014.txt,s3://awsub/examples/wordcount/speech/emmawatson,s3://awsub/examples/wordcount/out/emmawatson
