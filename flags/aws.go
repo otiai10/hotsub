@@ -12,21 +12,22 @@ import "github.com/urfave/cli"
 // 	Usage: `AWS VPC ID in which AmazonEC2 instances would be launched`,
 // }
 
-var awsRegion = cli.StringFlag{
+// AwsRegion ...
+var AwsRegion = cli.StringFlag{
 	Name:  "aws-region",
 	Usage: `AWS region name in which AmazonEC2 instances would be launched`,
 	Value: "ap-northeast-1",
 }
 
-// awsEC2InstanceType ...
-var awsEC2InstanceType = cli.StringFlag{
+// AwsEC2InstanceType ...
+var AwsEC2InstanceType = cli.StringFlag{
 	Name:  "aws-ec2-instance-type",
 	Usage: `AWS EC2 instance type. If specified, all --min-cores and --min-ram would be ignored.`,
 	Value: "t2.micro",
 }
 
-// awsIAMInstanceProfile ...
-var awsIAMInstanceProfile = cli.StringFlag{
+// AwsIAMInstanceProfile ...
+var AwsIAMInstanceProfile = cli.StringFlag{
 	Name:  "aws-iam-instance-profile",
 	Usage: `AWS instance profile from your IAM roles.`,
 }

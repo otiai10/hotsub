@@ -6,24 +6,24 @@ import "github.com/urfave/cli"
 
 // Index lists and exports all the flags so that awsub can use them.
 var Index = []cli.Flag{
-	verbose,
-	logDirectory,
-	concurrency,
-	provider,
-	tasks,
-	image,
-	script,
-	shared,
-	keep,
-	disksize,
-	env,
+	Verbose,
+	LogDirectory,
+	Concurrency,
+	Provider,
+	Tasks,
+	Image,
+	Script,
+	Shared,
+	Keep,
+	Disksize,
+	Env,
 
 	// AWS
-	awsRegion,
-	awsEC2InstanceType,
-	awsIAMInstanceProfile,
+	AwsRegion,
+	AwsEC2InstanceType,
+	AwsIAMInstanceProfile,
 
 	// GCP
-	googleProject,
-	googleZone,
+	GoogleProject,
+	GoogleZone,
 }

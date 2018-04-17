@@ -4,17 +4,17 @@ import (
 	"github.com/urfave/cli"
 )
 
-var verbose = cli.BoolFlag{
+var Verbose = cli.BoolFlag{
 	Name:  "verbose,v",
 	Usage: `Print verbose log for operation.`,
 }
 
-var logDirectory = cli.StringFlag{
+var LogDirectory = cli.StringFlag{
 	Name:  "log-dir",
 	Usage: `Path to log directory where stdout/stderr log files will be placed (default: "${cwd}/logs/${time}")`,
 }
 
-var concurrency = cli.Int64Flag{
+var Concurrency = cli.Int64Flag{
 	Name:  "concurrency,C",
 	Usage: `Concurrency for creating machines (≠ job running) // TODO: more documentation`,
 	Value: 8,
@@ -26,38 +26,39 @@ var concurrency = cli.Int64Flag{
 // 	Usage: `Print the pipeline(s) that would be run and then exit. (default: false)`,
 // }
 
-var provider = cli.StringFlag{
+var Provider = cli.StringFlag{
 	Name:  "provider,p",
 	Usage: `Job service provider. Valid values are "aws" and "local."`,
 	Value: "aws",
 }
 
-// tasks ...
-var tasks = cli.StringFlag{
+// Tasks ...
+var Tasks = cli.StringFlag{
 	Name:  "tasks",
 	Usage: `Path to CSV of task parameters, expected to specify --env, --input, --input-recursive and --output-recursive. (required)`,
 }
 
-// image ...
-var image = cli.StringFlag{
+// Image ...
+var Image = cli.StringFlag{
 	Name:  "image",
 	Usage: `Image name from Docker Hub or other Docker image service.`,
 	Value: "ubuntu:14.04",
 }
 
-// script ...
-var script = cli.StringFlag{
+// Script ...
+var Script = cli.StringFlag{
 	Name:  "script",
 	Usage: `Local path to a script to run inside the job's Docker container. (required)`,
 }
 
-// shared ...
-var shared = cli.StringSliceFlag{
+// Shared ...
+var Shared = cli.StringSliceFlag{
 	Name:  "shared,S",
 	Usage: `Shared data URL on cloud storage bucket. (e.g. s3://~)`,
 }
 
-var keep = cli.BoolFlag{
+// Keep ...
+var Keep = cli.BoolFlag{
 	Name:  "keep",
 	Usage: `Keep instances created for computing event after everything gets done`,
 }
@@ -76,17 +77,17 @@ var keep = cli.BoolFlag{
 // 	Value: 4,
 // }
 
-// disksize ...
-var disksize = cli.UintFlag{
+// Disksize ...
+var Disksize = cli.UintFlag{
 	Name:  "disk-size",
 	Usage: `Size of data disk to attach for each job in GB.`,
 	Value: 64,
 }
 
-// env flag allows to provide environment variables to each container, instead of using "--env" in tasks file.
+// Env flag allows to provide environment variables to each container, instead of using "--env" in tasks file.
 // This flag is expected to be used for specifying common environment variables to containers,
 // but at the same time, which is specific for project or every command line.
-var env = cli.StringSliceFlag{
+var Env = cli.StringSliceFlag{
 	Name:  "env,E",
 	Usage: `Environment variables to pass to all the workflow containers`,
 }

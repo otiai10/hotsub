@@ -1,0 +1,1 @@
+This package collects all the definitions of `awsub` command line flags/options.
