@@ -54,7 +54,7 @@ func action(ctx *cli.Context) error {
 		if err != nil {
 			return err
 		}
-		dir = filepath.Join(cwd, "logs", time.Now().Format("20060102_150405"))
+		dir = filepath.Join(cwd, "log", time.Now().Format("20060102_150405"))
 	}
 	factory := &logs.IntegratedLoggerFactory{File: &logs.FileLoggerFactory{Dir: dir}}
 	if ctx.Bool("verbose") {
