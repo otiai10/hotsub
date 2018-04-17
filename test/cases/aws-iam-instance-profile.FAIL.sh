@@ -8,4 +8,4 @@ awsub \
     --tasks ${PROJROOT}/test/wordcount/wordcount.csv \
     --script ${PROJROOT}/test/wordcount/main.sh \
     --verbose
-    # --aws-iam-instance-profile testtest
+    # --aws-iam-instance-profile awsubtest

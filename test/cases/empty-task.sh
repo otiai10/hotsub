@@ -7,5 +7,5 @@ set -e -v
 awsub \
     --tasks ${PROJROOT}/test/wordcount/empty-task.csv \
     --script ${PROJROOT}/test/wordcount/main.sh \
-    --aws-iam-instance-profile testtest \
+    --aws-iam-instance-profile awsubtest \
     --verbose

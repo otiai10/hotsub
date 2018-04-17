@@ -8,7 +8,7 @@ mkdir -p ${DEST}
 set -v
 bwa mem \
     -t 2 -T 0 \
-    ${REFERENCE}/GRCh37.fa \
+    ${REFERENCE}/${REFERENCE_FILE} \
     ${FASTQ_1} ${FASTQ_2} \
     > ${DEST}/result.sam
 samtools view \
