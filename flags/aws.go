@@ -31,3 +31,10 @@ var AwsIAMInstanceProfile = cli.StringFlag{
 	Name:  "aws-iam-instance-profile",
 	Usage: `AWS instance profile from your IAM roles.`,
 }
+
+// AwsSharedInstanceType ...
+var AwsSharedInstanceType = cli.StringFlag{
+	Name:  "aws-shared-instance-type",
+	Usage: `Shared Instance Type on AWS`,
+	Value: "m4.4xlarge",
+}

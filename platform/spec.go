@@ -41,14 +41,13 @@ func DefineMachineSpec(ctx Context) (*dkmachine.CreateOptions, error) {
 // though it's a bit verbose ;)
 func DefineSharedDataInstanceSpec(shared core.Inputs, ctx Context) (*dkmachine.CreateOptions, error) {
 	opt := &dkmachine.CreateOptions{
+		Name:                        "Shared-Data-Instance",
 		AmazonEC2Region:             ctx.String("aws-region"),
 		AmazonEC2IAMInstanceProfile: ctx.String("aws-iam-instance-profile"),
 		AmazonEC2SecurityGroup:      DefaultAWSSecurityGroupName,
-		// {{{ TODO: Fix hard coding
-		AmazonEC2InstanceType: "m4.2xlarge", // TODO: Fix hard coding
-		AmazonEC2RootSize:     64,           // TODO: Fix hard coding
-		// }}}
-		Name: "Shared-Data-Instance",
+
+		AmazonEC2InstanceType: ctx.String("aws-shared-instance-type"),
+		AmazonEC2RootSize:     ctx.Int("shareddata-disksize"),
 	}
 	switch Provider(ctx.String("provider")) {
 	case AWS:

@@ -91,3 +91,10 @@ var Env = cli.StringSliceFlag{
 	Name:  "env,E",
 	Usage: `Environment variables to pass to all the workflow containers`,
 }
+
+// SharedDataDisksize ...
+var SharedDataDisksize = cli.IntFlag{
+	Name:  "shareddata-disksize",
+	Usage: `Disk size of shared data instance (in GB)`,
+	Value: 64,
+}

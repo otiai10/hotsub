@@ -15,13 +15,15 @@ var Index = []cli.Flag{
 	Script,
 	Shared,
 	Keep,
-	Disksize,
 	Env,
+	Disksize,
+	SharedDataDisksize,
 
 	// AWS
 	AwsRegion,
 	AwsEC2InstanceType,
 	AwsIAMInstanceProfile,
+	AwsSharedInstanceType,
 
 	// GCP
 	GoogleProject,
