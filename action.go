@@ -2,10 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
+	"regexp"
+	"time"
 
 	"github.com/otiai10/awsub/core"
+	"github.com/otiai10/awsub/logs"
 	"github.com/otiai10/awsub/parser"
 	"github.com/otiai10/awsub/platform"
 	"github.com/urfave/cli"
@@ -33,17 +37,45 @@ func action(ctx *cli.Context) error {
 	root.Runtime.Image.Name = ctx.String("image")
 	root.Runtime.Script.Path = ctx.String("script")
 
+	root.Concurrency = ctx.Int64("concurrency")
+
 	jobs, err := parser.ParseFile(tasksfpath)
 	if err != nil {
 		return err
 	}
 	root.Jobs = jobs
+	applog("Your tasks file is parsed and decoded to %d job(s) ✅", len(jobs))
+
+	// {{{ Define Log Location
+	// root.JobLoggerFactory = new(logs.ColorfulLoggerFactory)
+	dir := ctx.String("log-dir")
+	if dir == "" {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		dir = filepath.Join(cwd, "log", time.Now().Format("20060102_150405"))
+	}
+	factory := &logs.IntegratedLoggerFactory{File: &logs.FileLoggerFactory{Dir: dir}}
+	if ctx.Bool("verbose") {
+		factory.Verbose = new(logs.ColorfulLoggerFactory)
+	}
+	root.JobLoggerFactory = factory
+	log.Printf("[COMMAND]\tSee logs here -> %s\n", dir)
+	// }}}
+
+	commonEnv, err := parser.ParseEnv(ctx.StringSlice("env"))
+	if err != nil {
+		return err
+	}
+	root.CommonParameters.Envs = commonEnv
 
 	shared, err := parser.ParseSharedData(ctx.StringSlice("shared"))
 	if err != nil {
 		return err
 	}
 	root.SharedData.Inputs = shared
+
 	sdispec, err := platform.DefineSharedDataInstanceSpec(shared, ctx)
 	if err != nil {
 		return err
@@ -60,17 +92,32 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	if !ctx.Bool("keep") {
-		defer root.Destroy()
-	}
-
-	if err := root.Create(); err != nil {
+	if err := root.Prepare(); err != nil {
 		return err
 	}
 
-	if err := root.Commit(nil); err != nil {
+	destroy := func() error {
+		if !ctx.Bool("keep") {
+			return root.Destroy()
+		}
+		return nil
+	}
+
+	if err := root.Run(); err != nil {
+		destroy()
 		return err
 	}
+
+	if err := destroy(); err != nil {
+		return err
+	}
+
+	applog("All of your %d job(s) are completed 🎉", len(jobs))
 
 	return nil
+}
+
+func applog(format string, v ...interface{}) {
+	format = regexp.MustCompile("\n*$").ReplaceAllString(format, "\n")
+	log.Printf("[COMMAND]\t"+format, v...)
 }

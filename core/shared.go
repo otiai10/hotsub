@@ -33,6 +33,9 @@ type SharedData struct {
 // Create ...
 func (sd *SharedData) Create() error {
 
+	// FIXME: Use component.Log to manage log level
+	fmt.Printf("[Root Component]\t[CREATE]\tCreating Shared Data Instance...\n")
+
 	instance, err := dkmachine.Create(sd.Spec)
 	sd.Instance = instance
 	if err != nil {
@@ -55,10 +58,11 @@ func (sd *SharedData) fetchAll() error {
 	if err != nil {
 		return nil
 	}
+
 	for range progress {
-		fmt.Printf(".") // DEBUG: delete
+		// fmt.Printf(".")
 	}
-	fmt.Printf("\n")
+	// fmt.Printf("\n")
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
@@ -104,7 +108,7 @@ func (sd SharedData) fetch(input *Input) error {
 		return err
 	}
 	for payload := range stream {
-		fmt.Printf("[SaredData] &%d> %s\n", payload.Type, payload.Text())
+		fmt.Printf("[SaredDataInstance]\t[FETCH]\t&%d> %s\n", payload.Type, payload.Text())
 	}
 
 	if fetch.ExitCode != 0 {
@@ -123,9 +127,11 @@ func (sd SharedData) startNFS() error {
 	if err != nil {
 		return nil
 	}
+
 	for range progress {
-		fmt.Printf(".") // DEBUG: delete
+		// fmt.Printf(".")
 	}
+	// fmt.Printf("\n")
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{

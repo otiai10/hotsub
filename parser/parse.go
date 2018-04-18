@@ -12,8 +12,10 @@ import (
 )
 
 var (
-	headExpression   = regexp.MustCompile("^(?P<key>.+) +(?P<bind>.+)$")
-	sharedExpression = regexp.MustCompile("^(?P<name>[0-9A-Z_]+)=(?P<url>.+)$")
+	headExpressionString         = "^(?P<key>.+) +(?P<bind>.+)$"
+	headExpression               = regexp.MustCompile(headExpressionString)
+	keyValuePairExpressionString = "^(?P<key>[0-9A-Z_]+)=(?P<value>.+)$"
+	keyValuePairExpression       = regexp.MustCompile(keyValuePairExpressionString)
 )
 
 // ParseFile ...
@@ -61,9 +63,12 @@ func ParseRowReader(r *csv.Reader, prefix string) (jobs []*core.Job, err error) 
 	for _, th := range hrow {
 		matched := headExpression.FindStringSubmatch(th)
 		if len(matched) < 3 {
-			return nil, fmt.Errorf("unexpected format for task file columns header: %v", th)
+			return nil, fmt.Errorf("unexpected format for task file columns header: %v (expected: %s)", th, headExpressionString)
 		}
-		header = append(header, Column{Type: matched[1], Name: matched[2]})
+		header = append(header, Column{
+			Type: strings.Trim(matched[1], " "),
+			Name: strings.Trim(matched[2], " "),
+		})
 	}
 	for i, row := range rows {
 		if len(row) < len(header) {
@@ -88,6 +93,7 @@ type Column struct {
 
 // Bind ...
 func (c Column) Bind(job *core.Job, value string) error {
+	value = strings.Trim(value, " ")
 	switch c.Type {
 	case "--env":
 		job.Parameters.Envs = append(job.Parameters.Envs, core.Env{Name: c.Name, Value: value})
@@ -121,9 +127,9 @@ func ParseSharedData(kvpairs []string) (inputs core.Inputs, err error) {
 		return
 	}
 	for _, kv := range kvpairs {
-		kvl := sharedExpression.FindStringSubmatch(kv)
+		kvl := keyValuePairExpression.FindStringSubmatch(kv)
 		if len(kvl) < 3 {
-			err = fmt.Errorf("Invalid format for shared data: %s", kv)
+			err = fmt.Errorf("Invalid format for shared data: %s (expected: %s)", kv, keyValuePairExpressionString)
 			return
 		}
 		inputs = append(inputs, &core.Input{Resource: core.Resource{
@@ -131,6 +137,25 @@ func ParseSharedData(kvpairs []string) (inputs core.Inputs, err error) {
 			URL:       kvl[2],
 			Recursive: true, // TEMP
 		}})
+	}
+	return
+}
+
+// ParseEnv should parse given string slice flags to []core.Env.
+func ParseEnv(kvpairs []string) (envs []core.Env, err error) {
+	if len(kvpairs) == 0 {
+		return
+	}
+	for _, kv := range kvpairs {
+		kvl := keyValuePairExpression.FindStringSubmatch(kv)
+		if len(kvl) < 3 {
+			err = fmt.Errorf("Invalid format for env variable: %s (expected: %s)", kv, keyValuePairExpressionString)
+			return
+		}
+		envs = append(envs, core.Env{
+			Name:  kvl[1],
+			Value: kvl[2],
+		})
 	}
 	return
 }

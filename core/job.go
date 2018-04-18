@@ -1,7 +1,6 @@
 package core
 
 import (
-	"io"
 	"time"
 
 	"github.com/otiai10/daap"
@@ -16,10 +15,12 @@ func NewJob(index int, prefix string) *Job {
 			Index:     index,
 			Prefix:    prefix,
 		},
+		Parameters: &Parameters{},
 		Container: &JobContainer{
 			Image:  &Image{},
 			Script: &Script{},
 		},
+		Report: &Report{},
 	}
 }
 
@@ -31,11 +32,7 @@ type Job struct {
 
 	// Parameters specifies the parameters assigned to this job.
 	// It is exactly what the corresponding row in tasks file is parsed to.
-	Parameters struct {
-		Inputs  Inputs
-		Outputs Outputs
-		Envs    []Env
-	} `json:"parameters"`
+	Parameters *Parameters
 
 	// Container spedifies the settings which is used the real execution runtime.
 	Container *JobContainer
@@ -47,16 +44,6 @@ type Job struct {
 
 	// Report ...
 	Report *Report
-}
-
-// Report ...
-type Report struct {
-	Log struct {
-		Writer io.Writer
-	}
-	Metrics struct {
-		Writer io.Writer
-	}
 }
 
 // JobContainer ...

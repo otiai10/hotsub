@@ -1,8 +1,6 @@
 package core
 
 import (
-	"log"
-	"os"
 	"time"
 )
 
@@ -14,6 +12,9 @@ type Component struct {
 
 	// Jobs represent specific set of jobs which should be executed on this component.
 	Jobs []*Job
+
+	// CommonParameters represents the common env (and TODO: input, output) for all the workflow containers.
+	CommonParameters *Parameters
 
 	// SharedData ...
 	SharedData *SharedData
@@ -39,29 +40,30 @@ type Component struct {
 		Script *Script
 	}
 
-	// Report directory path
-	Report struct {
-		// LocalPath is a local path to save report files.
-		LocalPath string
-		// URL, if specified, the report path would be uploaded to this URL.
-		URL string
-		// Message is an interface to write log
-	}
+	// TODO: Not yet used
+	// RootLog is an application logger ONLY FOR ROOT COMPONENT.
+	// RootLog *log.Logger
 
-	// Log is an application logger ONLY FOR ROOT COMPONENT.
-	Log *log.Logger
+	// JobLoggerFactory is an interface to specify logger for each job.
+	JobLoggerFactory LoggerFactory
+
+	// Concurrency for creating machines.
+	// We estimate that creating machines is the most costly process in job lifecycle,
+	// therefore, this "Concurrency" prop should throttle the concurrency of them.
+	Concurrency int64
 }
 
 // RootComponentTemplate ...
 func RootComponentTemplate(name string) *Component {
 	return &Component{
 		Identity: Identity{Name: name, Timestamp: time.Now().UnixNano()},
-		Log:      log.New(os.Stdout, "[root]", 1),
 		Machine:  &Machine{},
 		Runtime: struct {
 			Image  *Image
 			Script *Script
 		}{Image: &Image{}, Script: &Script{}},
-		SharedData: &SharedData{},
+		CommonParameters: &Parameters{},
+		SharedData:       &SharedData{},
+		Concurrency:      8,
 	}
 }

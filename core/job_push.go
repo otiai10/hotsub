@@ -18,7 +18,7 @@ func (job *Job) Push() error {
 		eg.Go(func() error { return job.push(o) })
 	}
 
-	return nil
+	return eg.Wait()
 }
 
 func (job *Job) push(output *Output) error {
@@ -39,7 +39,7 @@ func (job *Job) push(output *Output) error {
 	}
 
 	for payload := range stream {
-		fmt.Printf("&%d> %s\n", payload.Type, payload.Text())
+		job.Stdio(payload.Type, PUSH, payload.Text())
 	}
 
 	if push.ExitCode != 0 {
