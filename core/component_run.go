@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"time"
 
 	"golang.org/x/sync/errgroup"
 	"golang.org/x/sync/semaphore"
@@ -39,6 +40,12 @@ func (component *Component) Run() error {
 		// Merge common parameters to each job.
 		// TODO: Refactor, such as job.Parameters.Merge(common)
 		j.Parameters.Envs = append(j.Parameters.Envs, component.CommonParameters.Envs...)
+
+		// FIXME: Throttle API request to avoid "too many requests" error
+		const AWS_API_REQUEST_LIMIT = 60
+		if component.Concurrency >= AWS_API_REQUEST_LIMIT {
+			time.Sleep(500 * time.Millisecond)
+		}
 
 		// Execute main.
 		eg.Go(func() error {
