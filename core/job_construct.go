@@ -10,12 +10,14 @@ import (
 )
 
 // Construct creates containers inside job instance.
-func (job *Job) Construct(shared *SharedData) error {
+func (job *Job) Construct(shared *SharedData) (err error) {
 
 	job.Lifetime(CONSTRUCT, "Constructing containers for this job...")
 
+	volumes := []*daap.Volume{}
 	if len(shared.Inputs) != 0 {
-		if err := shared.CreateNFSVolumeOn(job.Machine.Instance); err != nil {
+		volumes, err = shared.CreateNFSVolumesOn(job.Machine.Instance)
+		if err != nil {
 			return err
 		}
 		job.addContainerEnv(shared.Envs()...)
@@ -23,7 +25,8 @@ func (job *Job) Construct(shared *SharedData) error {
 
 	eg := new(errgroup.Group)
 	eg.Go(func() error { return job.wakeupRoutineContainer() })
-	eg.Go(func() error { return job.wakeupWorkflowContainer(shared) })
+	eg.Go(func() error { return job.wakeupWorkflowContainer(volumes) })
+
 	return eg.Wait()
 }
 
@@ -58,7 +61,7 @@ func (job *Job) wakeupRoutineContainer() error {
 }
 
 // wakeupWorkflowContainer wakes the user-defined workflow container up.
-func (job *Job) wakeupWorkflowContainer(shared *SharedData) error {
+func (job *Job) wakeupWorkflowContainer(volumes []*daap.Volume) error {
 
 	job.Lifetime(CONSTRUCT, "Constructing workflow container inside the computing instance...")
 
@@ -74,11 +77,13 @@ func (job *Job) wakeupWorkflowContainer(shared *SharedData) error {
 	mounts := []mount.Mount{
 		daap.Bind(AWSUB_HOSTROOT, AWSUB_CONTAINERROOT),
 	}
-	if shared.Volume != nil && shared.Volume.Name != "" {
+	for _, volume := range volumes {
+		if volume.Name == "" {
+			continue
+		}
 		mounts = append(
 			mounts,
-			daap.VolumeByName(shared.Volume.Name, AWSUB_CONTAINERROOT+"/"+AWSUB_SHARED_DIR),
-			// daap.MountVolume(shared.Volume.Name, AWSUB_CONTAINERROOT+"/"+AWSUB_SHARED_DIR),
+			daap.VolumeByName(volume.Name, AWSUB_CONTAINERROOT+"/"+AWSUB_SHARED_DIR),
 		)
 	}
 
