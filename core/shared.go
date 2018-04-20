@@ -161,7 +161,7 @@ func (sd *SharedData) CreateNFSVolumeOn(m *dkmachine.Machine) error {
 			Driver: "local",
 			DriverOpts: map[string]string{
 				"type":   "nfs",
-				"o":      "addr=" + sd.Instance.Driver.PrivateIPAddress + ",rw,vers=4",
+				"o":      "addr=" + sd.Instance.Driver.PrivateIPAddress + ",ro,vers=4",
 				"device": ":/",
 			},
 			Name: "shared",
