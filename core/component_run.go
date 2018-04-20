@@ -17,7 +17,7 @@ func (component *Component) Run(ctx context.Context) error {
 		return nil
 	}
 
-	eg, groupctx := errgroup.WithContext(ctx)
+	eg, _ := errgroup.WithContext(ctx)
 	sem := semaphore.NewWeighted(component.Concurrency)
 
 	for i, job := range component.Jobs {
@@ -50,7 +50,7 @@ func (component *Component) Run(ctx context.Context) error {
 
 		// Execute main.
 		eg.Go(func() error {
-			return j.Run(groupctx, component.SharedData, sem)
+			return j.Run(component.SharedData, sem)
 		})
 	}
 

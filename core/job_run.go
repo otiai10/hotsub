@@ -7,9 +7,12 @@ import (
 )
 
 // Run ...
-func (job *Job) Run(ctx context.Context, shared *SharedData, sem *semaphore.Weighted) error {
+func (job *Job) Run(shared *SharedData, sem *semaphore.Weighted) error {
 
-	sem.Acquire(ctx, 1)
+	jobctx := context.Background()
+	defer jobctx.Done()
+
+	sem.Acquire(jobctx, 1)
 	if err := job.Create(); err != nil {
 		return err
 	}
