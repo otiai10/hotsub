@@ -17,7 +17,7 @@ func (component *Component) Run(ctx context.Context) error {
 		return nil
 	}
 
-	eg, _ := errgroup.WithContext(ctx)
+	eg, groupctx := errgroup.WithContext(ctx)
 	createAPIRequestThrottle := semaphore.NewWeighted(component.Concurrency)
 
 	for i, job := range component.Jobs {
@@ -50,11 +50,15 @@ func (component *Component) Run(ctx context.Context) error {
 
 		// Execute main.
 		eg.Go(func() error {
-			return j.Run(component.SharedData, createAPIRequestThrottle)
+			return j.Run(groupctx, component.SharedData, createAPIRequestThrottle)
 		})
 	}
 
-	return eg.Wait()
+	if err := eg.Wait(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Prepare ...
