@@ -19,7 +19,6 @@ type SharedData struct {
 
 	// {{{ TODO: multiple SharedDataInstances design
 	Instance *dkmachine.Machine
-	Volume   *daap.Volume
 	// }}}
 
 	Inputs    Inputs
@@ -154,22 +153,31 @@ func (sd SharedData) startNFS() error {
 	return nil
 }
 
-// CreateNFSVolumeOn ...
-func (sd *SharedData) CreateNFSVolumeOn(m *dkmachine.Machine) error {
-	sd.Volume = &daap.Volume{
+// CreateNFSVolumesOn creates volumes from `*SharedData` for specified computing machine.
+// **This must not mutate `*SharedData` struct itself.**
+func (sd *SharedData) CreateNFSVolumesOn(m *dkmachine.Machine) ([]*daap.Volume, error) {
+	volumes := []*daap.Volume{}
+
+	volume := &daap.Volume{
 		Config: volume.VolumesCreateBody{
 			Driver: "local",
 			DriverOpts: map[string]string{
 				"type":   "nfs",
-				"o":      "addr=" + sd.Instance.Driver.PrivateIPAddress + ",rw,vers=4",
+				"o":      "addr=" + sd.Instance.Driver.PrivateIPAddress + ",ro,vers=4",
 				"device": ":/",
 			},
 			Name: "shared",
 		},
 		Machine: m,
 	}
+
 	ctx := context.Background()
-	return sd.Volume.Create(ctx)
+	if err := volume.Create(ctx); err != nil {
+		return volumes, err
+	}
+
+	volumes = append(volumes, volume)
+	return volumes, nil
 }
 
 // Envs ...

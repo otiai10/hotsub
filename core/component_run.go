@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -10,14 +11,14 @@ import (
 
 // Run executes all the jobs recursively.
 // The concurrency of creating machines is managed here.
-func (component *Component) Run() error {
+func (component *Component) Run(ctx context.Context) error {
 
 	if len(component.Jobs) == 0 {
 		return nil
 	}
 
-	eg := new(errgroup.Group)
-	sem := semaphore.NewWeighted(component.Concurrency)
+	eg, groupctx := errgroup.WithContext(ctx)
+	createAPIRequestThrottle := semaphore.NewWeighted(component.Concurrency)
 
 	for i, job := range component.Jobs {
 
@@ -49,11 +50,15 @@ func (component *Component) Run() error {
 
 		// Execute main.
 		eg.Go(func() error {
-			return j.Run(component.SharedData, sem)
+			return j.Run(groupctx, component.SharedData, createAPIRequestThrottle)
 		})
 	}
 
-	return eg.Wait()
+	if err := eg.Wait(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Prepare ...

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -103,7 +104,8 @@ func action(ctx *cli.Context) error {
 		return nil
 	}
 
-	if err := root.Run(); err != nil {
+	rootctx := context.Background()
+	if err := root.Run(rootctx); err != nil {
 		destroy()
 		return err
 	}

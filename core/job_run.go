@@ -7,25 +7,54 @@ import (
 )
 
 // Run ...
-func (job *Job) Run(shared *SharedData, sem *semaphore.Weighted) error {
+func (job *Job) Run(ctx context.Context, shared *SharedData, sem *semaphore.Weighted) error {
 
-	ctx := context.Background()
+	done := make(chan error)
+	defer close(done)
+	go job.run(shared, sem, done)
 
-	sem.Acquire(ctx, 1)
+	// Destroy computing instance for this job anyway,
+	// EVEN WHEN any of other job failed.
+	defer job.Destroy()
+
+	for {
+		select {
+		case err := <-done:
+			// This "err" could be nil or non-nil.
+			// Once non-nil error is returned, errgroup.WithContext would emit the cancellation
+			// to all the "job.Run" by "ctx.Done()" channel.
+			return err
+		case <-ctx.Done():
+			// If any of parallel "job.Run" has failed, the cancellation is notified by this channle.
+			// Stop, destroy and return this "job.Run" as well.
+			return ctx.Err()
+		}
+	}
+
+}
+
+func (job *Job) run(shared *SharedData, sem *semaphore.Weighted, done chan<- error) {
+
+	jobctx := context.Background()
+	defer jobctx.Done()
+
+	sem.Acquire(jobctx, 1)
 	if err := job.Create(); err != nil {
-		return err
+		done <- err
+		return
 	}
 	sem.Release(1)
 
-	defer job.Destroy()
-
 	if err := job.Construct(shared); err != nil {
-		return err
+		done <- err
+		return
 	}
 
 	if err := job.Commit(); err != nil {
-		return err
+		done <- err
+		return
 	}
 
-	return nil
+	done <- nil
+	return
 }
