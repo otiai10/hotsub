@@ -13,10 +13,6 @@ func (job *Job) Run(ctx context.Context, shared *SharedData, sem *semaphore.Weig
 	defer close(done)
 	go job.run(shared, sem, done)
 
-	// Destroy computing instance for this job anyway,
-	// EVEN WHEN any of other job failed.
-	defer job.Destroy()
-
 	for {
 		select {
 		case err := <-done:
