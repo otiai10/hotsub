@@ -38,6 +38,7 @@ func (job *Job) wakeupRoutineContainer() error {
 	ctx := context.Background()
 	img := "awsub/lifecycle"
 	container := daap.NewContainer(img, job.Machine.Instance)
+	container.RetryCount = ContainerMaxRetry
 
 	progress, err := container.PullImage(ctx)
 	if err != nil {
@@ -67,6 +68,7 @@ func (job *Job) wakeupWorkflowContainer(volumes []*daap.Volume) error {
 
 	ctx := context.Background()
 	container := daap.NewContainer(job.Container.Image.Name, job.Machine.Instance)
+	container.RetryCount = ContainerMaxRetry
 
 	progress, err := container.PullImage(ctx)
 	if err != nil {
