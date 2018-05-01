@@ -7,11 +7,6 @@ import (
 	"github.com/otiai10/dkmachine/v0/dkmachine"
 )
 
-const (
-	// CreateMaxRetry represents max count for retrying `docker-machine create`
-	CreateMaxRetry = 4
-)
-
 // Create creates physical machine and wake the required containers up.
 // In most cases, containers with awsub/lifecycle and user defined image are required.
 func (job *Job) Create() error {
