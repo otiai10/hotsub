@@ -75,8 +75,8 @@ func ParseRowReader(r *csv.Reader, prefix string) (jobs []*core.Job, err error) 
 			return jobs, fmt.Errorf("csv/tsv record doesn't have enough columns specified with the first row: %v", i)
 		}
 		job := core.NewJob(i, prefix)
-		for i, value := range row {
-			if err := header[i].Bind(job, value); err != nil {
+		for j, value := range row {
+			if err := header[j].Bind(job, value); err != nil {
 				return nil, err
 			}
 		}
