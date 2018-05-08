@@ -1,2 +1,0 @@
---env SAMPLE,--input INPUT1,--input INPUT2,--input-recursive REFERENCE,--output-recursive OUTPUT_DIR
-K562_150,s3://hgc-otiai10-test/examples/genomon_rna/sequence_data/small/K562_150/sequence1.txt,s3://hgc-otiai10-test/examples/genomon_rna/sequence_data/small/K562_150/sequence2.txt,s3://hgc-otiai10-test/examples/genomon_rna/db/GRCh37.STAR-2.5.2a,s3://hgc-otiai10-test/examples/out/K562_150

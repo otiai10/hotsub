@@ -1,0 +1,2 @@
+--env SAMPLE,--input INPUT1,--input INPUT2,--input-recursive REFERENCE,--output-recursive OUTPUT_DIR
+MCF-7,s3://awsub/examples/STAR/samples/MCF-7/sequence1.txt,s3://awsub/examples/STAR/samples/MCF-7/sequence2.txt,s3://awsub/resources/reference/GRCh37.STAR-2.5.2a,s3://awsub/examples/STAR/out/MCF-7
