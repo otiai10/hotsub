@@ -94,6 +94,13 @@ type Column struct {
 // Bind ...
 func (c Column) Bind(job *core.Job, value string) error {
 	value = strings.Trim(value, " ")
+
+	// Skip empty value deliberately,
+	// so that user defined script can switch its operation by itself.
+	if value == "" {
+		return nil
+	}
+
 	switch c.Type {
 	case "--env":
 		job.Parameters.Envs = append(job.Parameters.Envs, core.Env{Name: c.Name, Value: value})
