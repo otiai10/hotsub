@@ -36,6 +36,14 @@ func (job *Job) Fetch() error {
 
 // fetch
 func (job *Job) fetch(input *Input) error {
+
+	// Skip empty URL deliberately,
+	// so that user defined script can switch its operation by itself.
+	// TODO: This conditional skip should be moved to some validation steps in the future.
+	if input.URL == "" {
+		return nil
+	}
+
 	if err := input.Localize(AWSUB_CONTAINERROOT); err != nil {
 		return err
 	}
