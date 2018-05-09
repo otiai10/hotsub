@@ -25,7 +25,9 @@ for script in ${PROJROOT}/test/cases/*.sh; do
     if [[ ${name} != *${MATCH}* ]]; then continue; fi
   fi
 
-  if [[ ${name} = *".FAIL.sh" ]]; then expected=1; else expected=0; fi
+  if [[ ${name} = "SKIP."* ]]; then echo "Skip! ${name}" && continue; fi
+
+  if [[ ${name} = "FAIL."* ]]; then expected=1; else expected=0; fi
 
   # Execute testcase script
   ${script}
