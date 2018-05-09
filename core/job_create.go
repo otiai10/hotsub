@@ -13,14 +13,14 @@ func (job *Job) Create() error {
 
 	job.Lifetime(CREATE, "Creating computing instance for this job...")
 
-	return job.create(0)
+	return job.create(0, nil)
 }
 
 // create can be called recursively.
-func (job *Job) create(retry int) error {
+func (job *Job) create(retry int, lasterror error) error {
 
 	if retry >= CreateMaxRetry {
-		return fmt.Errorf("max retry of creating machine exceeded: failed %d times", CreateMaxRetry)
+		return fmt.Errorf("max retry of creating machine exceeded: failed %d times with last error: %v", CreateMaxRetry, lasterror)
 	}
 
 	spec := *job.Machine.Spec
@@ -41,5 +41,5 @@ func (job *Job) create(retry int) error {
 
 	job.Lifetime(CREATE, "Retrying creating an instance for this job...")
 	time.Sleep(time.Duration(retry*40) * time.Second)
-	return job.create(retry + 1)
+	return job.create(retry+1, err)
 }
