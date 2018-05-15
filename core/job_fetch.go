@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"path/filepath"
+	"sync"
 
 	"github.com/otiai10/daap"
 	"github.com/otiai10/ternary"
@@ -111,6 +112,11 @@ func (job *Job) ensure(output *Output) error {
 	return nil
 }
 
+// FIXME: Use channel to merge envs...
+var lock = new(sync.Mutex)
+
 func (job *Job) addContainerEnv(envs ...Env) {
+	lock.Lock()
+	defer lock.Unlock()
 	job.Container.Envs = append(job.Container.Envs, envs...)
 }
