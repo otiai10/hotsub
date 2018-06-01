@@ -9,7 +9,7 @@ import (
 	"github.com/docker/docker/api/types/volume"
 
 	"github.com/otiai10/daap"
-	"github.com/otiai10/dkmachine/v0/dkmachine"
+	"github.com/otiai10/dkmachine"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -163,7 +163,7 @@ func (sd *SharedData) CreateNFSVolumesOn(m *dkmachine.Machine) ([]*daap.Volume, 
 			Driver: "local",
 			DriverOpts: map[string]string{
 				"type":   "nfs",
-				"o":      "addr=" + sd.Instance.Driver.PrivateIPAddress + ",ro,vers=4",
+				"o":      "addr=" + sd.Instance.GetPrivateIPAddress() + ",ro,vers=4",
 				"device": ":/",
 			},
 			Name: "shared",

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/otiai10/dkmachine/v0/dkmachine"
+	"github.com/otiai10/dkmachine"
 )
 
 // Create creates physical machine and wake the required containers up.
