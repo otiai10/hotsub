@@ -1,6 +1,6 @@
 package core
 
-import "github.com/otiai10/dkmachine/v0/dkmachine"
+import "github.com/otiai10/dkmachine"
 
 // Machine ...
 type Machine struct {

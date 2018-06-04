@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/otiai10/awsub/core"
-	"github.com/otiai10/dkmachine/v0/dkmachine"
+	"github.com/otiai10/dkmachine"
 )
 
 // DefineMachineSpec is a factory layer to connect cli.Context to CreateOptions.

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/otiai10/dkmachine/v0/dkmachine"
+	"github.com/otiai10/dkmachine"
 )
 
 // Create creates physical machine and wake the required containers up.
@@ -35,8 +35,8 @@ func (job *Job) create(retry int, lasterror error) error {
 	}
 
 	// Clean up for retry
-	if err := instance.Remove(); err != nil {
-		return fmt.Errorf("failed to clean up machine for retry: %v", err)
+	if errOnRemove := instance.Remove(); errOnRemove != nil {
+		return fmt.Errorf("last error on create: %v: failed to clean up machine for retry: %v", err, errOnRemove)
 	}
 
 	job.Lifetime(CREATE, "Retrying creating an instance for this job...")

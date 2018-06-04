@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/otiai10/daap"
-	"github.com/otiai10/dkmachine/v0/dkmachine"
+	"github.com/otiai10/dkmachine"
 )
 
 // NewJob ...

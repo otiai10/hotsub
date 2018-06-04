@@ -1,0 +1,3 @@
+--env CASENAME,--input-recursive REFERENCE,--env REFERENCE_FILE,--input FASTQ_1,--input FASTQ_2,--output-recursive OUTDIR
+tumor,s3://awsub/resources/reference/GRCh37,GRCh37.fa,s3://awsub/resources/samples/5929/tumor/sequence_1.fastq,s3://awsub/resources/samples/5929/tumor/sequence_2.fastq,s3://awsub/examples/bwa-alignment/out
+control,s3://awsub/resources/reference/GRCh37,GRCh37.fa,s3://awsub/resources/samples/5929/control/sequence_1.fastq,s3://awsub/resources/samples/5929/control/sequence_2.fastq,s3://awsub/examples/bwa-alignment/out
