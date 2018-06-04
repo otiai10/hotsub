@@ -159,7 +159,7 @@ func (sd *SharedData) CreateNFSVolumesOn(m *dkmachine.Machine) ([]*daap.Volume, 
 	volumes := []*daap.Volume{}
 
 	volume := &daap.Volume{
-		Config: volume.VolumesCreateBody{
+		Config: volume.VolumeCreateBody{
 			Driver: "local",
 			DriverOpts: map[string]string{
 				"type":   "nfs",
