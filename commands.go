@@ -84,8 +84,8 @@ var ocrExample = `
 
     /*
      * If you want to try awsub on AWS, you need 2 things beforehand.
-     * 1) S3 Bucket, in which your input files/directories are located
-     * 2) IAM Instance Profile, which can read/put to your S3 Bucket
+		 * 1) S3 Bucket, in which your input files/directories are located
+		 * 2) TODO: more friendly quickstart
      */
 
     // Prepare your input files on your s3 bucket
@@ -95,7 +95,7 @@ var ocrExample = `
     $ sed -e "s/_placeholder_/{YOUR_S3_BUCKET}/g" ./examples/wordcount/template.csv > ./examples/wordcount/wordcount.csv
 
     // Execute the tasks with specific docker image
-    $ awsub --tasks ./examples/wordcount/wordcount.csv --script ./examples/wordcount/main.sh -aws-iam-instance-profile {YOUR_INSTANCE_PROFILE} --verbose
+    $ awsub --tasks ./examples/wordcount/wordcount.csv --script ./examples/wordcount/main.sh --verbose
 
     /*
      * Then you can see s3://{YOUR_S3_BUCKET}/speech/out is created

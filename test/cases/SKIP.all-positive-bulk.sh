@@ -6,7 +6,6 @@ set -e -v
 awsub \
     --tasks ${PROJROOT}/test/wordcount/wordcount.bulk.csv \
     --script ${PROJROOT}/test/wordcount/main.sh \
-    --aws-iam-instance-profile awsubtest \
     --concurrency 64 \
     --log-dir /tmp \
     --verbose

@@ -26,12 +26,6 @@ var AwsEC2InstanceType = cli.StringFlag{
 	Value: "t2.micro",
 }
 
-// AwsIAMInstanceProfile ...
-var AwsIAMInstanceProfile = cli.StringFlag{
-	Name:  "aws-iam-instance-profile",
-	Usage: `AWS instance profile from your IAM roles.`,
-}
-
 // AwsSharedInstanceType ...
 var AwsSharedInstanceType = cli.StringFlag{
 	Name:  "aws-shared-instance-type",

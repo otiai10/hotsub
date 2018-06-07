@@ -3,15 +3,22 @@ package platform
 import (
 	"fmt"
 
+	"github.com/otiai10/iamutil"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/aws/aws-sdk-go/service/iam"
 )
 
 const (
+	// DefaultAWSInstanceProfileNameForCompute default aws instance profile name
+	DefaultAWSInstanceProfileNameForCompute = "awsub-compute" + "-" + AwsubSecurityStructureVersion
+	// TODO: Separate instance profile for shared data instance
+
 	// DefaultAWSSecurityGroupName default aws security group name
-	DefaultAWSSecurityGroupName = "awsub-default"
+	DefaultAWSSecurityGroupName = "awsub-default" + "-" + AwsubSecurityStructureVersion
 )
 
 // AmazonWebServices ...
@@ -33,6 +40,10 @@ func (p *AmazonWebServices) Validate() error {
 
 	if err := createSecurityGroupIfNotExists(sess); err != nil {
 		return fmt.Errorf("failed to setup security group: %v", err)
+	}
+
+	if err := createInstanceProfileIfNotExists(sess); err != nil {
+		return fmt.Errorf("failed to setup instance profile: %v", err)
 	}
 
 	return nil
@@ -99,4 +110,31 @@ func createSecurityGroupIfNotExists(sess *session.Session) error {
 	}
 
 	return nil
+}
+
+func createInstanceProfileIfNotExists(sess *session.Session) error {
+
+	_, err := iamutil.FindInstanceProfile(sess, DefaultAWSInstanceProfileNameForCompute)
+	if err == nil {
+		// Found! Well done! Do nothing!
+		return nil
+	}
+
+	ae, ok := err.(awserr.Error)
+	if !ok || ae.Code() != iam.ErrCodeNoSuchEntityException {
+		return err
+	}
+
+	// Well, it's not found. Create new one.
+	profile := &iamutil.InstanceProfile{
+		Name: DefaultAWSInstanceProfileNameForCompute,
+		Role: &iamutil.Role{
+			Description: "awsub Instance Profile for computing nodes",
+			PolicyArns: []string{
+				"arn:aws:iam::aws:policy/AmazonS3FullAccess",
+			},
+		},
+	}
+
+	return profile.Create(sess)
 }
