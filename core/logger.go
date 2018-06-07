@@ -11,3 +11,15 @@ type Logger interface {
 	Stdio(int, string, string)
 	Close() error
 }
+
+func (component *Component) loggerForJob(job *Job) error {
+	if component.JobLoggerFactory == nil {
+		return nil
+	}
+	logger, err := component.JobLoggerFactory.Logger(job)
+	if err != nil {
+		return err
+	}
+	job.Report.Log = logger
+	return nil
+}
