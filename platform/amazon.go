@@ -30,6 +30,15 @@ func (p *AmazonWebServices) Validate() error {
 		SharedConfigState: session.SharedConfigEnable,
 		Config:            aws.Config{Region: &p.Region},
 	}))
+
+	if err := createSecurityGroupIfNotExists(sess); err != nil {
+		return fmt.Errorf("failed to setup security group: %v", err)
+	}
+
+	return nil
+}
+
+func createSecurityGroupIfNotExists(sess *session.Session) error {
 	client := ec2.New(sess)
 
 	// Check existing SecurityGroup
