@@ -60,25 +60,3 @@ func (component *Component) Run(ctx context.Context) error {
 
 	return nil
 }
-
-// Prepare ...
-func (component *Component) Prepare() error {
-	if len(component.SharedData.Inputs) != 0 {
-		if err := component.SharedData.Create(); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (component *Component) loggerForJob(job *Job) error {
-	if component.JobLoggerFactory == nil {
-		return nil
-	}
-	logger, err := component.JobLoggerFactory.Logger(job)
-	if err != nil {
-		return err
-	}
-	job.Report.Log = logger
-	return nil
-}
