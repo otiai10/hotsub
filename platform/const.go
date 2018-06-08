@@ -15,3 +15,8 @@ const (
 	AmazonEC2 Driver = "amazonec2"
 	Google    Driver = "google"
 )
+
+const (
+	// AwsubSecurityStructureVersion ...
+	AwsubSecurityStructureVersion = "2018-06-07"
+)

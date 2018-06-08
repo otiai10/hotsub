@@ -22,7 +22,6 @@ var Index = []cli.Flag{
 	// AWS
 	AwsRegion,
 	AwsEC2InstanceType,
-	AwsIAMInstanceProfile,
 	AwsSharedInstanceType,
 
 	// GCP

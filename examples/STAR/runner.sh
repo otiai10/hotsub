@@ -17,7 +17,6 @@ awsub \
   --shared REFERENCE=s3://awsub/resources/reference/GRCh37.STAR-2.5.2a \
   --script ${CWD}/main.sh \
   --image friend1ws/star-alignment \
-  --aws-iam-instance-profile awsubtest \
   --aws-ec2-instance-type m4.2xlarge \
   --disk-size 128 \
   --verbose

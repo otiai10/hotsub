@@ -1,10 +1,7 @@
 language: go
 go:
   - tip
-baranches:
-  only:
-    - master
-# if: type = pull_request
+if: branch = master OR type = pull_request
 env:
   global:
     # - AWS_ACCESS_KEY_ID=" should be declared on Travis console "

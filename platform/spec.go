@@ -14,7 +14,7 @@ func DefineMachineSpec(ctx Context) (*dkmachine.CreateOptions, error) {
 		AmazonEC2Region:             ctx.String("aws-region"),
 		AmazonEC2RootSize:           ctx.Int("disk-size"),
 		AmazonEC2InstanceType:       ctx.String("aws-ec2-instance-type"),
-		AmazonEC2IAMInstanceProfile: ctx.String("aws-iam-instance-profile"),
+		AmazonEC2IAMInstanceProfile: DefaultAWSInstanceProfileNameForCompute,
 		AmazonEC2SecurityGroup:      DefaultAWSSecurityGroupName,
 		// GCP
 		GoogleProject:  ctx.String("google-project"),
@@ -43,7 +43,7 @@ func DefineSharedDataInstanceSpec(shared core.Inputs, ctx Context) (*dkmachine.C
 	opt := &dkmachine.CreateOptions{
 		Name:                        "Shared-Data-Instance",
 		AmazonEC2Region:             ctx.String("aws-region"),
-		AmazonEC2IAMInstanceProfile: ctx.String("aws-iam-instance-profile"),
+		AmazonEC2IAMInstanceProfile: DefaultAWSInstanceProfileNameForCompute,
 		AmazonEC2SecurityGroup:      DefaultAWSSecurityGroupName,
 
 		AmazonEC2InstanceType: ctx.String("aws-shared-instance-type"),
