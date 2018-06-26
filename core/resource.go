@@ -25,14 +25,14 @@ type Resource struct {
 	LocalPath string `json:"local_path" yaml:"local_path"`
 }
 
-// Localize ...
+// Localize convert given resource URL to local file path inside the container.
 func (resource *Resource) Localize(rootdir string) error {
 	u, err := url.Parse(resource.URL)
 	if err != nil {
 		return err
 	}
 	bucket := u.Host
-	resource.LocalPath = filepath.Join(rootdir, bucket, u.Path)
+	resource.LocalPath = filepath.ToSlash(filepath.Join(rootdir, bucket, u.Path))
 	return nil
 }
 
