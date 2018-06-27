@@ -57,11 +57,11 @@ var quickguide = cli.Command{
 }
 
 func checkAWSCredentials() (string, error) {
-	myself, err := user.Current()
+	hd, err := homedir()
 	if err != nil {
-		return "", fmt.Errorf("can't detect current user: %v", err)
+		return "", err
 	}
-	fpath := filepath.Join(myself.HomeDir, ".aws", "credentials")
+	fpath := filepath.Join(hd, ".aws", "credentials")
 	stat, err := os.Stat(fpath)
 	if err != nil {
 		return "", fmt.Errorf("credential file can't be found at %v: %v", fpath, err)
@@ -70,6 +70,17 @@ func checkAWSCredentials() (string, error) {
 		return "", fmt.Errorf("credential file path seems to be a directory: %v", fpath)
 	}
 	return fpath, nil
+}
+
+func homedir() (string, error) {
+	if hd := os.Getenv("HOME"); hd != "" {
+		return hd, nil
+	}
+	myself, err := user.Current()
+	if err != nil {
+		return "", fmt.Errorf("can't detect current user: %v", err)
+	}
+	return myself.HomeDir, nil
 }
 
 func speak(format string, v ...interface{}) {
