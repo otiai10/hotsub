@@ -12,29 +12,7 @@ hotsub \
 
 # Installation
 
-There are 3 options to install `hotsub` command.
-
-## 1. Download binary directly
-
-Check releases here https://github.com/otiai10/hotsub/releases and choose the binary for your OS.
-
-## 2. go get
-
-If you have `go` and `${GOPATH}/bin` is binded to `PATH`
-
-```
-go get -u github.com/otiai10/hotsub
-```
-
-## 3. Clone and build
-
-needs `go` as well
-
-```
-git clone git@github.com:otiai10/hotsub.git
-cd hotsub
-go install .
-```
+Check releases here https://github.com/otiai10/awsub/releases and choose the binary for your OS.
 
 # Quick Guide
 
