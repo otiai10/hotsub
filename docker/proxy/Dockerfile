@@ -1,4 +1,4 @@
-# This docker image specifies how to get started with `awsub` CLI.
+# This docker image specifies how to get started with `hotsub` CLI.
 FROM debian:stretch-slim
 
 # 0) Packages
@@ -14,11 +14,11 @@ RUN base=https://github.com/docker/machine/releases/download/v0.14.0 \
 # 2) aws cli
 RUN pip install awscli
 
-# 3) awsub itself
-RUN wget -q https://github.com/otiai10/awsub/releases/download/v0.3.0/awsub.linux_amd64.tar.gz
-RUN tar -xzvf awsub.linux_amd64.tar.gz && mv ./awsub /usr/local/bin
+# 3) hotsub itself
+RUN wget -q https://github.com/otiai10/hotsub/releases/download/v0.3.0/hotsub.linux_amd64.tar.gz
+RUN tar -xzvf hotsub.linux_amd64.tar.gz && mv ./hotsub /usr/local/bin
 
 # Usage of this image:
 #
-#     docker run -it -v ~/.aws:/root/.aws awsub/proxy
+#     docker run -it -v ~/.aws:/root/.aws hotsub/proxy
 #

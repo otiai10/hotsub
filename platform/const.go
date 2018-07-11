@@ -17,6 +17,6 @@ const (
 )
 
 const (
-	// AwsubSecurityStructureVersion ...
-	AwsubSecurityStructureVersion = "2018-06-07"
+	// HotsubSecurityStructureVersion ...
+	HotsubSecurityStructureVersion = "2018-06-07"
 )

@@ -12,7 +12,7 @@ func (job *Job) Exec() error {
 
 	ctx := context.Background()
 
-	env := []string{fmt.Sprintf("%s=%s", "AWSUB_ROOT", AWSUB_CONTAINERROOT)}
+	env := []string{fmt.Sprintf("%s=%s", "HOTSUB_ROOT", HOTSUB_CONTAINERROOT)}
 	for _, e := range job.Container.Envs {
 		env = append(env, e.Pair())
 	}

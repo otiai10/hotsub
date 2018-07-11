@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/otiai10/awsub/core"
+	"github.com/otiai10/hotsub/core"
 )
 
 type (

@@ -48,7 +48,7 @@ func (job *Job) wakeupRoutineContainer() error {
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
-			Mounts:     []mount.Mount{daap.Bind(AWSUB_HOSTROOT, AWSUB_CONTAINERROOT)},
+			Mounts:     []mount.Mount{daap.Bind(HOTSUB_HOSTROOT, HOTSUB_CONTAINERROOT)},
 			Privileged: true,
 		},
 	})
@@ -77,7 +77,7 @@ func (job *Job) wakeupWorkflowContainer(volumes []*daap.Volume) error {
 	job.drain(progress)
 
 	mounts := []mount.Mount{
-		daap.Bind(AWSUB_HOSTROOT, AWSUB_CONTAINERROOT),
+		daap.Bind(HOTSUB_HOSTROOT, HOTSUB_CONTAINERROOT),
 	}
 	for _, volume := range volumes {
 		if volume.Name == "" {
@@ -85,7 +85,7 @@ func (job *Job) wakeupWorkflowContainer(volumes []*daap.Volume) error {
 		}
 		mounts = append(
 			mounts,
-			daap.VolumeByName(volume.Name, AWSUB_CONTAINERROOT+"/"+AWSUB_SHARED_DIR),
+			daap.VolumeByName(volume.Name, HOTSUB_CONTAINERROOT+"/"+HOTSUB_SHARED_DIR),
 		)
 	}
 

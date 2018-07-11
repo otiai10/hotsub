@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/otiai10/awsub/flags"
+	"github.com/otiai10/hotsub/flags"
 	"github.com/urfave/cli"
 )
 

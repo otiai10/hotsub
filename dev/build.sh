@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# This script compiles "awsub" binaries for multiple platforms,
+# This script compiles "hotsub" binaries for multiple platforms,
 # by using "gox" (https://github.com/mitchellh/gox).
-# If you want to cross-compile 'awsub" binary by yourself,
+# If you want to cross-compile 'hotsub" binary by yourself,
 # you need to run `go get -u github.com/mitchellh/gox" at first.
 
 DEVELOPDIR=`cd $(dirname $0) && pwd`
@@ -18,6 +18,6 @@ gox -output="${BUILDDIR}/{{.OS}}_{{.Arch}}/{{.Dir}}" -osarch="${TARGETS}" -rebui
 
 for dir in ${BUILDDIR}/*; do
     osarch=`basename ${dir}`
-    tar -czvf builds/awsub.${osarch}.tar.gz -C ${dir} `ls ${dir}`
+    tar -czvf builds/hotsub.${osarch}.tar.gz -C ${dir} `ls ${dir}`
     rm -rf ${dir}
 done

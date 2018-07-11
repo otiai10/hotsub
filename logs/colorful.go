@@ -8,7 +8,7 @@ import (
 	"sync"
 
 	"github.com/fatih/color"
-	"github.com/otiai10/awsub/core"
+	"github.com/otiai10/hotsub/core"
 )
 
 var colors = []*color.Color{

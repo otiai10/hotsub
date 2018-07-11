@@ -14,11 +14,11 @@ import (
 
 const (
 	// DefaultAWSInstanceProfileNameForCompute default aws instance profile name
-	DefaultAWSInstanceProfileNameForCompute = "awsub-compute" + "-" + AwsubSecurityStructureVersion
+	DefaultAWSInstanceProfileNameForCompute = "hotsub-compute" + "-" + HotsubSecurityStructureVersion
 	// TODO: Separate instance profile for shared data instance
 
 	// DefaultAWSSecurityGroupName default aws security group name
-	DefaultAWSSecurityGroupName = "awsub-default" + "-" + AwsubSecurityStructureVersion
+	DefaultAWSSecurityGroupName = "hotsub-default" + "-" + HotsubSecurityStructureVersion
 )
 
 // AmazonWebServices ...
@@ -29,7 +29,7 @@ type AmazonWebServices struct {
 
 // Validate validates the platform itself, setting up the infrastructures if needed.
 // For AWS, it executes:
-//     1. Create SecurityGroup for awsub.
+//     1. Create SecurityGroup for hotsub.
 func (p *AmazonWebServices) Validate() error {
 
 	// Initialize EC2 API Client
@@ -75,7 +75,7 @@ func createSecurityGroupIfNotExists(sess *session.Session) error {
 	// It seems not existing. Let's create new one.
 	group, err := client.CreateSecurityGroup(&ec2.CreateSecurityGroupInput{
 		GroupName:   &name,
-		Description: aws.String("default sg of awsub"),
+		Description: aws.String("default sg of hotsub"),
 	})
 	if err != nil {
 		return err
@@ -83,7 +83,7 @@ func createSecurityGroupIfNotExists(sess *session.Session) error {
 
 	if _, err := client.CreateTags(&ec2.CreateTagsInput{
 		Resources: []*string{group.GroupId},
-		Tags:      []*ec2.Tag{{Key: aws.String("Name"), Value: aws.String("awsub-default")}},
+		Tags:      []*ec2.Tag{{Key: aws.String("Name"), Value: aws.String("hotsub-default")}},
 	}); err != nil {
 		return err
 	}
@@ -129,7 +129,7 @@ func createInstanceProfileIfNotExists(sess *session.Session) error {
 	profile := &iamutil.InstanceProfile{
 		Name: DefaultAWSInstanceProfileNameForCompute,
 		Role: &iamutil.Role{
-			Description: "awsub Instance Profile for computing nodes",
+			Description: "hotsub Instance Profile for computing nodes",
 			PolicyArns: []string{
 				"arn:aws:iam::aws:policy/AmazonS3FullAccess",
 			},

@@ -45,7 +45,7 @@ func (job *Job) fetch(input *Input) error {
 		return nil
 	}
 
-	if err := input.Localize(AWSUB_CONTAINERROOT); err != nil {
+	if err := input.Localize(HOTSUB_CONTAINERROOT); err != nil {
 		return err
 	}
 
@@ -80,7 +80,7 @@ func (job *Job) fetch(input *Input) error {
 // ensure the output directories exist on the workflow container.
 func (job *Job) ensure(output *Output) error {
 	// log.Println(job.Identity.Name, "ensure", output.URL)
-	if err := output.Localize(AWSUB_CONTAINERROOT); err != nil {
+	if err := output.Localize(HOTSUB_CONTAINERROOT); err != nil {
 		return err
 	}
 

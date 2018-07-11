@@ -1,1 +1,1 @@
-This package collects all the definitions of `awsub` command line flags/options.
+This package collects all the definitions of `hotsub` command line flags/options.

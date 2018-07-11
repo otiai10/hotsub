@@ -21,7 +21,7 @@ var quickguide = cli.Command{
 	Aliases: []string{"qg"},
 	Action: func(ctx *cli.Context) error {
 
-		speak("Hello! This is a quick guide to know how to use awsub.")
+		speak("Hello! This is a quick guide to know how to use hotsub.")
 		speak("First, let's check if you have enough tools on your machine.")
 
 		ng := 0
@@ -45,11 +45,11 @@ var quickguide = cli.Command{
 		}
 
 		if ng == 0 {
-			speak("\nCongrats! It seems you are ready to use `awsub`.")
+			speak("\nCongrats! It seems you are ready to use `hotsub`.")
 			speak("For the next step let's try following command.")
 			fmt.Println(ocrExample)
-			speak("If you have any question for using awsub, just issue `awsub help`, or")
-			speak("create new issue on https://github.com/otiai10/awsub/issues. Thank you!")
+			speak("If you have any question for using hotsub, just issue `hotsub help`, or")
+			speak("create new issue on https://github.com/otiai10/hotsub/issues. Thank you!")
 		}
 
 		return nil
@@ -94,7 +94,7 @@ func speak(format string, v ...interface{}) {
 var ocrExample = `
 
     /*
-     * If you want to try awsub on AWS, you need 2 things beforehand.
+     * If you want to try hotsub on AWS, you need 2 things beforehand.
 		 * 1) S3 Bucket, in which your input files/directories are located
 		 * 2) TODO: more friendly quickstart
      */
@@ -106,7 +106,7 @@ var ocrExample = `
     $ sed -e "s/_placeholder_/{YOUR_S3_BUCKET}/g" ./examples/wordcount/template.csv > ./examples/wordcount/wordcount.csv
 
     // Execute the tasks with specific docker image
-    $ awsub --tasks ./examples/wordcount/wordcount.csv --script ./examples/wordcount/main.sh --verbose
+    $ hotsub --tasks ./examples/wordcount/wordcount.csv --script ./examples/wordcount/main.sh --verbose
 
     /*
      * Then you can see s3://{YOUR_S3_BUCKET}/speech/out is created

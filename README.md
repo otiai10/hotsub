@@ -1,9 +1,9 @@
-# awsub [![Build Status](https://travis-ci.org/otiai10/awsub.svg?branch=master)](https://travis-ci.org/otiai10/awsub)
+# hotsub [![Build Status](https://travis-ci.org/otiai10/hotsub.svg?branch=master)](https://travis-ci.org/otiai10/hotsub)
 
 The simple batch job driver on AWS.
 
 ```sh
-awsub \
+hotsub \
   --image friend1ws/star-alignment \
   --script ./test/scripts/star-alignment.sh \
   --tasks ./test/tasks/star-alignment-tasks.csv \
@@ -12,18 +12,18 @@ awsub \
 
 # Installation
 
-There are 3 options to install `awsub` command.
+There are 3 options to install `hotsub` command.
 
 ## 1. Download binary directly
 
-Check releases here https://github.com/otiai10/awsub/releases and choose the binary for your OS.
+Check releases here https://github.com/otiai10/hotsub/releases and choose the binary for your OS.
 
 ## 2. go get
 
 If you have `go` and `${GOPATH}/bin` is binded to `PATH`
 
 ```
-go get -u github.com/otiai10/awsub
+go get -u github.com/otiai10/hotsub
 ```
 
 ## 3. Clone and build
@@ -31,17 +31,17 @@ go get -u github.com/otiai10/awsub
 needs `go` as well
 
 ```
-git clone git@github.com:otiai10/awsub.git
-cd awsub
+git clone git@github.com:otiai10/hotsub.git
+cd hotsub
 go install .
 ```
 
 # Quick Guide
 
-Once you have `awsub` installed, just hit following command
+Once you have `hotsub` installed, just hit following command
 
 ```
-awsub quickguide
+hotsub quickguide
 ```
 
 and you can see what you need.
@@ -50,4 +50,4 @@ and you can see what you need.
 
 To make it transparent, ask any question from this link.
 
-https://github.com/otiai10/awsub/issues
+https://github.com/otiai10/hotsub/issues
