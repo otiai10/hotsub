@@ -1,5 +1,5 @@
 --env SAMPLE,--input INPUT1,--input INPUT2,--output-recursive OUTPUT_DIR
-Hela_wt_dox-,s3://awsub/examples/STAR/samples/Hela_wt_dox-/sequence1.txt,s3://awsub/examples/STAR/samples/Hela_wt_dox-/sequence2.txt,s3://awsub/examples/STAR/out/Hela_wt_dox-
-MCF-7,s3://awsub/examples/STAR/samples/MCF-7/sequence1.txt,s3://awsub/examples/STAR/samples/MCF-7/sequence2.txt,s3://awsub/examples/STAR/out/MCF-7
-DU145_150,s3://awsub/examples/STAR/samples/DU145_150/sequence1.txt,s3://awsub/examples/STAR/samples/DU145_150/sequence2.txt,s3://awsub/examples/STAR/out/DU145_150
-K562_150,s3://awsub/examples/STAR/samples/K562_150/sequence1.txt,s3://awsub/examples/STAR/samples/K562_150/sequence2.txt,s3://awsub/examples/STAR/out/K562_150
+Hela_wt_dox-,s3://hotsub/examples/STAR/samples/Hela_wt_dox-/sequence1.txt,s3://hotsub/examples/STAR/samples/Hela_wt_dox-/sequence2.txt,s3://hotsub/examples/STAR/out/Hela_wt_dox-
+MCF-7,s3://hotsub/examples/STAR/samples/MCF-7/sequence1.txt,s3://hotsub/examples/STAR/samples/MCF-7/sequence2.txt,s3://hotsub/examples/STAR/out/MCF-7
+DU145_150,s3://hotsub/examples/STAR/samples/DU145_150/sequence1.txt,s3://hotsub/examples/STAR/samples/DU145_150/sequence2.txt,s3://hotsub/examples/STAR/out/DU145_150
+K562_150,s3://hotsub/examples/STAR/samples/K562_150/sequence1.txt,s3://hotsub/examples/STAR/samples/K562_150/sequence2.txt,s3://hotsub/examples/STAR/out/K562_150

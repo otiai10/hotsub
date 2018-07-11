@@ -6,7 +6,7 @@ set -e -v
 hotsub \
     --tasks ${PROJROOT}/test/wordcount/wordcount.csv \
     --script ${PROJROOT}/test/wordcount/main-shared.sh \
-    --shared NYANCAT=s3://awsub/examples/wordcount/nyancat \
+    --shared NYANCAT=s3://hotsub/examples/wordcount/nyancat \
     --shareddata-disksize 8 \
     --aws-shared-instance-type t2.micro \
     --log-dir /tmp \

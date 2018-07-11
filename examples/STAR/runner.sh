@@ -14,7 +14,7 @@ set -v
 # Good luck!
 hotsub \
   --tasks ${CWD}/star-alignment.csv \
-  --shared REFERENCE=s3://awsub/resources/reference/GRCh37.STAR-2.5.2a \
+  --shared REFERENCE=s3://hotsub/resources/reference/GRCh37.STAR-2.5.2a \
   --script ${CWD}/main.sh \
   --image friend1ws/star-alignment \
   --aws-ec2-instance-type m4.2xlarge \

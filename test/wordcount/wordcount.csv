@@ -1,3 +1,3 @@
 --env SPEAKER_NAME,--input SPEECH_FILE,--input-recursive META,--output-recursive OUTDIR
-Martin,s3://awsub/examples/wordcount/speech/martinking_1963.txt,s3://awsub/examples/wordcount/speech/martinking,s3://awsub/examples/wordcount/out/martin
-Emma,s3://awsub/examples/wordcount/speech/emmawatson_2014.txt,s3://awsub/examples/wordcount/speech/emmawatson,s3://awsub/examples/wordcount/out/emmawatson
+Martin,s3://hotsub/examples/wordcount/speech/martinking_1963.txt,s3://hotsub/examples/wordcount/speech/martinking,s3://hotsub/examples/wordcount/out/martin
+Emma,s3://hotsub/examples/wordcount/speech/emmawatson_2014.txt,s3://hotsub/examples/wordcount/speech/emmawatson,s3://hotsub/examples/wordcount/out/emmawatson
