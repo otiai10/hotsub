@@ -12,7 +12,7 @@ set -e
 # - Amazon S3
 # - Google Cloud Storage
 #
-# it means the docker image called "awsub/lifecycle" must have
+# it means the docker image called "hotsub/routine" must have
 # following binaries in its PATH:
 #
 # - aws (aws s3)

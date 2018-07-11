@@ -1,4 +1,4 @@
-# This docker image is supposed to be used as awsub/lifecycle, in which
+# This docker image is supposed to be used as hotsub/routine, in which
 # input files are donwloaded onto the host machine and
 # output files are uploaded to cloud storage services.
 FROM debian:stretch-slim
@@ -25,5 +25,5 @@ RUN pip install awscli --upgrade --quiet
 RUN curl https://sdk.cloud.google.com | bash
 ENV PATH=${PATH}:/root/google-cloud-sdk/bin
 
-# Uploader scripts
-ADD ./lifecycle /lifecycle
+# Downloader/Uploader scripts
+ADD ./scripts /scripts

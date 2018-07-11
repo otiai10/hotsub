@@ -50,7 +50,7 @@ func (job *Job) fetch(input *Input) error {
 	}
 
 	fetch := &daap.Execution{
-		Inline:  "/lifecycle/download.sh",
+		Inline:  "/scripts/download.sh",
 		Env:     input.EnvForFetch(),
 		Inspect: true,
 	}

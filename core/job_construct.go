@@ -36,7 +36,7 @@ func (job *Job) wakeupRoutineContainer() error {
 	job.Lifetime(CONSTRUCT, "Constructing routine container inside the computing instance...")
 
 	ctx := context.Background()
-	img := "awsub/lifecycle"
+	img := "hotsub/routine"
 	container := daap.NewContainer(img, job.Machine.Instance)
 	container.RetryCount = ContainerMaxRetry
 

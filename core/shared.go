@@ -51,7 +51,7 @@ func (sd *SharedData) Create() error {
 func (sd *SharedData) fetchAll() error {
 
 	ctx := context.Background()
-	container := daap.NewContainer("awsub/lifecycle", sd.Instance)
+	container := daap.NewContainer("hotsub/routine", sd.Instance)
 
 	progress, err := container.PullImage(ctx)
 	if err != nil {
@@ -97,7 +97,7 @@ func (sd SharedData) fetch(input *Input) error {
 	}
 
 	fetch := &daap.Execution{
-		Inline:  "/lifecycle/download.sh",
+		Inline:  "/scripts/download.sh",
 		Env:     input.EnvForFetch(),
 		Inspect: true,
 	}
