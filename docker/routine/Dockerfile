@@ -26,4 +26,4 @@ RUN curl https://sdk.cloud.google.com | bash
 ENV PATH=${PATH}:/root/google-cloud-sdk/bin
 
 # Downloader/Uploader scripts
-ADD ./scripts /scripts
+COPY ./scripts /scripts
