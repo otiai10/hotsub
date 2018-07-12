@@ -1,12 +1,12 @@
 package core
 
 const (
-	AWSUB_HOSTROOT      = "/tmp"
-	AWSUB_CONTAINERROOT = "/tmp"
-	AWSUB_SHARED_DIR    = "__shared"
+	HOTSUB_HOSTROOT      = "/tmp"
+	HOTSUB_CONTAINERROOT = "/tmp"
+	HOTSUB_SHARED_DIR    = "__shared"
 
 	// For SharedDataInstances
-	AWSUB_MOUNTPOINT = "/tmp"
+	HOTSUB_MOUNTPOINT = "/tmp"
 
 	// CreateMaxRetry represents max count for retrying `docker-machine create`
 	CreateMaxRetry = 4

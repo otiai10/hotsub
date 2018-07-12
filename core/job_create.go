@@ -8,7 +8,7 @@ import (
 )
 
 // Create creates physical machine and wake the required containers up.
-// In most cases, containers with awsub/lifecycle and user defined image are required.
+// In most cases, containers with hotsub/routine and user defined image are required.
 func (job *Job) Create() error {
 
 	job.Lifetime(CREATE, "Creating computing instance for this job...")

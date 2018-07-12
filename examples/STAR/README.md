@@ -1,9 +1,9 @@
 # STAR RNA-seq alignment example
 
-This example specifies how to run `STAR` on AWS by using `awsub`.
+This example specifies how to run `STAR` on AWS by using `hotsub`.
 
 ```sh
-awsub \
+hotsub \
   --tasks ./star-alignment.single.csv \
   --script ./main.sh \
   --image friend1ws/star-alignment \

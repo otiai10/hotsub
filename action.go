@@ -9,10 +9,10 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/otiai10/awsub/core"
-	"github.com/otiai10/awsub/logs"
-	"github.com/otiai10/awsub/parser"
-	"github.com/otiai10/awsub/platform"
+	"github.com/otiai10/hotsub/core"
+	"github.com/otiai10/hotsub/logs"
+	"github.com/otiai10/hotsub/parser"
+	"github.com/otiai10/hotsub/platform"
 	"github.com/urfave/cli"
 )
 

@@ -1,7 +1,7 @@
 # BWA example
 
 ```sh
-% awsub \
+% hotsub \
     --tasks ./bwa-alignment.csv \
     --script ./main.sh \
     --image otiai10/bwa \

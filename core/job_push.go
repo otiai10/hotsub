@@ -25,7 +25,7 @@ func (job *Job) push(output *Output) error {
 	ctx := context.Background()
 
 	push := &daap.Execution{
-		Inline: "/lifecycle/upload.sh",
+		Inline: "/scripts/upload.sh",
 		Env: []string{
 			fmt.Sprintf("%s=%s", "SOURCE", output.LocalPath),
 			fmt.Sprintf("%s=%s", "DEST", output.URL),

@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/otiai10/awsub/core"
+	"github.com/otiai10/hotsub/core"
 )
 
 var (

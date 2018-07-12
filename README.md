@@ -1,9 +1,9 @@
-# awsub [![Build Status](https://travis-ci.org/otiai10/awsub.svg?branch=master)](https://travis-ci.org/otiai10/awsub)
+# hotsub [![Build Status](https://travis-ci.org/otiai10/hotsub.svg?branch=master)](https://travis-ci.org/otiai10/hotsub)
 
 The simple batch job driver on AWS.
 
 ```sh
-awsub \
+hotsub \
   --image friend1ws/star-alignment \
   --script ./test/scripts/star-alignment.sh \
   --tasks ./test/tasks/star-alignment-tasks.csv \
@@ -16,10 +16,10 @@ Check releases here https://github.com/otiai10/awsub/releases and choose the bin
 
 # Quick Guide
 
-Once you have `awsub` installed, just hit following command
+Once you have `hotsub` installed, just hit following command
 
 ```
-awsub quickguide
+hotsub quickguide
 ```
 
 and you can see what you need.
@@ -28,4 +28,4 @@ and you can see what you need.
 
 To make it transparent, ask any question from this link.
 
-https://github.com/otiai10/awsub/issues
+https://github.com/otiai10/hotsub/issues
