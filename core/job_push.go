@@ -27,7 +27,7 @@ func (job *Job) push(output *Output) error {
 	push := &daap.Execution{
 		Inline: "/scripts/upload.sh",
 		Env: []string{
-			fmt.Sprintf("%s=%s", "SOURCE", output.LocalPath),
+			fmt.Sprintf("%s=%s", "SOURCE", output.DeployedPath),
 			fmt.Sprintf("%s=%s", "DEST", output.URL),
 		},
 		Inspect: true,

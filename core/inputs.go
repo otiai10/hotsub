@@ -17,6 +17,6 @@ type Input struct {
 	// // The resource specified by this URL would be downloaded to computing node
 	// // and translated to local file path.
 	// URL string `json:"url"        yaml:"url"`
-	// // LocalPath is a local file path which is translated from URL.
-	// LocalPath string `json:"local_path" yaml:"local_path"`
+	// // DeployedPath is a local file path which is translated from URL.
+	// DeployedPath string `json:"local_path" yaml:"local_path"`
 }

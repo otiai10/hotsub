@@ -84,7 +84,7 @@ func (job *Job) ensure(output *Output) error {
 		return err
 	}
 
-	dir := ternary.If(output.Recursive).String(output.LocalPath, filepath.Dir(output.LocalPath))
+	dir := ternary.If(output.Recursive).String(output.DeployedPath, filepath.Dir(output.DeployedPath))
 
 	ensure := &daap.Execution{
 		Inline:  fmt.Sprintf("mkdir -p %s", dir),

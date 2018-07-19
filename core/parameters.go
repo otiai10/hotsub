@@ -6,4 +6,8 @@ type Parameters struct {
 	Inputs  Inputs
 	Outputs Outputs
 	Envs    []Env
+
+	// Includes represent **local** files
+	// which should be transfered to VM from local.
+	Includes Includes
 }
