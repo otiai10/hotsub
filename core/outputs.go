@@ -17,6 +17,6 @@ type Output struct {
 	// // The output location specified by this URL would be translated to
 	// // local file path on computing node, and pushed to this URL after the job.
 	// URL string `json:"url"        yaml:"url"`
-	// // LocalPath is a local file path which is translated from URL.
-	// LocalPath string `json:"local_path" yaml:"local_path"`
+	// // DeployedPath is a local file path which is translated from URL.
+	// DeployedPath string `json:"local_path" yaml:"local_path"`
 }

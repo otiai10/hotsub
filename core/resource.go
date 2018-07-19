@@ -19,10 +19,10 @@ type Resource struct {
 	// URL is (in most cases) a resource location through the Internet,
 	// s3://..., gs://... for examples.
 	// The output location specified by this URL would be translated to
-	// local file path on computing node, and pushed to this URL after the job.
+	// local file path (== DeployedPath) on computing node, and pushed to this URL after the job.
 	URL string `json:"url"        yaml:"url"`
-	// LocalPath is a local file path which is translated from URL.
-	LocalPath string `json:"local_path" yaml:"local_path"`
+	// DeployedPath is a path (in VM) which is translated from URL.
+	DeployedPath string `json:"deployed_path" yaml:"deployed_path"`
 }
 
 // Localize convert given resource URL to local file path inside the container.
@@ -32,7 +32,7 @@ func (resource *Resource) Localize(rootdir string) error {
 		return err
 	}
 	bucket := u.Host
-	resource.LocalPath = filepath.ToSlash(filepath.Join(rootdir, bucket, u.Path))
+	resource.DeployedPath = filepath.ToSlash(filepath.Join(rootdir, bucket, u.Path))
 	return nil
 }
 
@@ -40,7 +40,7 @@ func (resource *Resource) Localize(rootdir string) error {
 func (resource *Resource) Env() Env {
 	return Env{
 		Name:  resource.Name,
-		Value: resource.LocalPath,
+		Value: resource.DeployedPath,
 	}
 }
 
@@ -49,6 +49,6 @@ func (resource *Resource) EnvForFetch() []string {
 	key := ternary.If(resource.Recursive).String("INPUT_RECURSIVE", "INPUT")
 	return []string{
 		fmt.Sprintf("%s=%s", key, resource.URL),
-		fmt.Sprintf("%s=%s", "DIR", filepath.Dir(resource.LocalPath)),
+		fmt.Sprintf("%s=%s", "DIR", filepath.Dir(resource.DeployedPath)),
 	}
 }

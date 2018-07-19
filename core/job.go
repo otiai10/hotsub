@@ -44,7 +44,21 @@ type Job struct {
 
 	// Report ...
 	Report *Report
+
+	// Type represents the type of workflows,
+	// MUST be either of ['Script','CWL']
+	Type JobType
 }
+
+// JobType represents the type
+type JobType string
+
+const (
+	// ShellScriptJob ...
+	ShellScriptJob JobType = "Script"
+	// CommonWorkflowLanguageJob ...
+	CommonWorkflowLanguageJob JobType = "CWL"
+)
 
 // JobContainer ...
 type JobContainer struct {
