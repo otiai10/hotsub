@@ -18,6 +18,21 @@ import (
 
 func generateJobsFromContext(ctx *cli.Context) (string, []*core.Job, error) {
 
+	if cwlfile := ctx.String("cwl"); cwlfile != "" {
+		name := filepath.Base(cwlfile)
+		jobs := []*core.Job{}
+		for index, param := range ctx.StringSlice("cwl-param") {
+			job := core.NewJob(index, name)
+			job.Parameters.Includes = core.Includes{
+				{LocalPath: cwlfile, Resource: core.Resource{Name: "CWL_FILE"}},
+				{LocalPath: param, Resource: core.Resource{Name: "CWL_PARAM_FILE"}},
+			}
+			job.Type = core.CommonWorkflowLanguageJob
+			jobs = append(jobs, job)
+		}
+		return name, jobs, nil
+	}
+
 	// Get tasks file path from context.
 	tasksfpath := ctx.String("tasks")
 	f, err := os.Open(tasksfpath)
@@ -53,9 +68,15 @@ func action(ctx *cli.Context) error {
 	}
 
 	root := core.RootComponentTemplate(name)
-
 	root.Jobs = jobs
+
 	root.Runtime.Image.Name = ctx.String("image")
+	// {{{ FIXME:
+	if jobs[0].Type == core.CommonWorkflowLanguageJob {
+		root.Runtime.Image.Name = "otiai10/c4cwl"
+	}
+	// }}}
+
 	root.Runtime.Script.Path = ctx.String("script")
 	root.Concurrency = ctx.Int64("concurrency")
 

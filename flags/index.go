@@ -27,4 +27,8 @@ var Index = []cli.Flag{
 	// GCP
 	GoogleProject,
 	GoogleZone,
+
+	// CommonWorkflowLanguage
+	CWLFileFlag,
+	CWLParamFlag,
 }
