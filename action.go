@@ -72,7 +72,7 @@ func action(ctx *cli.Context) error {
 
 	root.Runtime.Image.Name = ctx.String("image")
 	// {{{ FIXME:
-	if jobs[0].Type == core.CommonWorkflowLanguageJob {
+	if len(jobs) != 0 && jobs[0].Type == core.CommonWorkflowLanguageJob {
 		root.Runtime.Image.Name = "otiai10/c4cwl"
 	}
 	// }}}
