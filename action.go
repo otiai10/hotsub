@@ -16,6 +16,28 @@ import (
 	"github.com/urfave/cli"
 )
 
+func generateJobsFromContext(ctx *cli.Context) (string, []*core.Job, error) {
+
+	// Get tasks file path from context.
+	tasksfpath := ctx.String("tasks")
+	f, err := os.Open(tasksfpath)
+	if err != nil {
+		return "", nil, fmt.Errorf("failed to open tasks file `%s`: %v", tasksfpath, err)
+	}
+	defer f.Close()
+
+	// Create jobs model from tasks file.
+	jobs, err := parser.ParseFile(tasksfpath)
+	if err != nil {
+		return "", nil, err
+	}
+
+	// Decide workflow name by tasks file name.
+	name := filepath.Base(tasksfpath)
+
+	return name, jobs, nil
+}
+
 // action ...
 // All the CLI context should be parsed and decoded on this layer,
 // no deeper layer should NOT touch cli.
@@ -25,26 +47,18 @@ func action(ctx *cli.Context) error {
 		return ctx.App.Command("help").Run(ctx)
 	}
 
-	tasksfpath := ctx.String("tasks")
-	f, err := os.Open(tasksfpath)
-	if err != nil {
-		return fmt.Errorf("failed to open tasks file `%s`: %v", tasksfpath, err)
-	}
-	defer f.Close()
-
-	name := filepath.Base(tasksfpath)
-	root := core.RootComponentTemplate(name)
-
-	root.Runtime.Image.Name = ctx.String("image")
-	root.Runtime.Script.Path = ctx.String("script")
-
-	root.Concurrency = ctx.Int64("concurrency")
-
-	jobs, err := parser.ParseFile(tasksfpath)
+	name, jobs, err := generateJobsFromContext(ctx)
 	if err != nil {
 		return err
 	}
+
+	root := core.RootComponentTemplate(name)
+
 	root.Jobs = jobs
+	root.Runtime.Image.Name = ctx.String("image")
+	root.Runtime.Script.Path = ctx.String("script")
+	root.Concurrency = ctx.Int64("concurrency")
+
 	applog("Your tasks file is parsed and decoded to %d job(s) ✅", len(jobs))
 
 	// {{{ Define Log Location
