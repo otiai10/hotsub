@@ -19,9 +19,14 @@ func (job *Job) Run(ctx context.Context, shared *SharedData, sem *semaphore.Weig
 			// to all the "job.Run" by "ctx.Done()" channel.
 			return err
 		case <-ctx.Done():
-			// If any of parallel "job.Run" has failed, the cancellation is notified by this channle.
-			// Stop, destroy and return this "job.Run" as well.
-			return ctx.Err()
+			/*
+				// If any of parallel "job.Run" has failed, the cancellation is notified by this channle.
+				// Stop, destroy and return this "job.Run" as well.
+				return ctx.Err()
+			*/
+
+			// Do nothing. Don't let this job fail. Keep running.
+			// See https://github.com/otiai10/hotsub/issues/101 for more detail.
 		}
 	}
 

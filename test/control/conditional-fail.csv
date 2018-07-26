@@ -1,0 +1,3 @@
+--env FAIL, --env MESSAGE
+, This is successful
+true, This is unsuccessful

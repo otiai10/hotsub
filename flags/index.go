@@ -31,4 +31,5 @@ var Index = []cli.Flag{
 	// CommonWorkflowLanguage
 	CWLFileFlag,
 	CWLParamFlag,
+	IncludeFlag,
 }

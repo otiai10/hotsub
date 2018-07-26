@@ -4,8 +4,9 @@ package platform
 type Provider string
 
 const (
-	AWS Provider = "aws"
-	GCP Provider = "gcp"
+	AWS   Provider = "aws"
+	GCP   Provider = "gcp"
+	Local Provider = "local"
 )
 
 // Driver ...
@@ -14,6 +15,7 @@ type Driver string
 const (
 	AmazonEC2 Driver = "amazonec2"
 	Google    Driver = "google"
+	Vbox      Driver = "virtualbox"
 )
 
 const (

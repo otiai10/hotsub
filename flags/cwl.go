@@ -13,3 +13,9 @@ var CWLParamFlag = cli.StringSliceFlag{
 	Name:  "cwl-param",
 	Usage: "Parameter files for CWL",
 }
+
+// IncludeFlag represents local files to be included onto workflow container.
+var IncludeFlag = cli.StringSliceFlag{
+	Name:  "include",
+	Usage: "Local files to be included onto workflow container",
+}

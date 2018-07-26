@@ -159,3 +159,22 @@ func ParseEnv(kvpairs []string) (envs []core.Env, err error) {
 	}
 	return
 }
+
+// ParseIncludes ...
+func ParseIncludes(kvpairs []string) core.Includes {
+	includes := core.Includes{}
+	for _, kvpair := range kvpairs {
+		kv := keyValuePairExpression.FindStringSubmatch(kvpair)
+		if len(kv) < 3 {
+			includes = append(includes, &core.Include{
+				LocalPath: kvpair,
+			})
+		} else {
+			includes = append(includes, &core.Include{
+				LocalPath: kv[2],
+				Resource:  core.Resource{Name: kv[1]},
+			})
+		}
+	}
+	return includes
+}

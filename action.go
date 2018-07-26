@@ -18,6 +18,7 @@ import (
 
 func generateJobsFromContext(ctx *cli.Context) (string, []*core.Job, error) {
 
+	// FIXME: ugly
 	if cwlfile := ctx.String("cwl"); cwlfile != "" {
 		name := filepath.Base(cwlfile)
 		jobs := []*core.Job{}
@@ -66,6 +67,13 @@ func action(ctx *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
+	// {{{ Add included files to each job.
+	includes := parser.ParseIncludes(ctx.StringSlice("include"))
+	for _, job := range jobs {
+		job.Parameters.Includes = append(job.Parameters.Includes, includes...)
+	}
+	// }}}
 
 	root := core.RootComponentTemplate(name)
 	root.Jobs = jobs
