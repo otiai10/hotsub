@@ -12,10 +12,7 @@ func (job *Job) Exec() error {
 
 	ctx := context.Background()
 
-	workflow, err := job.toWorkflowExecution(ctx)
-	if err != nil {
-		return err
-	}
+	workflow := job.toWorkflowExecution()
 
 	stream, err := job.Container.Workflow.Exec(ctx, workflow)
 	if err != nil {
@@ -33,7 +30,7 @@ func (job *Job) Exec() error {
 	return nil
 }
 
-func (job *Job) toWorkflowExecution(ctx context.Context) (*daap.Execution, error) {
+func (job *Job) toWorkflowExecution() *daap.Execution {
 
 	env := []string{fmt.Sprintf("%s=%s", "HOTSUB_ROOT", HOTSUB_CONTAINERROOT)}
 	for _, e := range job.Container.Envs {
@@ -42,14 +39,12 @@ func (job *Job) toWorkflowExecution(ctx context.Context) (*daap.Execution, error
 
 	workflow := &daap.Execution{Inspect: true, Env: env}
 
-	if job.Type != CommonWorkflowLanguageJob {
+	switch job.Type {
+	case CommonWorkflowLanguageJob:
+		workflow.Inline = "cwltool ${CWL_FILE} ${CWL_PARAM_FILE}"
+	default:
 		workflow.Script = job.Container.Script.Path
-		return workflow, nil
 	}
 
-	// CWL
-	workflow.Env = env
-	workflow.Inline = "cwltool ${CWL_FILE} ${CWL_PARAM_FILE}"
-
-	return workflow, nil
+	return workflow
 }
