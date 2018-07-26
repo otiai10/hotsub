@@ -68,6 +68,13 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
+	// {{{ Add included files to each job.
+	includes := parser.ParseIncludes(ctx.StringSlice("include"))
+	for _, job := range jobs {
+		job.Parameters.Includes = append(job.Parameters.Includes, includes...)
+	}
+	// }}}
+
 	root := core.RootComponentTemplate(name)
 	root.Jobs = jobs
 

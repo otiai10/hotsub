@@ -135,8 +135,12 @@ func (job *Job) upload(include *Include) error {
 	// This is just "Localize" specific for "Include".
 	include.DeployedPath = filepath.ToSlash(filepath.Join(HOTSUB_CONTAINERROOT, filepath.Base(include.LocalPath)))
 
-	job.addContainerEnv(include.Env())
+	// Skip anonymous includes
+	if include.Resource.Name == "" {
+		return nil
+	}
 
+	job.addContainerEnv(include.Env())
 	return nil
 }
 
