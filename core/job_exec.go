@@ -3,8 +3,6 @@ package core
 import (
 	"context"
 	"fmt"
-	"os"
-	"path/filepath"
 
 	"github.com/otiai10/daap"
 )
@@ -50,28 +48,8 @@ func (job *Job) toWorkflowExecution(ctx context.Context) (*daap.Execution, error
 	}
 
 	// CWL
-	// TODO: Uploading all "Includes" should be moved into "Fetch" step.
-	for _, include := range job.Parameters.Includes {
-		if err := job.upload(ctx, include); err != nil {
-			return nil, err
-		}
-		envpair := fmt.Sprintf("%s=%s", include.Name, include.DeployedPath)
-		env = append(env, envpair)
-	}
 	workflow.Env = env
 	workflow.Inline = "cwltool ${CWL_FILE} ${CWL_PARAM_FILE}"
 
 	return workflow, nil
-}
-
-func (job *Job) upload(ctx context.Context, include *Include) error {
-	f, err := os.Open(include.LocalPath)
-	if err != nil {
-		return err
-	}
-	if err := job.Container.Workflow.Upload(ctx, f, HOTSUB_CONTAINERROOT); err != nil {
-		return err
-	}
-	include.DeployedPath = filepath.ToSlash(filepath.Join(HOTSUB_CONTAINERROOT, filepath.Base(include.LocalPath)))
-	return nil
 }

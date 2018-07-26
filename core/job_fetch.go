@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
+	"os"
 	"path/filepath"
 	"sync"
 
@@ -26,6 +27,11 @@ func (job *Job) Fetch() error {
 	for _, output := range job.Parameters.Outputs {
 		o := output
 		eg.Go(func() error { return job.ensure(o) })
+	}
+
+	for _, include := range job.Parameters.Includes {
+		i := include
+		eg.Go(func() error { return job.upload(i) })
 	}
 
 	for _, env := range job.Parameters.Envs {
@@ -109,6 +115,28 @@ func (job *Job) ensure(output *Output) error {
 	}
 
 	job.addContainerEnv(output.Env())
+	return nil
+}
+
+// upload local files to the workflow container specified by "--include".
+func (job *Job) upload(include *Include) error {
+
+	ctx := context.Background()
+	f, err := os.Open(include.LocalPath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if err := job.Container.Workflow.Upload(ctx, f, HOTSUB_CONTAINERROOT); err != nil {
+		return err
+	}
+
+	// This is just "Localize" specific for "Include".
+	include.DeployedPath = filepath.ToSlash(filepath.Join(HOTSUB_CONTAINERROOT, filepath.Base(include.LocalPath)))
+
+	job.addContainerEnv(include.Env())
+
 	return nil
 }
 

@@ -18,6 +18,7 @@ import (
 
 func generateJobsFromContext(ctx *cli.Context) (string, []*core.Job, error) {
 
+	// FIXME: ugly
 	if cwlfile := ctx.String("cwl"); cwlfile != "" {
 		name := filepath.Base(cwlfile)
 		jobs := []*core.Job{}
