@@ -30,6 +30,8 @@ func DefineMachineSpec(ctx Context) (*dkmachine.CreateOptions, error) {
 		opt.Driver = string(AmazonEC2)
 	case GCP:
 		opt.Driver = string(Google)
+	case Local:
+		opt.Driver = string(Vbox)
 	default:
 		opt.Driver = string(AmazonEC2)
 	}
