@@ -1,4 +1,4 @@
-package main
+package application
 
 import (
 	"context"
@@ -6,17 +6,16 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"regexp"
 	"time"
 
 	"github.com/otiai10/hotsub/core"
 	"github.com/otiai10/hotsub/logs"
+	"github.com/otiai10/hotsub/params"
 	"github.com/otiai10/hotsub/parser"
 	"github.com/otiai10/hotsub/platform"
-	"github.com/urfave/cli"
 )
 
-func generateJobsFromContext(ctx *cli.Context) (string, []*core.Job, error) {
+func generateJobsFromContext(ctx params.Context) (string, []*core.Job, error) {
 
 	// FIXME: ugly
 	if cwlfile := ctx.String("cwl"); cwlfile != "" {
@@ -54,14 +53,8 @@ func generateJobsFromContext(ctx *cli.Context) (string, []*core.Job, error) {
 	return name, jobs, nil
 }
 
-// action ...
-// All the CLI context should be parsed and decoded on this layer,
-// no deeper layer should NOT touch cli.
-func action(ctx *cli.Context) error {
-
-	if ctx.NumFlags() == 0 {
-		return ctx.App.Command("help").Run(ctx)
-	}
+// Run ...
+func Run(ctx params.Context) error {
 
 	name, jobs, err := generateJobsFromContext(ctx)
 	if err != nil {
@@ -160,9 +153,4 @@ func action(ctx *cli.Context) error {
 	applog("All of your %d job(s) are completed 🎉", len(jobs))
 
 	return nil
-}
-
-func applog(format string, v ...interface{}) {
-	format = regexp.MustCompile("\n*$").ReplaceAllString(format, "\n")
-	log.Printf("[COMMAND]\t"+format, v...)
 }

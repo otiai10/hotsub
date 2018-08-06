@@ -3,7 +3,7 @@
 PROJROOT=$(dirname $(dirname $(cd $(dirname $0) && pwd)))
 
 set -e -v
-hotsub \
+hotsub run \
     --tasks ${PROJROOT}/test/bwa-alignment/bwa-alignment.csv \
     --script ${PROJROOT}/test/bwa-alignment/main.sh \
     --image otiai10/bwa \
