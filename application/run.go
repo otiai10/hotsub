@@ -125,7 +125,7 @@ func Run(ctx params.Context) error {
 	}
 	root.Machine.Spec = spec
 
-	if err := platform.Get(ctx).Validate(); err != nil {
+	if err := platform.Get(ctx).Validate(ctx); err != nil {
 		return err
 	}
 

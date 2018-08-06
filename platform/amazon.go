@@ -3,6 +3,8 @@ package platform
 import (
 	"fmt"
 
+	"github.com/otiai10/hotsub/params"
+
 	"github.com/otiai10/iamutil"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -13,6 +15,19 @@ import (
 )
 
 const (
+
+	// DefaultAWSWorkspaceVpcName ...
+	DefaultAWSWorkspaceVpcName = "hotsub-workspace" + "-" + HotsubSecurityStructureVersion
+
+	// DefaultAWSSubnetName ...
+	DefaultAWSSubnetName = "hotsub-subnet" + "-" + HotsubSecurityStructureVersion
+
+	// DefaultAWSInternetGatewayName ...
+	DefaultAWSInternetGatewayName = "hotsub-gateway" + "-" + HotsubSecurityStructureVersion
+
+	// DefaultAWSRouteTableName ...
+	DefaultAWSRouteTableName = "hotsub-default-rt" + "-" + HotsubSecurityStructureVersion
+
 	// DefaultAWSInstanceProfileNameForCompute default aws instance profile name
 	DefaultAWSInstanceProfileNameForCompute = "hotsub-compute" + "-" + HotsubSecurityStructureVersion
 	// TODO: Separate instance profile for shared data instance
@@ -30,7 +45,7 @@ type AmazonWebServices struct {
 // Validate validates the platform itself, setting up the infrastructures if needed.
 // For AWS, it executes:
 //     1. Create SecurityGroup for hotsub.
-func (p *AmazonWebServices) Validate() error {
+func (p *AmazonWebServices) Validate(ctx params.Context) error {
 
 	// Initialize EC2 API Client
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
@@ -38,18 +53,138 @@ func (p *AmazonWebServices) Validate() error {
 		Config:            aws.Config{Region: &p.Region},
 	}))
 
-	if err := createSecurityGroupIfNotExists(sess); err != nil {
+	if err := createWorkspaceVpcIfNotExists(sess, ctx); err != nil {
+		return fmt.Errorf("failed to setup VPC: %v", err)
+	}
+
+	if err := createSecurityGroupIfNotExists(sess, ctx); err != nil {
 		return fmt.Errorf("failed to setup security group: %v", err)
 	}
 
-	if err := createInstanceProfileIfNotExists(sess); err != nil {
+	if err := createInstanceProfileIfNotExists(sess, ctx); err != nil {
 		return fmt.Errorf("failed to setup instance profile: %v", err)
 	}
 
 	return nil
 }
 
-func createSecurityGroupIfNotExists(sess *session.Session) error {
+func createWorkspaceVpcIfNotExists(sess *session.Session, ctx params.Context) error {
+
+	client := ec2.New(sess)
+
+	vpcsout, err := client.DescribeVpcs(&ec2.DescribeVpcsInput{
+		Filters: []*ec2.Filter{
+			&ec2.Filter{Name: aws.String("tag:Name"), Values: aws.StringSlice([]string{DefaultAWSWorkspaceVpcName})},
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	// Good, existing.
+	if len(vpcsout.Vpcs) != 0 {
+		return ctx.Set("aws-vpc-id", *vpcsout.Vpcs[0].VpcId)
+	}
+
+	// Create because it doesn't exist
+	createout, err := client.CreateVpc(&ec2.CreateVpcInput{
+		CidrBlock: aws.String("10.0.0.0/16"),
+	})
+	if err != nil {
+		return err
+	}
+	vpc := createout.Vpc
+
+	// Name this VPC
+	_, err = client.CreateTags(&ec2.CreateTagsInput{
+		Tags:      []*ec2.Tag{{Key: aws.String("Name"), Value: aws.String(DefaultAWSWorkspaceVpcName)}},
+		Resources: []*string{vpc.VpcId},
+	})
+	if err != nil {
+		return err
+	}
+
+	// Create subnet
+	subnetout, err := client.CreateSubnet(&ec2.CreateSubnetInput{
+		AvailabilityZone: aws.String(ctx.String("aws-region") + "a"), // FIXME: hard coded
+		CidrBlock:        aws.String("10.0.0.0/18"),
+		VpcId:            vpc.VpcId,
+	})
+	if err != nil {
+		return err
+	}
+	subnet := subnetout.Subnet
+
+	// Name this subnet
+	_, err = client.CreateTags(&ec2.CreateTagsInput{
+		Tags:      []*ec2.Tag{{Key: aws.String("Name"), Value: aws.String(DefaultAWSSubnetName)}},
+		Resources: []*string{subnet.SubnetId},
+	})
+	if err != nil {
+		return err
+	}
+
+	// Create InternetGateway
+	gatewayout, err := client.CreateInternetGateway(&ec2.CreateInternetGatewayInput{})
+	if err != nil {
+		return err
+	}
+	gateway := gatewayout.InternetGateway
+
+	// Name this internet gateway
+	_, err = client.CreateTags(&ec2.CreateTagsInput{
+		Tags:      []*ec2.Tag{{Key: aws.String("Name"), Value: aws.String(DefaultAWSInternetGatewayName)}},
+		Resources: []*string{gateway.InternetGatewayId},
+	})
+	if err != nil {
+		return err
+	}
+
+	// Attach this InternetGateway to the VPC
+	_, err = client.AttachInternetGateway(&ec2.AttachInternetGatewayInput{
+		InternetGatewayId: gateway.InternetGatewayId,
+		VpcId:             vpc.VpcId,
+	})
+	if err != nil {
+		return err
+	}
+
+	// Create RouteTable
+	routetablesout, err := client.DescribeRouteTables(&ec2.DescribeRouteTablesInput{
+		Filters: []*ec2.Filter{
+			{Name: aws.String("vpc-id"), Values: []*string{vpc.VpcId}},
+		},
+	})
+	if err != nil {
+		return err
+	}
+	if len(routetablesout.RouteTables) == 0 {
+		return fmt.Errorf("no default routetable found on this VPC")
+	}
+	routetable := routetablesout.RouteTables[0]
+
+	// Name this default RouteTable
+	_, err = client.CreateTags(&ec2.CreateTagsInput{
+		Tags:      []*ec2.Tag{{Key: aws.String("Name"), Value: aws.String(DefaultAWSRouteTableName)}},
+		Resources: []*string{routetable.RouteTableId},
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = client.CreateRoute(&ec2.CreateRouteInput{
+		DestinationCidrBlock: aws.String("0.0.0.0/0"),
+		RouteTableId:         routetable.RouteTableId,
+		GatewayId:            gateway.InternetGatewayId,
+	})
+	if err != nil {
+		return err
+	}
+
+	return ctx.Set("aws-vpc-id", *vpc.VpcId)
+}
+
+func createSecurityGroupIfNotExists(sess *session.Session, ctx params.Context) error {
 	client := ec2.New(sess)
 
 	// Check existing SecurityGroup
@@ -75,6 +210,7 @@ func createSecurityGroupIfNotExists(sess *session.Session) error {
 	// It seems not existing. Let's create new one.
 	group, err := client.CreateSecurityGroup(&ec2.CreateSecurityGroupInput{
 		GroupName:   &name,
+		VpcId:       aws.String(ctx.String("aws-vpc-id")),
 		Description: aws.String("default sg of hotsub"),
 	})
 	if err != nil {
@@ -112,7 +248,7 @@ func createSecurityGroupIfNotExists(sess *session.Session) error {
 	return nil
 }
 
-func createInstanceProfileIfNotExists(sess *session.Session) error {
+func createInstanceProfileIfNotExists(sess *session.Session, ctx params.Context) error {
 
 	_, err := iamutil.FindInstanceProfile(sess, DefaultAWSInstanceProfileNameForCompute)
 	if err == nil {
