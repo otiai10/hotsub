@@ -6,7 +6,7 @@ set -e -v
 
 # This control script fails intentionally.
 # This test case checks if "hotsub" can detect script error inside the container.
-hotsub \
+hotsub run \
     --tasks ${PROJROOT}/test/control/example.csv \
     --script ${PROJROOT}/test/control/main.sh \
     --verbose

@@ -3,7 +3,7 @@
 The simple batch job driver on AWS and GCP. (Azure, OpenStack are coming soon)
 
 ```sh
-hotsub \
+hotsub run \
   --image friend1ws/star-alignment \
   --script ./test/scripts/star-alignment.sh \
   --tasks ./test/tasks/star-alignment-tasks.csv \

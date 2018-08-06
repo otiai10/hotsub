@@ -3,7 +3,7 @@
 PROJROOT=$(dirname $(dirname $(cd $(dirname $0) && pwd)))
 
 set -e -v
-hotsub \
+hotsub run \
     --tasks ${PROJROOT}/test/wordcount/wordcount.csv \
     --script ${PROJROOT}/test/wordcount/main.sh \
     --env FOO="This is foo, specified as a common env" \

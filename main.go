@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/otiai10/hotsub/flags"
 	"github.com/urfave/cli"
 )
 
@@ -17,9 +16,8 @@ func main() {
 	app.Commands = commands
 	app.Version = version
 	app.Usage = "command line to run batch computing on AWS"
-	app.Description = "Open-source command-line tool to run batch computing tasks and workflows on backend services such as Amazon Web Service."
-	app.Flags = flags.Index
-	app.Action = action
+	app.Description = "Open-source command-line tool to run batch computing tasks and workflows on backend services such as Amazon Web Services."
+	// app.Flags = flags.Index
 	if err := app.Run(os.Args); err != nil {
 		log.Println(err)
 		os.Exit(1)

@@ -3,7 +3,7 @@
 PROJROOT=$(dirname $(dirname $(cd $(dirname $0) && pwd)))
 
 set -e -v
-hotsub \
+hotsub run \
   --cwl ${PROJROOT}/test/cwl/hello.cwl \
   --cwl-param ${PROJROOT}/test/cwl/job.yml \
   --verbose
