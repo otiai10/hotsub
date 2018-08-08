@@ -101,6 +101,10 @@ func Run(ctx params.Context) error {
 	log.Printf("[COMMAND]\tSee logs here -> %s\n", dir)
 	// }}}
 
+	if err := platform.Get(ctx).Validate(ctx); err != nil {
+		return err
+	}
+
 	commonEnv, err := parser.ParseEnv(ctx.StringSlice("env"))
 	if err != nil {
 		return err
@@ -124,10 +128,6 @@ func Run(ctx params.Context) error {
 		return err
 	}
 	root.Machine.Spec = spec
-
-	if err := platform.Get(ctx).Validate(); err != nil {
-		return err
-	}
 
 	if err := root.Prepare(); err != nil {
 		return err

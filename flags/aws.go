@@ -32,3 +32,15 @@ var AwsSharedInstanceType = cli.StringFlag{
 	Usage: `Shared Instance Type on AWS`,
 	Value: "m4.4xlarge",
 }
+
+// AwsVpcID ...
+var AwsVpcID = cli.StringFlag{
+	Name:  "aws-vpc-id",
+	Usage: `VPC ID on which computing VMs are launched`,
+}
+
+// AwsSubnetID ...
+var AwsSubnetID = cli.StringFlag{
+	Name:  "aws-subnet-id",
+	Usage: `Subnet ID in which computing VMs are launched`,
+}

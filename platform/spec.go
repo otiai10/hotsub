@@ -3,15 +3,19 @@ package platform
 import (
 	"strings"
 
+	"github.com/otiai10/hotsub/params"
+
 	"github.com/otiai10/dkmachine"
 	"github.com/otiai10/hotsub/core"
 )
 
 // DefineMachineSpec is a factory layer to connect cli.Context to CreateOptions.
-func DefineMachineSpec(ctx Context) (*dkmachine.CreateOptions, error) {
+func DefineMachineSpec(ctx params.Context) (*dkmachine.CreateOptions, error) {
 	opt := &dkmachine.CreateOptions{
 		// AWS
 		AmazonEC2Region:             ctx.String("aws-region"),
+		AmazonEC2VpcID:              ctx.String("aws-vpc-id"),
+		AmazonEC2SubnetID:           ctx.String("aws-subnet-id"),
 		AmazonEC2RootSize:           ctx.Int("disk-size"),
 		AmazonEC2InstanceType:       ctx.String("aws-ec2-instance-type"),
 		AmazonEC2IAMInstanceProfile: DefaultAWSInstanceProfileNameForCompute,
@@ -41,9 +45,11 @@ func DefineMachineSpec(ctx Context) (*dkmachine.CreateOptions, error) {
 // DefineSharedDataInstanceSpec ...
 // It defines ALL the specifications for docker-machine,
 // though it's a bit verbose ;)
-func DefineSharedDataInstanceSpec(shared core.Inputs, ctx Context) (*dkmachine.CreateOptions, error) {
+func DefineSharedDataInstanceSpec(shared core.Inputs, ctx params.Context) (*dkmachine.CreateOptions, error) {
 	opt := &dkmachine.CreateOptions{
 		Name:                        "Shared-Data-Instance",
+		AmazonEC2VpcID:              ctx.String("aws-vpc-id"),
+		AmazonEC2SubnetID:           ctx.String("aws-subnet-id"),
 		AmazonEC2Region:             ctx.String("aws-region"),
 		AmazonEC2IAMInstanceProfile: DefaultAWSInstanceProfileNameForCompute,
 		AmazonEC2SecurityGroup:      DefaultAWSSecurityGroupName,

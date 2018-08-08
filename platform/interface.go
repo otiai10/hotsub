@@ -1,18 +1,16 @@
 package platform
 
+import (
+	"github.com/otiai10/hotsub/params"
+)
+
 // Platform ...
 type Platform interface {
-	Validate() error
-}
-
-// Context ...
-type Context interface {
-	String(string) string
-	Int(string) int
+	Validate(ctx params.Context) error
 }
 
 // Get ...
-func Get(ctx Context) Platform {
+func Get(ctx params.Context) Platform {
 	switch Provider(ctx.String("provider")) {
 	case AWS:
 		return &AmazonWebServices{Region: ctx.String("aws-region")}

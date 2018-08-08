@@ -20,5 +20,5 @@ const (
 
 const (
 	// HotsubSecurityStructureVersion ...
-	HotsubSecurityStructureVersion = "2018-06-07"
+	HotsubSecurityStructureVersion = "2018-08-06"
 )
