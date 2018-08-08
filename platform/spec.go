@@ -14,6 +14,8 @@ func DefineMachineSpec(ctx params.Context) (*dkmachine.CreateOptions, error) {
 	opt := &dkmachine.CreateOptions{
 		// AWS
 		AmazonEC2Region:             ctx.String("aws-region"),
+		AmazonEC2VpcID:              ctx.String("aws-vpc-id"),
+		AmazonEC2SubnetID:           ctx.String("aws-subnet-id"),
 		AmazonEC2RootSize:           ctx.Int("disk-size"),
 		AmazonEC2InstanceType:       ctx.String("aws-ec2-instance-type"),
 		AmazonEC2IAMInstanceProfile: DefaultAWSInstanceProfileNameForCompute,
@@ -47,6 +49,7 @@ func DefineSharedDataInstanceSpec(shared core.Inputs, ctx params.Context) (*dkma
 	opt := &dkmachine.CreateOptions{
 		Name:                        "Shared-Data-Instance",
 		AmazonEC2VpcID:              ctx.String("aws-vpc-id"),
+		AmazonEC2SubnetID:           ctx.String("aws-subnet-id"),
 		AmazonEC2Region:             ctx.String("aws-region"),
 		AmazonEC2IAMInstanceProfile: DefaultAWSInstanceProfileNameForCompute,
 		AmazonEC2SecurityGroup:      DefaultAWSSecurityGroupName,

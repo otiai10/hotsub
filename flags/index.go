@@ -24,6 +24,7 @@ var Index = []cli.Flag{
 	AwsEC2InstanceType,
 	AwsSharedInstanceType,
 	AwsVpcID,
+	AwsSubnetID,
 
 	// GCP
 	GoogleProject,

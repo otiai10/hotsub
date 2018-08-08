@@ -38,3 +38,9 @@ var AwsVpcID = cli.StringFlag{
 	Name:  "aws-vpc-id",
 	Usage: `VPC ID on which computing VMs are launched`,
 }
+
+// AwsSubnetID ...
+var AwsSubnetID = cli.StringFlag{
+	Name:  "aws-subnet-id",
+	Usage: `Subnet ID in which computing VMs are launched`,
+}
