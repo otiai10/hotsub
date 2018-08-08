@@ -16,7 +16,12 @@ func createSecurityGroupIfNotExists(sess *session.Session, ctx params.Context) e
 	// Check existing SecurityGroup
 	name := DefaultAWSSecurityGroupName
 	res, err := client.DescribeSecurityGroups(&ec2.DescribeSecurityGroupsInput{
-		GroupNames: []*string{&name},
+		// GroupNames: []*string{&name}, // <- Default VPC Only
+		Filters: []*ec2.Filter{
+			{Name: aws.String("vpc-id"), Values: []*string{aws.String(ctx.String("aws-vpc-id"))}},
+			{Name: aws.String("tag:Name"), Values: []*string{&name}},
+			{Name: aws.String("group-name"), Values: []*string{&name}},
+		},
 	})
 
 	// If exists, well done!
@@ -40,14 +45,14 @@ func createSecurityGroupIfNotExists(sess *session.Session, ctx params.Context) e
 		Description: aws.String("default sg of hotsub"),
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create new security group: %v", err)
 	}
 
 	if _, err := client.CreateTags(&ec2.CreateTagsInput{
 		Resources: []*string{group.GroupId},
-		Tags:      []*ec2.Tag{{Key: aws.String("Name"), Value: aws.String("hotsub-default")}},
+		Tags:      []*ec2.Tag{{Key: aws.String("Name"), Value: aws.String(name)}},
 	}); err != nil {
-		return err
+		return fmt.Errorf("failed to name this security group: %v", err)
 	}
 
 	anywhere := []*ec2.IpRange{&ec2.IpRange{CidrIp: aws.String("0.0.0.0/0")}}
