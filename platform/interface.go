@@ -16,6 +16,8 @@ func Get(ctx params.Context) Platform {
 		return &AmazonWebServices{Region: ctx.String("aws-region")}
 	case GCP:
 		return &GoogleCloudPlatform{}
+	case Local:
+		return &Virtualbox{}
 	}
 	return &AmazonWebServices{}
 }
