@@ -12,6 +12,7 @@ import (
 func createWorkspaceVpcIfNotExists(sess *session.Session, ctx params.Context) error {
 
 	client := ec2.New(sess)
+	region := ctx.String("aws-region")
 
 	vpcsout, err := client.DescribeVpcs(&ec2.DescribeVpcsInput{
 		Filters: []*ec2.Filter{{Name: aws.String("tag:Name"), Values: aws.StringSlice([]string{DefaultAWSWorkspaceVpcName})}},
@@ -62,7 +63,7 @@ func createWorkspaceVpcIfNotExists(sess *session.Session, ctx params.Context) er
 
 	// Create subnet
 	subnetout, err := client.CreateSubnet(&ec2.CreateSubnetInput{
-		AvailabilityZone: aws.String(ctx.String("aws-region") + "a"), // FIXME: hard coded
+		AvailabilityZone: aws.String(region + "a"), // FIXME: hard coded
 		CidrBlock:        aws.String(privateIPAddressRange + "/18"),
 		VpcId:            vpc.VpcId,
 	})
@@ -136,6 +137,15 @@ func createWorkspaceVpcIfNotExists(sess *session.Session, ctx params.Context) er
 		DestinationCidrBlock: aws.String("0.0.0.0/0"),
 		RouteTableId:         routetable.RouteTableId,
 		GatewayId:            gateway.InternetGatewayId,
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = client.CreateVpcEndpoint(&ec2.CreateVpcEndpointInput{
+		VpcId:         vpc.VpcId,
+		ServiceName:   aws.String(fmt.Sprintf("com.amazonaws.%s.s3", region)),
+		RouteTableIds: []*string{routetable.RouteTableId},
 	})
 	if err != nil {
 		return err
