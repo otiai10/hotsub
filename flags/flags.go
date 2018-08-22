@@ -28,7 +28,7 @@ var Concurrency = cli.Int64Flag{
 
 var Provider = cli.StringFlag{
 	Name:  "provider,p",
-	Usage: `Job service provider. Valid values are "aws" and "local."`,
+	Usage: `Job service provider, either of [aws, gcp, vbox, hyperv]`,
 	Value: "aws",
 }
 
