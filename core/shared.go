@@ -10,7 +10,9 @@ import (
 
 	"github.com/otiai10/daap"
 	"github.com/otiai10/dkmachine"
+	"golang.org/x/oauth2/google"
 	"golang.org/x/sync/errgroup"
+	compute "google.golang.org/api/compute/v1"
 )
 
 // SharedData ...
@@ -40,6 +42,28 @@ func (sd *SharedData) Create() error {
 	if err != nil {
 		return err
 	}
+
+	// {{{ https://github.com/otiai10/awsub/issues/84
+	if sd.Spec.Driver == "google" {
+		ctx := context.Background()
+		client, err := google.DefaultClient(ctx, compute.ComputeScope)
+		if err != nil {
+			return err
+		}
+		service, err := compute.New(client)
+		if err != nil {
+			return err
+		}
+		instance, err := service.Instances.Get(sd.Spec.GoogleProject, sd.Spec.GoogleZone, sd.Spec.Name).Do()
+		if err != nil {
+			return err
+		}
+		if len(instance.NetworkInterfaces) == 0 {
+			return fmt.Errorf("failed to fetch network interfaces of this shared data instance: %v", instance.Name)
+		}
+		sd.Instance.GCEInternalNetworkIPAddress = instance.NetworkInterfaces[0].NetworkIP
+	}
+	// }}}
 
 	eg := new(errgroup.Group)
 	eg.Go(sd.startNFS)

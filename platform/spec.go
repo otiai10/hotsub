@@ -26,7 +26,8 @@ func DefineMachineSpec(ctx params.Context) (*dkmachine.CreateOptions, error) {
 		GoogleDiskSize: ctx.Int("disk-size"),
 		GoogleScopes: strings.Join([]string{
 			"https://www.googleapis.com/auth/devstorage.read_write",
-			"https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write",
+			"https://www.googleapis.com/auth/logging.write",
+			"https://www.googleapis.com/auth/monitoring.write",
 		}, ","),
 	}
 	switch Provider(ctx.String("provider")) {
@@ -58,6 +59,15 @@ func DefineSharedDataInstanceSpec(shared core.Inputs, ctx params.Context) (*dkma
 
 		AmazonEC2InstanceType: ctx.String("aws-shared-instance-type"),
 		AmazonEC2RootSize:     ctx.Int("shareddata-disksize"),
+		// GCP
+		GoogleProject:  ctx.String("google-project"),
+		GoogleZone:     ctx.String("google-zone"),
+		GoogleDiskSize: ctx.Int("shareddata-disksize"),
+		GoogleScopes: strings.Join([]string{
+			"https://www.googleapis.com/auth/devstorage.read_write",
+			"https://www.googleapis.com/auth/logging.write",
+			"https://www.googleapis.com/auth/monitoring.write",
+		}, ","),
 	}
 	switch Provider(ctx.String("provider")) {
 	case AWS:

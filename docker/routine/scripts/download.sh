@@ -43,6 +43,8 @@ function download() {
     exit 1
   fi
 
+  DEST=${DIR}/`basename ${SRC}`
+
   case ${PROVIDER} in
   s3)
     if [[ -n ${INPUT_RECURSIVE} ]]; then
@@ -54,6 +56,8 @@ function download() {
     ;;
   gs)
     if [[ -n ${INPUT_RECURSIVE} ]]; then
+      DEST=`dirname ${DEST}`
+      mkdir -p ${DEST}
       CMD="gsutil cp -R"
     else
       CMD="gsutil cp"
@@ -61,7 +65,6 @@ function download() {
     ;;
   esac
 
-  DEST=${DIR}/`basename ${SRC}`
   ${CMD} ${SRC} ${DEST} || exit $?
 }
 
