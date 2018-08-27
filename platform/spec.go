@@ -24,6 +24,7 @@ func DefineMachineSpec(ctx params.Context) (*dkmachine.CreateOptions, error) {
 		GoogleProject:  ctx.String("google-project"),
 		GoogleZone:     ctx.String("google-zone"),
 		GoogleDiskSize: ctx.Int("disk-size"),
+		GoogleTags:     []string{DefaultGoogleInstanceTag},
 		GoogleScopes: strings.Join([]string{
 			"https://www.googleapis.com/auth/devstorage.read_write",
 			"https://www.googleapis.com/auth/logging.write",
@@ -63,6 +64,7 @@ func DefineSharedDataInstanceSpec(shared core.Inputs, ctx params.Context) (*dkma
 		GoogleProject:  ctx.String("google-project"),
 		GoogleZone:     ctx.String("google-zone"),
 		GoogleDiskSize: ctx.Int("shareddata-disksize"),
+		GoogleTags:     []string{DefaultGoogleInstanceTag},
 		GoogleScopes: strings.Join([]string{
 			"https://www.googleapis.com/auth/devstorage.read_write",
 			"https://www.googleapis.com/auth/logging.write",
