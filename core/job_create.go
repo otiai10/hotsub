@@ -39,7 +39,7 @@ func (job *Job) create(retry int, lasterror error) error {
 		return fmt.Errorf("last error on create: %v: failed to clean up machine for retry: %v", err, errOnRemove)
 	}
 
-	job.Lifetime(CREATE, "Retrying creating an instance for this job...")
+	job.Lifetime(CREATE, "Retrying instance creation for this job...")
 	time.Sleep(time.Duration(retry*40) * time.Second)
 	return job.create(retry+1, err)
 }
