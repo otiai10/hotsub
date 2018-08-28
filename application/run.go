@@ -21,11 +21,11 @@ func generateJobsFromContext(ctx params.Context) (string, []*core.Job, error) {
 	if cwlfile := ctx.String("cwl"); cwlfile != "" {
 		name := filepath.Base(cwlfile)
 		jobs := []*core.Job{}
-		for index, param := range ctx.StringSlice("cwl-param") {
+		for index, jobparam := range ctx.StringSlice("cwl-job") {
 			job := core.NewJob(index, name)
 			job.Parameters.Includes = core.Includes{
 				{LocalPath: cwlfile, Resource: core.Resource{Name: "CWL_FILE"}},
-				{LocalPath: param, Resource: core.Resource{Name: "CWL_PARAM_FILE"}},
+				{LocalPath: jobparam, Resource: core.Resource{Name: "CWL_JOB_FILE"}},
 			}
 			job.Type = core.CommonWorkflowLanguageJob
 			jobs = append(jobs, job)

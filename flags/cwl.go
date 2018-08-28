@@ -10,7 +10,7 @@ var CWLFileFlag = cli.StringFlag{
 
 // CWLParamFlag represents parameter files of CWL
 var CWLParamFlag = cli.StringSliceFlag{
-	Name:  "cwl-param",
+	Name:  "cwl-job",
 	Usage: "Parameter files for CWL",
 }
 

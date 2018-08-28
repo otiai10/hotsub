@@ -41,7 +41,7 @@ func (job *Job) toWorkflowExecution() *daap.Execution {
 
 	switch job.Type {
 	case CommonWorkflowLanguageJob:
-		workflow.Inline = "cwltool ${CWL_FILE} ${CWL_PARAM_FILE}"
+		workflow.Inline = "cwltool ${CWL_FILE} ${CWL_JOB_FILE}"
 	default:
 		workflow.Script = job.Container.Script.Path
 	}
