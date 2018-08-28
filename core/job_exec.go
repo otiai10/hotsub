@@ -32,7 +32,7 @@ func (job *Job) Exec() error {
 
 func (job *Job) toWorkflowExecution() *daap.Execution {
 
-	env := []string{fmt.Sprintf("%s=%s", "HOTSUB_ROOT", HOTSUB_CONTAINERROOT)}
+	env := []string{fmt.Sprintf("%s=%s", "HOTSUB_ROOT", HotsubContainerRoot)}
 	for _, e := range job.Container.Envs {
 		env = append(env, e.Pair())
 	}

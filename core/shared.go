@@ -89,7 +89,7 @@ func (sd *SharedData) fetchAll() error {
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
-			Mounts: []mount.Mount{daap.Bind(HOTSUB_MOUNTPOINT, HOTSUB_MOUNTPOINT)},
+			Mounts: []mount.Mount{daap.Bind(HotsubSharedInstanceMountPoint, HotsubSharedInstanceMountPoint)},
 		},
 	})
 	if err != nil {
@@ -116,7 +116,7 @@ func (sd SharedData) fetch(input *Input) error {
 
 	ctx := context.Background()
 
-	if err := input.Localize(HOTSUB_CONTAINERROOT); err != nil {
+	if err := input.Localize(HotsubContainerRoot); err != nil {
 		return err
 	}
 
@@ -158,12 +158,12 @@ func (sd SharedData) startNFS() error {
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
-			Mounts:      []mount.Mount{daap.Bind(HOTSUB_MOUNTPOINT, HOTSUB_MOUNTPOINT)},
+			Mounts:      []mount.Mount{daap.Bind(HotsubSharedInstanceMountPoint, HotsubSharedInstanceMountPoint)},
 			Privileged:  true,
 			NetworkMode: "host",
 		},
 		Container: &dockercontainer.Config{
-			Env: []string{fmt.Sprintf("%s=%s", "MOUNTPOINT", HOTSUB_MOUNTPOINT)},
+			Env: []string{fmt.Sprintf("%s=%s", "MOUNTPOINT", HotsubSharedInstanceMountPoint)},
 		},
 	})
 	if err != nil {
@@ -208,7 +208,7 @@ func (sd *SharedData) CreateNFSVolumesOn(m *dkmachine.Machine) ([]*daap.Volume, 
 func (sd *SharedData) Envs() (envs []Env) {
 	for _, input := range sd.Inputs {
 		// Relocalize for workflow container
-		input.Localize(HOTSUB_CONTAINERROOT + "/" + HOTSUB_SHARED_DIR)
+		input.Localize(HotsubContainerRoot + "/" + HotsubSharedDirectoryPath)
 		envs = append(envs, input.Env())
 	}
 	return envs
