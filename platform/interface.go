@@ -13,7 +13,7 @@ type Platform interface {
 func Get(ctx params.Context) Platform {
 	switch Provider(ctx.String("provider")) {
 	case AWS:
-		return &AmazonWebServices{Region: ctx.String("aws-region")}
+		return &AmazonWebServices{}
 	case GCP:
 		return &GoogleCloudPlatform{}
 	case VBOX:

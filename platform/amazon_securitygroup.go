@@ -10,7 +10,7 @@ import (
 	"github.com/otiai10/hotsub/params"
 )
 
-func createSecurityGroupIfNotExists(sess *session.Session, ctx params.Context) error {
+func (p AmazonWebServices) createSecurityGroupIfNotExists(sess *session.Session, ctx params.Context) error {
 	client := ec2.New(sess)
 
 	// Check existing SecurityGroup

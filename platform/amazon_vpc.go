@@ -9,7 +9,7 @@ import (
 	"github.com/otiai10/hotsub/params"
 )
 
-func createWorkspaceVpcIfNotExists(sess *session.Session, ctx params.Context) error {
+func (p AmazonWebServices) createWorkspaceVpcIfNotExists(sess *session.Session, ctx params.Context) error {
 
 	client := ec2.New(sess)
 	region := ctx.String("aws-region")
