@@ -41,7 +41,11 @@ func (job *Job) toWorkflowExecution() *daap.Execution {
 
 	switch job.Type {
 	case CommonWorkflowLanguageJob:
+		// TODO: support more options for CWL
 		workflow.Inline = "cwltool ${CWL_FILE} ${CWL_JOB_FILE}"
+	case WorkflowDescriptionLanguageJob:
+		// TODO: support more options for WDL
+		workflow.Inline = "java -jar /cromwell-34.jar run ${WDL_FILE} -i ${WDL_JOB_FILE}"
 	default:
 		workflow.Script = job.Container.Script.Path
 	}
