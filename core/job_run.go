@@ -11,6 +11,11 @@ func (job *Job) Run(ctx context.Context, shared *SharedData, sem *semaphore.Weig
 
 	done := job.run(shared, sem)
 
+	// Destroy the instance independently,
+	// NO MATTER if the neighbors got succeeded or failed.
+	// See https://github.com/otiai10/hotsub/issues/115#issuecomment-417197674
+	defer job.Destroy()
+
 	for {
 		select {
 		case err := <-done:
