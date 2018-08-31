@@ -49,6 +49,6 @@ func (job *Job) create(retry int, regenerateCerts bool, lasterror error) error {
 	}
 
 	job.Lifetime(CREATE, "Retrying instance creation for this job...")
-	time.Sleep(time.Duration(retry*40) * time.Second)
+	time.Sleep(time.Duration(retry*10) * time.Second)
 	return job.create(retry+1, false, err)
 }

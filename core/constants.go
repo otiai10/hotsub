@@ -18,7 +18,7 @@ const (
 	HotsubSharedInstanceMountPoint = "/tmp"
 
 	// CreateMaxRetry represents max count for retrying `docker-machine create`
-	CreateMaxRetry = 4
+	CreateMaxRetry = 6
 
 	// ContainerMaxRetry represents max count for retrying operations inside docker containers,
 	// such as "pull image", "exec create" and "exec create".
