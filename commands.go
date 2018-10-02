@@ -21,4 +21,14 @@ var commands = []cli.Command{
 		},
 		Flags: flags.Index,
 	},
+
+	// init
+	cli.Command{
+		Name:        "init",
+		Description: "Initialize CLI environment on which hotsub runs",
+		Usage:       "Initialize CLI environment on which hotsub runs",
+		Action: func(ctx *cli.Context) error {
+			return application.Init(ctx)
+		},
+	},
 }
