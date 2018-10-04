@@ -31,4 +31,15 @@ var commands = []cli.Command{
 			return application.Init(ctx)
 		},
 	},
+
+	// template
+	cli.Command{
+		Name:        "template",
+		Description: "Create a template project of hotsub",
+		Usage:       "Create a template project of hotsub",
+		Action: func(ctx *cli.Context) error {
+			return application.Template(ctx)
+		},
+		Flags: flags.Template,
+	},
 }
