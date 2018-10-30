@@ -2,10 +2,14 @@ package core
 
 import (
 	"fmt"
+	"regexp"
 	"time"
 
-	"github.com/docker/machine/libmachine/check"
 	"github.com/otiai10/dkmachine"
+)
+
+var (
+	regenerateCertsExp = regexp.MustCompile("You can attempt to regenerate them using 'docker-machine regenerate-certs")
 )
 
 // Create creates physical machine and wake the required containers up.
@@ -39,7 +43,8 @@ func (job *Job) create(retry int, regenerateCerts bool, lasterror error) error {
 		return nil
 	}
 
-	if _, ok := err.(check.ErrCertInvalid); ok {
+	// FIXME: Wish Go2's error value will solve it...
+	if regenerateCertsExp.MatchString(err.Error()) {
 		job.Lifetime(CREATE, "Regenerating certificates for this job after %d seconds. REASON: %v", (retry * 5), err)
 		time.Sleep(time.Duration(retry*5) * time.Second)
 		return job.create(retry+1, true, err)
