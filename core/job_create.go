@@ -40,7 +40,7 @@ func (job *Job) create(retry int, regenerateCerts bool, lasterror error) error {
 	}
 
 	if _, ok := err.(check.ErrCertInvalid); ok {
-		job.Lifetime(CREATE, "Regenerating certificates for this job after %d seconds. REASON: %T", (retry * 5), err)
+		job.Lifetime(CREATE, "Regenerating certificates for this job after %d seconds. REASON: %v", (retry * 5), err)
 		time.Sleep(time.Duration(retry*5) * time.Second)
 		return job.create(retry+1, true, err)
 	}
@@ -50,7 +50,7 @@ func (job *Job) create(retry int, regenerateCerts bool, lasterror error) error {
 		return fmt.Errorf("last error on create: %v: failed to clean up machine for retry: %v", err, errOnRemove)
 	}
 
-	job.Lifetime(CREATE, "Retrying instance creation for this job after %d seconds. REASON: %T", (retry * 5), err)
+	job.Lifetime(CREATE, "Retrying instance creation for this job after %d seconds. REASON: %v", (retry * 5), err)
 	time.Sleep(time.Duration(retry*5) * time.Second)
 	return job.create(retry+1, false, err)
 }
