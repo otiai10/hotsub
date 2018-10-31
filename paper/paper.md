@@ -20,10 +20,6 @@ bibliography: paper.bib
 
 # Summary
 
-**hotsub** is an command line software which automatically executes genome analytics with ETL/ExTL framework on cloud services, such as Amazon Web Services or Google Cloud Platform.
-
-# Introduction
-
 Because of the rapid accumulation of biomedical data all over the world, developing a platform for analzing them using high-performance computational infrastructure has become increasingly important in many biological and medical fields. Nowadays, cloud computing is getting a lot of attention since they can promote the sharing of data and reproducible analytical workflows across institutions. On the other hand, there has yet been no decisive practice on how to set up analytical workflows in cloud computing resources.
 
 One possible approach is what we call on-demand Extraction Transformation Load (ETL) framework. The overview of this framework is as follows:
