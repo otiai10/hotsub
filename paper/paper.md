@@ -20,7 +20,7 @@ bibliography: paper.bib
 
 # Summary
 
-foobar
+**hotsub** is an command line software which automatically executes genome analytics with ETL/ExTL framework on cloud services, such as Amazon Web Services or Google Cloud Platform.
 
 # Introduction
 
