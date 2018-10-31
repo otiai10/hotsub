@@ -43,12 +43,12 @@ func (job *Job) create(retry int, regenerateCerts bool, lasterror error) error {
 		return nil
 	}
 
-	// FIXME: Wish Go2's error value will solve it...
-	if regenerateCertsExp.MatchString(err.Error()) {
-		job.Lifetime(CREATE, "Regenerating certificates for this job after %d seconds. REASON: %v", (retry * 5), err)
-		time.Sleep(time.Duration(retry*5) * time.Second)
-		return job.create(retry+1, true, err)
-	}
+	// TODO: Just "*dkmachine.Machine.RegenerateCerts()" seams it doesn't update local certs files
+	// if regenerateCertsExp.MatchString(err.Error()) {
+	// 	job.Lifetime(CREATE, "Regenerating certificates for this job after %d seconds. REASON: %v", (retry * 5), err)
+	// 	time.Sleep(time.Duration(retry*5) * time.Second)
+	// 	return job.create(retry+1, true, err)
+	// }
 
 	// Clean up for retry
 	if errOnRemove := job.Machine.Instance.Remove(); errOnRemove != nil {
