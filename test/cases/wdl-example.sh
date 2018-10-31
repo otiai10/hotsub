@@ -7,6 +7,7 @@ hotsub run \
   --wdl ${PROJROOT}/test/wdl/hello.wdl \
   --wdl-job ${PROJROOT}/test/wdl/job-0.json \
   --wdl-job ${PROJROOT}/test/wdl/job-1.json \
-  --provider gcp \
-  --google-project genomondevel1 \
   --verbose
+
+  # --provider gcp \
+  # --google-project genomondevel1 \
