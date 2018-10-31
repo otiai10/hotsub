@@ -34,6 +34,8 @@ Here we propose a novel framework, on-demand Extended Extraction Transform Load 
 
 We have developed a software implementing the proposed ExETL framework, hotsub (https://github.com/otiai10/hotsub).
 
+Since 'hotsub' uses Docker and Docker Machine, users of 'hotsub' don't have to care about acquiring VMs on cloud services nor setting up environment for computing. Handling infrastructures and runtimes are automated by 'hotsub'.
+
 # References
 
 - [AWS Batch — Easy and Efficient Batch Computing Capabilities - AWS](https://aws.amazon.com/batch/)
