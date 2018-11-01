@@ -54,10 +54,18 @@ type Job struct {
 type JobType string
 
 const (
+
 	// ShellScriptJob ...
+	// Recommended
 	ShellScriptJob JobType = "Script"
+
 	// CommonWorkflowLanguageJob ...
+	// See https://github.com/common-workflow-language/common-workflow-language
 	CommonWorkflowLanguageJob JobType = "CWL"
+
+	// WorkflowDescriptionLanguageJob ...
+	// See https://github.com/openwdl/wdl
+	WorkflowDescriptionLanguageJob JobType = "WDL"
 )
 
 // JobContainer ...

@@ -24,9 +24,11 @@ func DefineMachineSpec(ctx params.Context) (*dkmachine.CreateOptions, error) {
 		GoogleProject:  ctx.String("google-project"),
 		GoogleZone:     ctx.String("google-zone"),
 		GoogleDiskSize: ctx.Int("disk-size"),
+		GoogleTags:     []string{DefaultGoogleInstanceTag},
 		GoogleScopes: strings.Join([]string{
 			"https://www.googleapis.com/auth/devstorage.read_write",
-			"https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write",
+			"https://www.googleapis.com/auth/logging.write",
+			"https://www.googleapis.com/auth/monitoring.write",
 		}, ","),
 	}
 	switch Provider(ctx.String("provider")) {
@@ -34,8 +36,10 @@ func DefineMachineSpec(ctx params.Context) (*dkmachine.CreateOptions, error) {
 		opt.Driver = string(AmazonEC2)
 	case GCP:
 		opt.Driver = string(Google)
-	case Local:
+	case VBOX:
 		opt.Driver = string(Vbox)
+	case HYPERV:
+		opt.Driver = string(Hyperv)
 	default:
 		opt.Driver = string(AmazonEC2)
 	}
@@ -56,6 +60,16 @@ func DefineSharedDataInstanceSpec(shared core.Inputs, ctx params.Context) (*dkma
 
 		AmazonEC2InstanceType: ctx.String("aws-shared-instance-type"),
 		AmazonEC2RootSize:     ctx.Int("shareddata-disksize"),
+		// GCP
+		GoogleProject:  ctx.String("google-project"),
+		GoogleZone:     ctx.String("google-zone"),
+		GoogleDiskSize: ctx.Int("shareddata-disksize"),
+		GoogleTags:     []string{DefaultGoogleInstanceTag},
+		GoogleScopes: strings.Join([]string{
+			"https://www.googleapis.com/auth/devstorage.read_write",
+			"https://www.googleapis.com/auth/logging.write",
+			"https://www.googleapis.com/auth/monitoring.write",
+		}, ","),
 	}
 	switch Provider(ctx.String("provider")) {
 	case AWS:

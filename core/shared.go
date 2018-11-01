@@ -10,7 +10,9 @@ import (
 
 	"github.com/otiai10/daap"
 	"github.com/otiai10/dkmachine"
+	"golang.org/x/oauth2/google"
 	"golang.org/x/sync/errgroup"
+	compute "google.golang.org/api/compute/v1"
 )
 
 // SharedData ...
@@ -41,6 +43,28 @@ func (sd *SharedData) Create() error {
 		return err
 	}
 
+	// {{{ https://github.com/otiai10/awsub/issues/84
+	if sd.Spec.Driver == "google" {
+		ctx := context.Background()
+		client, err := google.DefaultClient(ctx, compute.ComputeScope)
+		if err != nil {
+			return err
+		}
+		service, err := compute.New(client)
+		if err != nil {
+			return err
+		}
+		instance, err := service.Instances.Get(sd.Spec.GoogleProject, sd.Spec.GoogleZone, sd.Spec.Name).Do()
+		if err != nil {
+			return err
+		}
+		if len(instance.NetworkInterfaces) == 0 {
+			return fmt.Errorf("failed to fetch network interfaces of this shared data instance: %v", instance.Name)
+		}
+		sd.Instance.GCEInternalNetworkIPAddress = instance.NetworkInterfaces[0].NetworkIP
+	}
+	// }}}
+
 	eg := new(errgroup.Group)
 	eg.Go(sd.startNFS)
 	eg.Go(sd.fetchAll)
@@ -65,7 +89,7 @@ func (sd *SharedData) fetchAll() error {
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
-			Mounts: []mount.Mount{daap.Bind(HOTSUB_MOUNTPOINT, HOTSUB_MOUNTPOINT)},
+			Mounts: []mount.Mount{daap.Bind(HotsubSharedInstanceMountPoint, HotsubSharedInstanceMountPoint)},
 		},
 	})
 	if err != nil {
@@ -92,7 +116,7 @@ func (sd SharedData) fetch(input *Input) error {
 
 	ctx := context.Background()
 
-	if err := input.Localize(HOTSUB_CONTAINERROOT); err != nil {
+	if err := input.Localize(HotsubContainerRoot); err != nil {
 		return err
 	}
 
@@ -134,12 +158,12 @@ func (sd SharedData) startNFS() error {
 
 	err = container.Create(ctx, daap.CreateConfig{
 		Host: &dockercontainer.HostConfig{
-			Mounts:      []mount.Mount{daap.Bind(HOTSUB_MOUNTPOINT, HOTSUB_MOUNTPOINT)},
+			Mounts:      []mount.Mount{daap.Bind(HotsubSharedInstanceMountPoint, HotsubSharedInstanceMountPoint)},
 			Privileged:  true,
 			NetworkMode: "host",
 		},
 		Container: &dockercontainer.Config{
-			Env: []string{fmt.Sprintf("%s=%s", "MOUNTPOINT", HOTSUB_MOUNTPOINT)},
+			Env: []string{fmt.Sprintf("%s=%s", "MOUNTPOINT", HotsubSharedInstanceMountPoint)},
 		},
 	})
 	if err != nil {
@@ -184,7 +208,7 @@ func (sd *SharedData) CreateNFSVolumesOn(m *dkmachine.Machine) ([]*daap.Volume, 
 func (sd *SharedData) Envs() (envs []Env) {
 	for _, input := range sd.Inputs {
 		// Relocalize for workflow container
-		input.Localize(HOTSUB_CONTAINERROOT + "/" + HOTSUB_SHARED_DIR)
+		input.Localize(HotsubContainerRoot + "/" + HotsubSharedDirectoryPath)
 		envs = append(envs, input.Env())
 	}
 	return envs

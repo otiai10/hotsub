@@ -51,7 +51,7 @@ func (job *Job) fetch(input *Input) error {
 		return nil
 	}
 
-	if err := input.Localize(HOTSUB_CONTAINERROOT); err != nil {
+	if err := input.Localize(HotsubContainerRoot); err != nil {
 		return err
 	}
 
@@ -86,7 +86,7 @@ func (job *Job) fetch(input *Input) error {
 // ensure the output directories exist on the workflow container.
 func (job *Job) ensure(output *Output) error {
 	// log.Println(job.Identity.Name, "ensure", output.URL)
-	if err := output.Localize(HOTSUB_CONTAINERROOT); err != nil {
+	if err := output.Localize(HotsubContainerRoot); err != nil {
 		return err
 	}
 
@@ -128,12 +128,12 @@ func (job *Job) upload(include *Include) error {
 	}
 	defer f.Close()
 
-	if err := job.Container.Workflow.Upload(ctx, f, HOTSUB_CONTAINERROOT); err != nil {
+	if err := job.Container.Workflow.Upload(ctx, f, HotsubContainerRoot); err != nil {
 		return err
 	}
 
 	// This is just "Localize" specific for "Include".
-	include.DeployedPath = filepath.ToSlash(filepath.Join(HOTSUB_CONTAINERROOT, filepath.Base(include.LocalPath)))
+	include.DeployedPath = filepath.ToSlash(filepath.Join(HotsubContainerRoot, filepath.Base(include.LocalPath)))
 
 	// Skip anonymous includes
 	if include.Resource.Name == "" {

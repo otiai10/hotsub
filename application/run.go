@@ -17,21 +17,37 @@ import (
 
 func generateJobsFromContext(ctx params.Context) (string, []*core.Job, error) {
 
-	// FIXME: ugly
+	// {{{ FIXME: ugly
 	if cwlfile := ctx.String("cwl"); cwlfile != "" {
 		name := filepath.Base(cwlfile)
 		jobs := []*core.Job{}
-		for index, param := range ctx.StringSlice("cwl-param") {
+		for index, jobparam := range ctx.StringSlice("cwl-job") {
 			job := core.NewJob(index, name)
 			job.Parameters.Includes = core.Includes{
 				{LocalPath: cwlfile, Resource: core.Resource{Name: "CWL_FILE"}},
-				{LocalPath: param, Resource: core.Resource{Name: "CWL_PARAM_FILE"}},
+				{LocalPath: jobparam, Resource: core.Resource{Name: "CWL_JOB_FILE"}},
 			}
 			job.Type = core.CommonWorkflowLanguageJob
 			jobs = append(jobs, job)
 		}
 		return name, jobs, nil
 	}
+
+	if wdlfile := ctx.String("wdl"); wdlfile != "" {
+		name := filepath.Base(wdlfile)
+		jobs := []*core.Job{}
+		for index, jobparam := range ctx.StringSlice("wdl-job") {
+			job := core.NewJob(index, name)
+			job.Parameters.Includes = core.Includes{
+				{LocalPath: wdlfile, Resource: core.Resource{Name: "WDL_FILE"}},
+				{LocalPath: jobparam, Resource: core.Resource{Name: "WDL_JOB_FILE"}},
+			}
+			job.Type = core.WorkflowDescriptionLanguageJob
+			jobs = append(jobs, job)
+		}
+		return name, jobs, nil
+	}
+	// }}}
 
 	// Get tasks file path from context.
 	tasksfpath := ctx.String("tasks")
@@ -72,9 +88,15 @@ func Run(ctx params.Context) error {
 	root.Jobs = jobs
 
 	root.Runtime.Image.Name = ctx.String("image")
-	// {{{ FIXME:
-	if len(jobs) != 0 && jobs[0].Type == core.CommonWorkflowLanguageJob {
-		root.Runtime.Image.Name = "otiai10/c4cwl"
+
+	// {{{ FIXME: ugly
+	if len(jobs) != 0 {
+		switch jobs[0].Type {
+		case core.CommonWorkflowLanguageJob:
+			root.Runtime.Image.Name = "hotsub/c4cwl"
+		case core.WorkflowDescriptionLanguageJob:
+			root.Runtime.Image.Name = "hotsub/c4wdl"
+		}
 	}
 	// }}}
 

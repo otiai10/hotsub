@@ -8,7 +8,7 @@ import (
 	"github.com/otiai10/iamutil"
 )
 
-func createInstanceProfileIfNotExists(sess *session.Session, ctx params.Context) error {
+func (p AmazonWebServices) createInstanceProfileIfNotExists(sess *session.Session, ctx params.Context) error {
 
 	_, err := iamutil.FindInstanceProfile(sess, DefaultAWSInstanceProfileNameForCompute)
 	if err == nil {

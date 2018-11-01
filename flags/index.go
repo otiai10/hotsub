@@ -33,5 +33,11 @@ var Index = []cli.Flag{
 	// CommonWorkflowLanguage
 	CWLFileFlag,
 	CWLParamFlag,
+
+	// WorkflowDescriptionLanguage
+	WDLFileFlag,
+	WDLJobFileFlag,
+
+	// Not recommended
 	IncludeFlag,
 }

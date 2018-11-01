@@ -21,4 +21,25 @@ var commands = []cli.Command{
 		},
 		Flags: flags.Index,
 	},
+
+	// init
+	cli.Command{
+		Name:        "init",
+		Description: "Initialize CLI environment on which hotsub runs",
+		Usage:       "Initialize CLI environment on which hotsub runs",
+		Action: func(ctx *cli.Context) error {
+			return application.Init(ctx)
+		},
+	},
+
+	// template
+	cli.Command{
+		Name:        "template",
+		Description: "Create a template project of hotsub",
+		Usage:       "Create a template project of hotsub",
+		Action: func(ctx *cli.Context) error {
+			return application.Template(ctx)
+		},
+		Flags: flags.Template,
+	},
 }

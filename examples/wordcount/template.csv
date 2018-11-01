@@ -1,3 +1,0 @@
---env SPEAKER_NAME,--input SPEECH_FILE,--input-recursive META,--output-recursive OUTDIR
-Martin,s3://_placeholder_/speech/martin_speech_1963.txt,s3://_placeholder_/speech/martin_meta,s3://_placeholder_/speech/out/martin
-Elizabeth,s3://_placeholder_/speech/elizabeth_speech_1588.txt,s3://_placeholder_/speech/elizabeth_meta,s3://_placeholder_/speech/out/elizabeth

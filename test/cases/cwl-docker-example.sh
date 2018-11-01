@@ -5,6 +5,6 @@ PROJROOT=$(dirname $(dirname $(cd $(dirname $0) && pwd)))
 set -e -v
 hotsub run \
   --cwl ${PROJROOT}/test/cwl/js-docker.cwl \
-  --cwl-param ${PROJROOT}/test/cwl/js-job.yml \
+  --cwl-job ${PROJROOT}/test/cwl/js-job.yml \
   --include ${PROJROOT}/test/cwl/hello.js \
   --verbose

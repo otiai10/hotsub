@@ -14,7 +14,7 @@ install:
   - curl -L https://github.com/docker/machine/releases/download/v0.13.0/docker-machine-`uname -s`-`uname -m` > /home/travis/bin/docker-machine && chmod a+x /home/travis/bin/docker-machine
   # Install Google Cloud SDK CLI
   - sudo apt-get install python
-  - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-187.0.0-linux-x86_64.tar.gz && tar xzvf google-cloud-sdk-187.0.0-linux-x86_64.tar.gz
+  - wget --quiet https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-187.0.0-linux-x86_64.tar.gz && tar xzvf google-cloud-sdk-187.0.0-linux-x86_64.tar.gz
   - yes | ${TRAVIS_BUILD_DIR}/google-cloud-sdk/install.sh
   - echo ${ENCODED_GCP_KEY_FILE} | base64 -d > ${HOME}/.config/gcloud/application_default_credentials.json
   - gcloud auth activate-service-account --key-file ${HOME}/.config/gcloud/application_default_credentials.json

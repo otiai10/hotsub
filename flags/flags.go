@@ -16,7 +16,7 @@ var LogDirectory = cli.StringFlag{
 
 var Concurrency = cli.Int64Flag{
 	Name:  "concurrency,C",
-	Usage: `Concurrency for creating machines (≠ job running) // TODO: more documentation`,
+	Usage: `Throttle concurrency number for running jobs`,
 	Value: 8,
 }
 
@@ -28,7 +28,7 @@ var Concurrency = cli.Int64Flag{
 
 var Provider = cli.StringFlag{
 	Name:  "provider,p",
-	Usage: `Job service provider. Valid values are "aws" and "local."`,
+	Usage: `Job service provider, either of [aws, gcp, vbox, hyperv]`,
 	Value: "aws",
 }
 

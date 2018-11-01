@@ -2,9 +2,14 @@ package core
 
 import (
 	"fmt"
+	"regexp"
 	"time"
 
 	"github.com/otiai10/dkmachine"
+)
+
+var (
+	regenerateCertsExp = regexp.MustCompile("You can attempt to regenerate them using 'docker-machine regenerate-certs")
 )
 
 // Create creates physical machine and wake the required containers up.
@@ -13,33 +18,44 @@ func (job *Job) Create() error {
 
 	job.Lifetime(CREATE, "Creating computing instance for this job...")
 
-	return job.create(0, nil)
+	return job.create(0, false, nil)
 }
 
 // create can be called recursively.
-func (job *Job) create(retry int, lasterror error) error {
+func (job *Job) create(retry int, regenerateCerts bool, lasterror error) error {
 
 	if retry >= CreateMaxRetry {
 		return fmt.Errorf("max retry of creating machine exceeded: failed %d times with last error: %v", CreateMaxRetry, lasterror)
 	}
 
-	spec := *job.Machine.Spec
-	job.Identity.Name = fmt.Sprintf("%s-%04d", job.Identity.Prefix, job.Identity.Index)
-	spec.Name = job.Identity.Name
-	instance, err := dkmachine.Create(&spec)
-	job.Machine.Instance = instance
+	var err error
+	if regenerateCerts {
+		err = job.Machine.Instance.RegenerateCerts()
+	} else {
+		spec := *job.Machine.Spec
+		job.Identity.Name = fmt.Sprintf("%s-%04d", job.Identity.Prefix, job.Identity.Index)
+		spec.Name = job.Identity.Name
+		job.Machine.Instance, err = dkmachine.Create(&spec)
+	}
 
 	// Succeeded!
 	if err == nil {
 		return nil
 	}
 
+	// TODO: Just "*dkmachine.Machine.RegenerateCerts()" seams it doesn't update local certs files
+	// if regenerateCertsExp.MatchString(err.Error()) {
+	// 	job.Lifetime(CREATE, "Regenerating certificates for this job after %d seconds. REASON: %v", (retry * 5), err)
+	// 	time.Sleep(time.Duration(retry*5) * time.Second)
+	// 	return job.create(retry+1, true, err)
+	// }
+
 	// Clean up for retry
-	if errOnRemove := instance.Remove(); errOnRemove != nil {
+	if errOnRemove := job.Machine.Instance.Remove(); errOnRemove != nil {
 		return fmt.Errorf("last error on create: %v: failed to clean up machine for retry: %v", err, errOnRemove)
 	}
 
-	job.Lifetime(CREATE, "Retrying creating an instance for this job...")
-	time.Sleep(time.Duration(retry*40) * time.Second)
-	return job.create(retry+1, err)
+	job.Lifetime(CREATE, "Retrying instance creation for this job after %d seconds. REASON: %v", (retry * 5), err)
+	time.Sleep(time.Duration(retry*5) * time.Second)
+	return job.create(retry+1, false, err)
 }

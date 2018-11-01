@@ -3,7 +3,8 @@
 ```sh
 % hotsub run \
   --cwl ./hello.cwl \
-  --cwl-param ./job.yml \
+  --cwl-job ./job-1.yml \
+  --cwl-job ./job-2.yml \
   --verbose
 ```
 
