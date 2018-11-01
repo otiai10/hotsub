@@ -7,6 +7,7 @@ import (
 )
 
 // Run ...
+// sem is a semaphore for running concurrency
 func (job *Job) Run(ctx context.Context, shared *SharedData, sem *semaphore.Weighted) error {
 
 	done := job.run(shared, sem)
@@ -49,11 +50,12 @@ func (job *Job) run(shared *SharedData, sem *semaphore.Weighted) <-chan error {
 		defer close(done)
 
 		sem.Acquire(jobctx, 1)
+		defer sem.Release(1)
+
 		if err := job.Create(); err != nil {
 			done <- err
 			return
 		}
-		sem.Release(1)
 
 		if err := job.Construct(shared); err != nil {
 			done <- err

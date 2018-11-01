@@ -16,7 +16,7 @@ var LogDirectory = cli.StringFlag{
 
 var Concurrency = cli.Int64Flag{
 	Name:  "concurrency,C",
-	Usage: `Concurrency for creating machines (≠ job running) // TODO: more documentation`,
+	Usage: `Throttle concurrency number for running jobs`,
 	Value: 8,
 }
 
