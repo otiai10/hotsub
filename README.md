@@ -4,27 +4,27 @@ The simple batch job driver on AWS and GCP. (Azure, OpenStack are coming soon)
 
 ```sh
 hotsub run \
+  --script ./star-alignment.sh \
+  --tasks ./star-alignment-tasks.csv \
   --image friend1ws/star-alignment \
-  --script ./test/scripts/star-alignment.sh \
-  --tasks ./test/tasks/star-alignment-tasks.csv \
-  --aws-ec2-instance-type t2.2xlarge
+  --aws-ec2-instance-type t2.2xlarge \
+  --verbose
 ```
 
-<img src="https://user-images.githubusercontent.com/931554/42975469-414f4878-8bf7-11e8-80fb-ad35d311fb6c.png" width="50%" />
+It will
+
+- execute workflow described in `star-alignment.sh`
+- for each samples specified in `star-alignment.csv`
+- in `friend1ws/star-alignment` docker containers
+- on EC2 instances of type `t2.2xlarge`
+
+and automatically upload the output files to S3 and clean up EC2 instances after all.
+
+See **[Documentation](https://hotsub.github.io/)** for more details.
 
 # Installation
 
-Check releases here https://github.com/otiai10/awsub/releases and choose the binary for your OS.
-
-# Quick Guide
-
-Once you have `hotsub` installed, just hit following command
-
-```
-hotsub quickguide
-```
-
-and you can see what you need.
+Check **[Getting Started](https://hotsub.github.io/getting-started)** on **[GitHub Pages](https://hotsub.github.io)**
 
 # Contact
 
