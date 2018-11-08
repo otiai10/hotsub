@@ -22,6 +22,17 @@ and automatically upload the output files to S3 and clean up EC2 instances after
 
 See **[Documentation](https://hotsub.github.io/)** for more details.
 
+# Why you use `hotsub`
+
+There are 3 points why `hotsub` is made and why you use it
+
+1. **No-need to setup your cloud on web consoles:**
+    - Since `hotsub` uese pure EC2 or GCE instances, you don't have to configure AWS Batch nor Dataflow on messy web consoles
+2. **Multi-platforms with the same interface of command line:**
+    - You can switch AWS and GCP as you like only with `--provider` option of `run` command (of course you need to have credentials on your local machine)
+3. **ExTL framework available:**
+    - In some cases of bio-informatics, the problem is how to handle common and huge refrence genome. `hotsub` suggests and implements <u>[`ExTL` framework](https://hotsub.github.io/etl-and-extl)</u>.
+
 # Installation
 
 Check **[Getting Started](https://hotsub.github.io/getting-started)** on **[GitHub Pages](https://hotsub.github.io)**
