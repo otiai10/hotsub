@@ -1,4 +1,4 @@
-# hotsub [![Build Status](https://travis-ci.org/otiai10/hotsub.svg?branch=master)](https://travis-ci.org/otiai10/hotsub)
+# hotsub [![Build Status](https://travis-ci.org/otiai10/hotsub.svg?branch=master)](https://travis-ci.org/otiai10/hotsub) [![Paper Status](http://joss.theoj.org/papers/f1e4470e4831caa4252427cec8c009a8/status.svg)](http://joss.theoj.org/papers/f1e4470e4831caa4252427cec8c009a8)
 
 The simple batch job driver on AWS and GCP. (Azure, OpenStack are coming soon)
 
