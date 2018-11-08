@@ -15,7 +15,7 @@ func main() {
 	}
 	app.Commands = commands
 	app.Version = version
-	app.Usage = "command line to run batch computing on AWS"
+	app.Usage = "command line to run batch computing on AWS and GCP with the same interface"
 	app.Description = "Open-source command-line tool to run batch computing tasks and workflows on backend services such as Amazon Web Services."
 	// app.Flags = flags.Index
 	if err := app.Run(os.Args); err != nil {
