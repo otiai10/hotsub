@@ -36,6 +36,14 @@ We have developed a software implementing the proposed ExETL framework, hotsub (
 
 Since 'hotsub' uses Docker and Docker Machine, users of 'hotsub' don't have to care about acquiring VMs on cloud services nor setting up environment for computing. Handling infrastructures and runtimes are automated by 'hotsub'.
 
+# Statement of need
+
+Even just for basic ETL framework provided by cloud services, it's necessary to configure the managed services on web-console of each cloud service. By using `hotsub`, on the other hand, users don't have to configure VMs on web-console.
+
+In addition, `hotsub` suggests and implements **ExTL** framework, which solves potential problems simple ETL frameworks by AWS Batch, ECS, and dsub have. By using simple ETL framework for bio-informatics, downloading huge reference genome on **each computing instance** could be inefficiency of network traffic and instance time.
+
+If your resources are located on Google Cloud Storage, you can just use `--provider` option to change which platform your computing resources will be launched on, with the same command line interface of `hotsub`. It helps the ecosystem of sharing workflows with someone using different cloud services.
+
 # References
 
 - [AWS Batch — Easy and Efficient Batch Computing Capabilities - AWS](https://aws.amazon.com/batch/)
