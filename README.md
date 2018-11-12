@@ -27,7 +27,7 @@ See **[Documentation](https://hotsub.github.io/)** for more details.
 There are 3 points why `hotsub` is made and why you use it
 
 1. **No-need to setup your cloud on web consoles:**
-    - Since `hotsub` uese pure EC2 or GCE instances, you don't have to configure AWS Batch nor Dataflow on messy web consoles
+    - Since `hotsub` uses pure EC2 or GCE instances, you don't have to configure AWS Batch nor Dataflow on messy web consoles
 2. **Multi-platforms with the same interface of command line:**
     - You can switch AWS and GCP as you like only with `--provider` option of `run` command (of course you need to have credentials on your local machine)
 3. **ExTL framework available:**
