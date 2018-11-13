@@ -45,9 +45,3 @@ In addition, `hotsub` suggests and implements **ExTL** framework, which solves p
 If your resources are located on Google Cloud Storage, you can just use `--provider` option to change which platform your computing resources will be launched on, with the same command line interface of `hotsub`. It helps the ecosystem of sharing workflows with someone using different cloud services.
 
 # References
-
-- [AWS Batch — Easy and Efficient Batch Computing Capabilities - AWS](https://aws.amazon.com/batch/)
-- [Batch - Compute job scheduling service | Microsoft Azure](https://azure.microsoft.com/en-us/services/batch/)
-- [DataBiosphere/dsub - Open-source command-line tool to run batch computing tasks and workflows on backend services such as Google Cloud.](https://github.com/DataBiosphere/dsub)
-- [Enterprise Container Platform | Docker](https://www.docker.com/)
-- [Docker Machine | Docker Documentation](https://docs.docker.com/machine/)
