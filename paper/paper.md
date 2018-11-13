@@ -28,13 +28,13 @@ One possible approach is what we call on-demand Extraction Transformation Load (
 2. Each input file is transformed into an output file (e.g., FASTQ to BAM conversion).
 3. Each generated output file is loaded to the storage area stopping and deleting each VMs.
 
-There are several frameworks which realize on-demand ETL framework in the cloud computing environment, which is often provided by cloud computing vendors (AWS Batch by Amazon Web Service or Azure Batch by Microsoft) or third parties (dsub by Google Genomics).  However, with these current ETL implementations, since commonly used data across VMs (e.g.,  reference genomes) is downloaded to individual VMs, we need to pay particular attention to the excessive load of network and storage, and deployment and transferring of data according to cost charging policy of each provider.
+There are several frameworks which realize on-demand ETL framework in the cloud computing environment, which is often provided by cloud computing vendors (AWS Batch by Amazon Web Service [@AWSBatch] or Azure Batch by Microsoft [@AzureBatch]) or third parties (dsub by Google Genomics [@DataBiosphere/dsub]). However, with these current ETL implementations, since commonly used data across VMs (e.g.,  reference genomes) is downloaded to individual VMs, we need to pay particular attention to the excessive load of network and storage, and deployment and transferring of data according to cost charging policy of each provider.
 
 Here we propose a novel framework, on-demand Extended Extraction Transform Load (ExETL), in which commonly necessary data is first loaded to a pre-built shared data instance, mounted by each computing VM and used across VMs. We demonstrate that this framework reduces the payment cost a lot in several cases. Besides, we would like to argue that sharing of analytical workflows will be enhanced since users can safely try the workflows without special caution of the location of the associated database.
 
 We have developed a software implementing the proposed ExETL framework, hotsub (https://github.com/otiai10/hotsub).
 
-Since 'hotsub' uses Docker and Docker Machine, users of 'hotsub' don't have to care about acquiring VMs on cloud services nor setting up environment for computing. Handling infrastructures and runtimes are automated by 'hotsub'.
+Since 'hotsub' uses Docker [@Docker] and Docker Machine [@DockerMachine], users of 'hotsub' don't have to care about acquiring VMs on cloud services nor setting up environment for computing. Handling infrastructures and runtimes are automated by 'hotsub'.
 
 # Statement of need
 
