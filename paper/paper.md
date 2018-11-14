@@ -11,6 +11,12 @@ authors:
     - name: Hiromu Ochiai
       orcid: 0000-0001-6636-856X
       affiliation: 1
+    - name: Kenichi Chiba
+      affiliation: 1
+    - name: Ai Okada
+      affiliation: 1
+    - name: Yuichi Shiraishi
+      affiliation: 1
 affiliations:
     - name: National Cancer Center Japan
       index: 1
