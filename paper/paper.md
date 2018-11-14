@@ -14,6 +14,7 @@ authors:
     - name: Kenichi Chiba
       affiliation: 1
     - name: Ai Okada
+      orcid: 0000-0002-9782-5900
       affiliation: 1
     - name: Yuichi Shiraishi
       orcid: 0000-0001-6144-5845
