@@ -11,8 +11,16 @@ authors:
     - name: Hiromu Ochiai
       orcid: 0000-0001-6636-856X
       affiliation: 1
+    - name: Kenichi Chiba
+      affiliation: 1
+    - name: Ai Okada
+      orcid: 0000-0002-9782-5900
+      affiliation: 1
+    - name: Yuichi Shiraishi
+      orcid: 0000-0001-6144-5845
+      affiliation: 1
 affiliations:
-    - name: National Cancer Center Japan
+    - name: National Cancer Center Research Institute, Tokyo, Japan
       index: 1
 date: November 12, 2018
 bibliography: paper.bib
@@ -43,5 +51,8 @@ Even just for basic ETL framework provided by cloud services, it's necessary to 
 In addition, `hotsub` suggests and implements **ExTL** framework, which solves potential problems simple ETL frameworks by AWS Batch, ECS, and dsub have. By using simple ETL framework for bio-informatics, downloading huge reference genome on **each computing instance** could be inefficiency of network traffic and instance time.
 
 If your resources are located on Google Cloud Storage, you can just use `--provider` option to change which platform your computing resources will be launched on, with the same command line interface of `hotsub`. It helps the ecosystem of sharing workflows with someone using different cloud services.
+
+# Acknowledgments
+This work was supported by Grant-in-Aid from the Japan Agency for Medical Research and Development (Advanced Genome Research and Bioinformatics Study to Facilitate Medical Innovation [17km0405207h0002]).
 
 # References
